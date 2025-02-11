@@ -1,4 +1,4 @@
-from sqlmodel import Field, SQLModel, LargeBinary, Column,
+from sqlmodel import Field, SQLModel, LargeBinary, Column
 import uuid as uuid_lib
 
 # SQLAlchemy
