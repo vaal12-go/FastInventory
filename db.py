@@ -1,6 +1,7 @@
 from sqlmodel import SQLModel, create_engine
 from models.item import Item
 from models.container import Container
+from models.file import SQLiteFile
 
 
 db_engine = "qwe2"
