@@ -1,6 +1,8 @@
 from sqlmodel import Field, SQLModel, LargeBinary, Column
 import uuid as uuid_lib
 
+from models.item import Item
+
 # SQLAlchemy
 # https://stackoverflow.com/questions/1779701/example-using-blob-in-sqlalchemy
 # SQLModel
@@ -13,3 +15,6 @@ class SQLiteFile(SQLModel, table=True):
     name: str
     description: str
     content_bytes: bytes = Field(sa_column=Column(LargeBinary))
+
+    item_uuid: uuid_lib.UUID | None = Field(
+        default=None, foreign_key="item.uuid")

@@ -7,5 +7,5 @@ class Item(SQLModel, table=True):
         default_factory=uuid_lib.uuid4, primary_key=True)
     name: str
     description: str = ""
-    container_id: uuid_lib.UUID | None = Field(
+    container_uuid: uuid_lib.UUID | None = Field(
         default=None, foreign_key="item.uuid")

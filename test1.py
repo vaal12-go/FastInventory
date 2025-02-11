@@ -14,10 +14,9 @@ def test_populate_db():
     for i in range(10):
         itm = Item(
             name=f"Name#{i}", description=f"description #{i}",
-            container_id=cnt.uuid
+            container_uuid=cnt.uuid
         )
-
-        print(itm)
+        # print(itm)
         session.add(itm)
-    print(f"Session:{session}")
+    # print(f"Session:{session}")
     session.commit()
