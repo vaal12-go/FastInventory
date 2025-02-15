@@ -3,8 +3,11 @@ import uuid as uuid_lib
 
 from models.item_tag_link import ItemTagLink
 
+from sqlalchemy import UniqueConstraint
+
 
 class Tag(SQLModel, table=True):
+    __table_args__ = (UniqueConstraint("tag"),)
     uuid: uuid_lib.UUID = Field(
         default_factory=uuid_lib.uuid4, primary_key=True)
     tag: str
@@ -12,4 +15,4 @@ class Tag(SQLModel, table=True):
 
     items: list["Item"] = Relationship(
         back_populates="tags", link_model=ItemTagLink,
-        sa_relationship_kwargs=dict(lazy="selectin"))
+    )

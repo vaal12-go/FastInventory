@@ -20,8 +20,7 @@ class Item(SQLModel, table=True):
 
     tags: list["Tag"] = Relationship(
         back_populates="items",
-        link_model=ItemTagLink,
-        sa_relationship_kwargs=dict(lazy="selectin"))
+        link_model=ItemTagLink)
 
     # class Config:
     #     arbitrary_types_allowed = True

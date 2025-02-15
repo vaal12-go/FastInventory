@@ -59,9 +59,9 @@ def item_get_handler(item_uuid: str):
 
             # print(f"item1:{item1}")
 
-            all_items = session.execute(
+            all_items = session.exec(
                 select(Item)
-            ).scalars()
+            ).all()
 
             outList = ItemOutList.parse_obj({"lst": all_items})
             print(f"outList:{outList}")

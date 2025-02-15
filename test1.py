@@ -16,8 +16,12 @@ def testDB2():
         "55a25addbe0849c2b98bad4c6d14315b"))
 
     tg = Tag(tag="test tag2", description="descr2")
-    session.add(tg)
-    session.commit()
+    try:
+        session.add(tg)
+        session.commit()
+    except Exception as e:
+        print(f"DB Exception:{e}")
+        return
 
     cnt = Item(name=f"Test item 1", description=f"To be placed in container")
     cnt.container_uuid = contItem.uuid

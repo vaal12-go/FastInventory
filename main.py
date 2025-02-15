@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI):
     db.db_engine = db.init_db()
     print(f"db_engine:{db.db_engine}")
     # test_populate_db()
-    # testDB2()
+    testDB2()
 
     yield
     # # Clean up the ML models and release the resources
