@@ -1,0 +1,59 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap related local imports -->
+    <link href="css/bootstrap.min_5.0.2.css" rel="stylesheet" />
+    <script src="js/bootstrap.bundle.min_5.0.2.js"></script>
+
+    <script src="js/utils.js"></script>
+    <script src="js/new_item.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row"><h1>New item</h1></div>
+      <div class="row">
+        <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Item name</label>
+            <input
+              type="text"
+              class="form-control"
+              id="item_name_input"
+              placeholder="Item name"
+            />
+          </div>
+          <div class="form-group">
+            <label for="item_description_textarea">Item description</label>
+            <textarea
+              class="form-control"
+              id="item_description_textarea"
+              rows="5"
+            ></textarea>
+            <small id="descriptionHelp" class="form-text text-muted"
+              >Describe the item</small
+            >
+          </div>
+
+          <div class="form-group border p-3">
+            <div>Container:</div>
+            <button type="button" class="btn btn-secondary">
+              Add container
+            </button>
+          </div>
+          <div class="p-1">
+            <button
+              id="new_item_submit_btn"
+              type="button"
+              class="btn btn-primary"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
