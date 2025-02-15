@@ -4,14 +4,11 @@ import uuid as uuid_lib
 from models.item_tag_link import ItemTagLink
 
 
-class Item(SQLModel, table=True):
+class Tag(SQLModel, table=True):
     uuid: uuid_lib.UUID = Field(
         default_factory=uuid_lib.uuid4, primary_key=True)
-    name: str
+    tag: str
     description: str = ""
 
-    container_uuid: uuid_lib.UUID | None = Field(
-        default=None, foreign_key="item.uuid")
-
-    tags: list["Tag"] = Relationship(
-        back_populates="items", link_model=ItemTagLink)
+    items: list["Item"] = Relationship(
+        back_populates="tags", link_model=ItemTagLink)

@@ -1,13 +1,16 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import db
-from test1 import test_populate_db
+from test1 import test_populate_db, testDB2
 from contextlib import asynccontextmanager
 from sqlmodel import Session, select
 
 from models.item import Item
 
 import helpers
+import handlers
+
+import uuid
 
 
 @asynccontextmanager
@@ -15,6 +18,7 @@ async def lifespan(app: FastAPI):
     db.db_engine = db.init_db()
     print(f"db_engine:{db.db_engine}")
     # test_populate_db()
+    testDB2()
 
     yield
     # # Clean up the ML models and release the resources
@@ -22,6 +26,11 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
+@app.get("/item/{item_uuid}")
+def item_get_handler(item_uuid: str):
+    return handlers.item_get_handler(item_uuid)
 
 
 @app.post("/item")

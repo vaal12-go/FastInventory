@@ -1,6 +1,8 @@
 from sqlmodel import SQLModel, create_engine
 from models.item import Item
 from models.file import SQLiteFile
+from models.tag import Tag
+from models.item_tag_link import ItemTagLink
 
 
 db_engine = "qwe2"

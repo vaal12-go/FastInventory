@@ -3,7 +3,32 @@ from PIL import Image, ImageFont, ImageDraw
 
 import db
 from models.item import Item
-from sqlmodel import Field, Session
+from models.tag import Tag
+from sqlmodel import Field, Session, select
+
+import uuid
+
+
+def testDB2():
+    session = Session(db.db_engine)
+
+    # tg = Tag(tag="test tag1", description="descr2")
+    # session.add(tg)
+    # session.commit()
+
+    # cnt = Item(name=f"Container item", description=f"This is first container")
+    # cnt.tags.append(tg)
+    # session.add(cnt)
+    # session.commit()
+    # print(f"Container itemID:{cnt.uuid}")
+
+    itm = session.exec(
+        select(Item).where(Item.uuid == uuid.UUID(
+            "55a25addbe0849c2b98bad4c6d14315b"))
+    ).first()
+
+    print(f"itm:{itm}")
+    print(f"itm.tags:{itm.tags}")
 
 
 def test_populate_db():
