@@ -11,4 +11,5 @@ class Tag(SQLModel, table=True):
     description: str = ""
 
     items: list["Item"] = Relationship(
-        back_populates="tags", link_model=ItemTagLink)
+        back_populates="tags", link_model=ItemTagLink,
+        sa_relationship_kwargs=dict(lazy="selectin"))

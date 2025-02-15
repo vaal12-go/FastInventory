@@ -6,11 +6,13 @@ from contextlib import asynccontextmanager
 from sqlmodel import Session, select
 
 from models.item import Item
+from models.tag import Tag
 
 import helpers
 import handlers
 
 import uuid
+from typing import List
 
 
 @asynccontextmanager
@@ -18,7 +20,7 @@ async def lifespan(app: FastAPI):
     db.db_engine = db.init_db()
     print(f"db_engine:{db.db_engine}")
     # test_populate_db()
-    testDB2()
+    # testDB2()
 
     yield
     # # Clean up the ML models and release the resources
@@ -33,7 +35,7 @@ def item_get_handler(item_uuid: str):
     return handlers.item_get_handler(item_uuid)
 
 
-@app.post("/item")
+@app.post("/item/")
 async def new_item_handler(newItem: Item):
     print(f"Have item:{newItem}")
     newUUID = newItem.uuid
@@ -51,8 +53,7 @@ async def new_item_handler(newItem: Item):
     }
 
 app.mount("/", StaticFiles(directory=helpers.getHttpClientDirectory(),
-          html=True), name="static")
-
+                           html=True), name="static")
 
 # To run :
 #   pipenv run fastapi dev --host 127.0.0.1 --port 8080 main.py

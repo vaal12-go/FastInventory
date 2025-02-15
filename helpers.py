@@ -6,5 +6,5 @@ def getHttpClientDirectory():
     #     os.path.dirname(os.path.realpath(__file__))
     # )
     curr_dir = os.path.dirname(os.path.realpath(__file__))
-    print(f"Curr Dir:{curr_dir}")
+    print(f"Curr Dir2:{curr_dir}")
     return os.path.join(curr_dir, "static")
