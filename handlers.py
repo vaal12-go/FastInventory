@@ -16,6 +16,18 @@ from app import app
 import helpers
 
 
+@app.delete("/item/{item_uuid}")
+async def delete_item_handler(item_uuid: uuid.UUID):
+    print(f"request to delete item {item_uuid} received")
+    session = Session(db.db_engine)
+    item_to_delete = session.get(Item, item_uuid)
+    session.delete(item_to_delete)
+    session.commit()
+    return {
+        "status": "success"
+    }
+
+
 @app.post("/item/")
 async def new_item_handler(newItem: Item):
     print(f"Have item:{newItem}")

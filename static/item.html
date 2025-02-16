@@ -25,9 +25,9 @@
     <div class="container">
       <div class="row"><h1 id="form_title">New item</h1></div>
       <div class="row">
-        <form>
+        <div class="col">
           <div class="form-group">
-            <label for="exampleInputEmail1">Item name</label>
+            <label for="item_name_input">Item name</label>
             <input
               type="text"
               class="form-control"
@@ -35,49 +35,75 @@
               placeholder="Item name"
             />
           </div>
-          <div class="form-group">
-            <label for="item_description_textarea">Item description</label>
-            <textarea
-              class="form-control"
-              id="item_description_textarea"
-              rows="5"
-            ></textarea>
-            <small id="descriptionHelp" class="form-text text-muted"
-              >Describe the item</small
-            >
-          </div>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="form-group">
+              <label for="item_description_textarea">Item description</label>
+              <textarea
+                class="form-control"
+                id="item_description_textarea"
+                rows="5"
+              ></textarea>
+              <small id="descriptionHelp" class="form-text text-muted"
+                >Describe the item</small
+              >
+            </div>
 
-          <div class="form-group border p-3">
-            <div>Container:</div>
-            <button type="button" class="btn btn-secondary">
-              Add container
-            </button>
+            <div class="form-group border p-3">
+              <div>Container:</div>
+              <button type="button" class="btn btn-secondary">
+                Add container
+              </button>
+            </div>
+            <div class="form-row border p-3">
+              <div>Tags:</div>
+              <div id="select2tags"></div>
+              <select
+                id="tags_select2_selector"
+                class="js-example-basic-multiple custom-select"
+                style="width: 100%"
+                name="states[]"
+                multiple="multiple"
+              >
+                <option value="AL">Alabama</option>
+                <option value="WY">Wyoming</option>
+              </select>
+            </div>
           </div>
-          <div class="form-row border p-3">
-            <div>Tags:</div>
-            <div id="select2tags"></div>
-            <select
-              id="tags_select2_selector"
-              class="js-example-basic-multiple custom-select"
-              style="width: 100%"
-              name="states[]"
-              multiple="multiple"
-            >
-              <option value="AL">Alabama</option>
-
-              <option value="WY">Wyoming</option>
-            </select>
-          </div>
-          <div class="p-1">
-            <button
-              id="new_item_submit_btn"
-              type="button"
-              class="btn btn-primary"
-            >
-              Save
-            </button>
-          </div>
-        </form>
+          <div class="col-4">Picture placeholder</div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-end">
+          Item create time: 12.12.12 | Item last modified time: 12.12.12
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-end">
+          Item UUID:<span id="item_uuid">not created yet</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="p-1">
+          <button
+            id="new_item_submit_btn"
+            type="button"
+            class="btn btn-primary"
+          >
+            Save
+          </button>
+          <button
+            id="item_delete_btn"
+            type="button"
+            class="btn btn-danger invisible"
+          >
+            Delete item
+          </button>
+          <button id="cancel_btn" type="button" class="btn btn-info">
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
   </body>

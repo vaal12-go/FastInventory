@@ -1,16 +1,45 @@
+var editItemUUID = null;
+
 window.onload = () => {
-  console.log("Hello :>> ");
+  document.getElementById("cancel_btn").addEventListener("click", () => {
+    window.location.replace(window.location.origin);
+  }); //document.getElementById("cancel_btn").addEventListener(
+
+  document.getElementById("item_delete_btn").addEventListener("click", () => {
+    console.log("Delete button pressed :>> ");
+    console.log("editItemUUID :>> ", editItemUUID);
+    fetchURL = `${window.location.origin}/item/${editItemUUID}`;
+    console.log("fetchURL :>> ", fetchURL);
+    fetchJSON(
+      fetchURL,
+      {
+        method: "DELETE",
+        // body: JSON.stringify(new_item_request),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      },
+      (jsonObj) => {
+        console.log("Have responce :>> ", jsonObj);
+        if (jsonObj.status == "success") {
+          window.location.replace(window.location.origin);
+        }
+      }
+    );
+  }); //document.getElementById("item_delete_btn").addEventListener("click", () => {
 
   const urlParams = new URL(window.location.toLocaleString()).searchParams;
-  const itemUUID = urlParams.get("itemUUID");
+  editItemUUID = urlParams.get("itemUUID");
 
-  console.log("itemUUID :>> ", itemUUID);
-  if (itemUUID === null) {
+  console.log("itemUUID :>> ", editItemUUID);
+  if (editItemUUID === null) {
     console.log("It is null :>> Creating new item");
   } else {
     console.log("Editing item :>> ");
+    document.getElementById("item_uuid").innerHTML = editItemUUID;
+    swapClassesOnElement("item_delete_btn", "invisible", null);
     document.getElementById("form_title").innerHTML = "Edit item";
-    populateFieldsWithItem(itemUUID);
+    populateFieldsWithItem(editItemUUID);
   }
 
   $("#tags_select2_selector").select2({
