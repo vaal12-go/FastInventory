@@ -1,3 +1,4 @@
+from fastapi.staticfiles import StaticFiles
 import uuid
 from sqlmodel import Session, select, text
 
@@ -10,6 +11,27 @@ from sqlalchemy.orm import joinedload
 from typing import List, Optional, Any
 
 from pydantic import BaseModel, computed_field
+
+from app import app
+import helpers
+
+
+@app.post("/item/")
+async def new_item_handler(newItem: Item):
+    print(f"Have item:{newItem}")
+    newUUID = newItem.uuid
+    session = Session(db.db_engine)
+    session.add(newItem)
+    session.commit()
+    print(f"Item after saving:{newItem}")
+    createdItem = session.exec(
+        select(Item).where(Item.uuid == newUUID)
+    ).first()
+    print(f"createdItem:{createdItem}")
+    return {
+        "status": "success",
+        "item": createdItem
+    }
 
 
 class ItemOut(BaseModel):
@@ -37,8 +59,9 @@ class ItemOutList(BaseModel):
 #     def slug(self) -> Any:
 #         return self.tags
 
-
+@app.get("/item/{item_uuid}")
 def item_get_handler(item_uuid: str):
+    session = Session(db.db_engine)
     print(f"Have itemUUID:{item_uuid}")
     requested_uuid = None
     try:
@@ -47,10 +70,11 @@ def item_get_handler(item_uuid: str):
         print(f"item_uuid:{item_uuid} supplied is not valid uuid")
     if requested_uuid is not None:
         print("Will return single item")
+        ret = session.get(Item, requested_uuid)
+        return ret
     else:
         if item_uuid == "all":
             print("Will return all items")
-            session = Session(db.db_engine)
 
             # item1 = session.get(Item, uuid.UUID(
             #     "55a25add-be08-49c2-b98b-ad4c6d14315b"))
@@ -64,7 +88,7 @@ def item_get_handler(item_uuid: str):
             ).all()
 
             outList = ItemOutList.parse_obj({"lst": all_items})
-            print(f"outList:{outList}")
+            # print(f"outList:{outList}")
 
             # print(f"all_items:{all_items}")
             # print(f"all_items:{list(all_items)}")
@@ -98,9 +122,14 @@ def item_get_handler(item_uuid: str):
                 #     print(f"itm:{itm}")
                 #     print(f"itm tags:{itm.tags}")
                 #     itms_list.append(itm)
-            return outList
+            return outList.lst
 
     return {
         "item_uuid": item_uuid,
         "item_uuid_type": str(type(item_uuid))
     }
+
+
+# This route should be defined after all the rest in other case it will shadow other routes
+app.mount("/", StaticFiles(directory=helpers.getHttpClientDirectory(),
+                           html=True), name="static")
