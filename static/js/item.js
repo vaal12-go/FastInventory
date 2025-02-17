@@ -24,7 +24,10 @@ window.onload = () => {
     debug: true,
   }).use(Dashboard, {
     target: "#uppy_file_upload_element",
+    singleFileFullScreen: true,
     inline: true,
+    hideUploadButton: true,
+    hideRetryButton: true,
   });
   // uppy.use(DragDrop, {
   //   target: "#uppy_file_upload_element",
