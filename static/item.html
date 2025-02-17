@@ -25,6 +25,7 @@
     />
 
     <script src="js/utils.js"></script>
+    <script src="js/item.populate_fields.js"></script>
     <script src="js/item.send_data.js"></script>
     <script type="module" src="js/item.js"></script>
   </head>
@@ -58,11 +59,18 @@
               >
             </div>
 
-            <div class="form-group border p-3">
-              <div>Container:</div>
-              <button type="button" class="btn btn-secondary">
+            <div class="form-group pt-3">
+              <div>
+                Container:
+                <select
+                  id="container_select"
+                  class="form-select mb-3"
+                  aria-label=".form-select-lg example"
+                ></select>
+              </div>
+              <!-- <button type="button" class="btn btn-secondary">
                 Add container
-              </button>
+              </button> -->
             </div>
             <div class="form-row border p-3">
               <div>Tags:</div>

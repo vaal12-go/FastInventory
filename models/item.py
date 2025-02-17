@@ -8,8 +8,6 @@ from pydantic import computed_field
 # Great many to many ORM\SQLmodel explanation
 # https://stackoverflow.com/questions/74273829/how-to-correctly-use-joins-with-sqlmodel
 
-from pydantic import BaseModel
-
 
 class ItemBase(SQLModel):
     name: str

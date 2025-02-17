@@ -29,13 +29,6 @@ window.onload = () => {
     hideUploadButton: true,
     hideRetryButton: true,
   });
-  // uppy.use(DragDrop, {
-  //   target: "#uppy_file_upload_element",
-  //   inline: true,
-  //   // hideUploadButton: false,
-  //   // singleFileFullScreen: true,
-  //   // hideRetryButton: false,
-  // });
   console.log("Uppy created :>> ", uppy);
   uppy.use(XHRUpload, {
     endpoint: "../upload_picture",
@@ -52,13 +45,13 @@ window.onload = () => {
     .getElementById("item_qr_code_generate_btn")
     .addEventListener("click", () => {
       console.log("generate code button pressed :>> ");
-      uppy.upload();
+      // uppy.upload();
 
-      // window.open(
-      //   window.location.origin +
-      //     "/generated_qr_code.html?itemUUID=" +
-      //     editItemUUID
-      // );
+      window.open(
+        window.location.origin +
+          "/generated_qr_code.html?itemUUID=" +
+          editItemUUID
+      );
     });
 
   document.getElementById("item_delete_btn").addEventListener("click", () => {
@@ -109,24 +102,3 @@ window.onload = () => {
       send_data(null);
     }); //addEventListener("click", () => {
 }; //window.onload = () => {
-
-function populateFieldsWithItem(itemUUID) {
-  var fetchURL = `${window.location.origin}/item/${itemUUID}`;
-  console.log("fetchURL :>> ");
-  fetchJSON(
-    fetchURL,
-    {
-      method: "GET",
-      // body: JSON.stringify(new_item_request),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    },
-    (jsonObj) => {
-      console.log("Have item responce :>> ", jsonObj);
-      document.getElementById("item_name_input").value = jsonObj.name;
-      document.getElementById("item_description_textarea").value =
-        jsonObj.description;
-    }
-  );
-} //function getItemByUUID(itemUUID) {

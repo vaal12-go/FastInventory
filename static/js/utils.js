@@ -24,3 +24,19 @@ async function fetchJSON(url, options, jsonFunction) {
     console.log("Catched exception:", err);
   }
 } //async function fetchJSON(url, options, jsonFunction) {
+
+function addOptionToSelect(
+  selectElId,
+  text = "No text",
+  value = -1,
+  selected = false
+) {
+  selectorElem = document.getElementById(selectElId);
+  newOpt = document.createElement("option");
+  newOpt.value = value;
+  newOpt.text = text;
+  if (selected) {
+    newOpt.selected = true;
+  }
+  selectorElem.options.add(newOpt);
+} //function addOptionToSelect(selectElId,

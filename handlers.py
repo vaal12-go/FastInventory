@@ -9,7 +9,6 @@ from models.tag import Tag
 
 from sqlalchemy.orm import joinedload
 
-from typing import List, Optional, Any
 
 from pydantic import BaseModel, computed_field
 
@@ -112,22 +111,3 @@ async def new_item_handler(newItem: ItemCreate):
     except Exception as e:
         print(f"Error in @app.post(item): {e}")
         print(traceback.format_exc())
-
-
-class ItemOut(BaseModel):
-    uuid: uuid.UUID
-    name: str
-    description: str
-    container_uuid: uuid.UUID | None = None
-    # tags: Optional[List[Tag]]
-    tags: Optional[List[Tag]] = []
-
-    class Config:
-        from_attributes = True
-
-
-class ItemOutList(BaseModel):
-    lst: List[ItemOut] = []
-
-    class Config:
-        from_attributes = True
