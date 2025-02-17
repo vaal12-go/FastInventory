@@ -1,3 +1,4 @@
+from fastapi import File, UploadFile
 from fastapi.staticfiles import StaticFiles
 import uuid
 from sqlmodel import Session, select, text
@@ -14,6 +15,47 @@ from pydantic import BaseModel, computed_field
 
 from app import app
 import helpers
+from typing import Annotated
+
+import logging
+
+logger = logging.getLogger("myapp.logger")
+
+logging.basicConfig(
+    filename='c:\\Users\\may13\\Desktop\\logs\\myapp.log', level=logging.INFO)
+logger.info('Started')
+
+logger.info('Finished')
+
+
+@app.post("/upload_picture")
+# async def upload_picture_handler(file_uploaded: Annotated[bytes, File()]):
+async def upload_picture_handler(file_uploaded: UploadFile):
+    logger.info('have picture upload')
+    try:
+        print("have picture upload")
+        # print(f"file len:{len(file)}")
+        # print(f"filename {file.filename}")
+        logger.info(f'have picture upload:{type(file_uploaded)}')
+        logger.info(f'have picture upload:{file_uploaded.filename}')
+        fUploadedSave = open(f"uploaded.{file_uploaded.filename}", "wb")
+        fUploadedSave.write(file_uploaded.file.read())
+        fUploadedSave.close()
+    except Exception as e:
+        logger.info(f"Have exception:{e}")
+        print(f"Have exception:{e}")
+    return {
+        "error": "Not implemented4"
+    }
+
+
+@app.get("/upload_picture")
+def up_test():
+    logger.info('have picture upload2')
+    print("Have get handler working")
+    return {
+        "error": "Not implemented3"
+    }
 
 
 @app.delete("/item/{item_uuid}")

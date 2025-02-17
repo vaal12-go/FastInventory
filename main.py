@@ -1,3 +1,5 @@
+import helpers
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI
 
 
@@ -20,14 +22,13 @@ from app import app
 import qr_code_handler
 import handlers
 
+print("before app routers")
 
-from fastapi.staticfiles import StaticFiles
-import helpers
 # This route should be defined after all the rest in other case it will shadow other routes
 app.mount("/", StaticFiles(directory=helpers.getHttpClientDirectory(),
                            html=True), name="static")
 
-
+print("After app routers")
 # def item_get_handler(item_uuid: str):
 #     return handlers.item_get_handler(item_uuid)
 

@@ -1,6 +1,46 @@
+// import {
+//   Uppy,
+//   DragDrop,
+//   Dashboard,
+//   XHRUpload,
+//   // ScreenCapture,
+//   // Webcam,
+// } from "./uppy_4.13.2.min.mjs";
+
+import {
+  Uppy,
+  DragDrop,
+  Dashboard,
+  XHRUpload,
+  Webcam,
+  Tus,
+} from "https://releases.transloadit.com/uppy/v4.13.2/uppy.min.mjs";
+
 var editItemUUID = null;
 
 window.onload = () => {
+  console.log("Creating uppy :>> ");
+  const uppy = new Uppy({
+    debug: true,
+  }).use(Dashboard, {
+    target: "#uppy_file_upload_element",
+    inline: true,
+  });
+  // uppy.use(DragDrop, {
+  //   target: "#uppy_file_upload_element",
+  //   inline: true,
+  //   // hideUploadButton: false,
+  //   // singleFileFullScreen: true,
+  //   // hideRetryButton: false,
+  // });
+  console.log("Uppy created :>> ", uppy);
+  uppy.use(XHRUpload, {
+    endpoint: "../upload_picture",
+    method: "POST",
+    fieldName: "file_uploaded",
+    bundle: true,
+  });
+
   document.getElementById("cancel_btn").addEventListener("click", () => {
     window.location.replace(window.location.origin);
   }); //document.getElementById("cancel_btn").addEventListener(
@@ -9,11 +49,13 @@ window.onload = () => {
     .getElementById("item_qr_code_generate_btn")
     .addEventListener("click", () => {
       console.log("generate code button pressed :>> ");
-      window.open(
-        window.location.origin +
-          "/generated_qr_code.html?itemUUID=" +
-          editItemUUID
-      );
+      uppy.upload();
+
+      // window.open(
+      //   window.location.origin +
+      //     "/generated_qr_code.html?itemUUID=" +
+      //     editItemUUID
+      // );
     });
 
   document.getElementById("item_delete_btn").addEventListener("click", () => {
@@ -98,7 +140,7 @@ window.onload = () => {
 };
 
 function populateFieldsWithItem(itemUUID) {
-  fetchURL = `${window.location.origin}/item/${itemUUID}`;
+  var fetchURL = `${window.location.origin}/item/${itemUUID}`;
   console.log("fetchURL :>> ");
   fetchJSON(
     fetchURL,

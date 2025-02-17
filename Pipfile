@@ -7,6 +7,7 @@ name = "pypi"
 fastapi = {extras = ["standard"], version = "*"}
 sqlmodel = "*"
 qrcode = {extras = ["pil"], version = "*"}
+python-multipart = "*"
 
 [dev-packages]
 
