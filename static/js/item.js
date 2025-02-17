@@ -64,7 +64,7 @@ window.onload = () => {
   document.getElementById("item_delete_btn").addEventListener("click", () => {
     console.log("Delete button pressed :>> ");
     console.log("editItemUUID :>> ", editItemUUID);
-    fetchURL = `${window.location.origin}/item/${editItemUUID}`;
+    var fetchURL = `${window.location.origin}/item/${editItemUUID}`;
     console.log("fetchURL :>> ", fetchURL);
     fetchJSON(
       fetchURL,
@@ -105,42 +105,10 @@ window.onload = () => {
   document
     .getElementById("new_item_submit_btn")
     .addEventListener("click", () => {
-      console.log("Butt pressed :>> ");
-      new_item_request = {
-        name: document.getElementById("item_name_input").value,
-        description: document.getElementById("item_description_textarea").value,
-        container_uuid: null,
-      };
-
-      selected_tags = $("#tags_select2_selector").select2("data");
-      console.log("selected_tags :>> ", selected_tags);
-
-      console.log("new_item_request :>> ", new_item_request);
-
-      fetchURL = `${window.location.origin}/item/`;
-      console.log("fetchURL :>> ", fetchURL);
-      fetchJSON(
-        fetchURL,
-        {
-          method: "POST",
-          body: JSON.stringify(new_item_request),
-          headers: {
-            "Content-type": "application/json; charset=UTF-8",
-          },
-        },
-        (jsonObj) => {
-          console.log("Have responce :>> ", jsonObj);
-          if ((jsonObj.status = "success")) {
-            window.location.replace(
-              window.location.toLocaleString() +
-                "?itemUUID=" +
-                jsonObj.item.uuid
-            );
-          }
-        }
-      );
-    });
-};
+      console.log("Submit Butt pressed :>> ");
+      send_data(null);
+    }); //addEventListener("click", () => {
+}; //window.onload = () => {
 
 function populateFieldsWithItem(itemUUID) {
   var fetchURL = `${window.location.origin}/item/${itemUUID}`;

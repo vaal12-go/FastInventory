@@ -4,7 +4,7 @@ import uuid
 from sqlmodel import Session, select, text
 
 import db
-from models.item import Item
+from models.item import Item, ItemCreate
 from models.tag import Tag
 
 from sqlalchemy.orm import joinedload
@@ -19,13 +19,35 @@ from typing import Annotated
 
 import logging
 
-logger = logging.getLogger("myapp.logger")
+
+import traceback
 
 logging.basicConfig(
     filename='c:\\Users\\may13\\Desktop\\logs\\myapp.log', level=logging.INFO)
-logger.info('Started')
 
-logger.info('Finished')
+api_logger = logging.getLogger("api server")
+# api_logger = logging.getLogger("uvicorn")
+
+api_logger.setLevel(logging.DEBUG)
+
+command_line_handler = logging.StreamHandler()
+
+command_line_handler.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(levelname)s- api - %(asctime)s - %(message)s')
+
+command_line_handler.setFormatter(formatter)
+
+api_logger.addHandler(command_line_handler)
+
+print("Set loggeer")
+api_logger.info("Logger is working")
+
+# logger = logging.getLogger("uvicorn")
+
+# # # logging.basicConfig(
+# # #     filename='c:\\Users\\may13\\Desktop\\logs\\myapp.log', level=logging.INFO)
+# logger.info('Started ************************************')
 
 
 @app.post("/upload_picture")
@@ -51,41 +73,72 @@ async def upload_picture_handler(file_uploaded: UploadFile):
 
 @app.get("/upload_picture")
 def up_test():
-    logger.info('have picture upload2')
+    api_logger.info("Logger is working")
+    # logger.info('have picture upload2')
     print("Have get handler working")
     return {
         "error": "Not implemented3"
     }
 
 
+@app.patch("/item/{item_uuid}")
+async def patch_item_handler(item_uuid: uuid.UUID, item_changed: Item):
+    logger.info(f"patch request for item:{item_uuid}")
+    logger.info(f"Patched item:{item_changed}")
+    session = Session(db.db_engine)
+    item_to_patch = session.get(Item, item_uuid)
+
+    # item_to_patch.name = session.commit()
+    return {
+        "error": "not implemented"
+    }
+
+
 @app.delete("/item/{item_uuid}")
 async def delete_item_handler(item_uuid: uuid.UUID):
-    print(f"request to delete item {item_uuid} received")
-    session = Session(db.db_engine)
-    item_to_delete = session.get(Item, item_uuid)
-    session.delete(item_to_delete)
-    session.commit()
-    return {
-        "status": "success"
-    }
+    try:
+        api_logger.info(f"request to delete item {item_uuid} received")
+        session = Session(db.db_engine)
+        item_to_delete = session.get(Item, item_uuid)
+        session.delete(item_to_delete)
+        session.commit()
+        return {
+            "status": "success",
+        }
+    except Exception as e:
+        api_logger.error(f"Error in @app.delete(itemitem_uuid): {e}")
+        api_logger.error(traceback.format_exc())
 
 
 @app.post("/item/")
-async def new_item_handler(newItem: Item):
-    print(f"Have item:{newItem}")
-    newUUID = newItem.uuid
-    session = Session(db.db_engine)
-    session.add(newItem)
-    session.commit()
-    print(f"Item after saving:{newItem}")
-    createdItem = session.exec(
-        select(Item).where(Item.uuid == newUUID)
-    ).first()
-    print(f"createdItem:{createdItem}")
-    return {
-        "status": "success",
-        "item": createdItem
-    }
+async def new_item_handler(newItem: ItemCreate):
+    try:
+        api_logger.info(f"Have item:{newItem}")
+        # newUUID = newItem.uuid
+        session = Session(db.db_engine)
+        sqlItem = Item()
+        sqlItem = Item.model_validate(
+            newItem
+        )
+        # sqlItem.model_copy(
+        #     newItem
+        # )
+        api_logger.info(f"SQItem after construct:{sqlItem}")
+        newUUID = sqlItem.uuid
+        session.add(sqlItem)
+        session.commit()
+        api_logger.info(f"Item after saving:{sqlItem}")
+        createdItem = session.exec(
+            select(Item).where(Item.uuid == newUUID)
+        ).first()
+        api_logger.info(f"createdItem:{createdItem}")
+        return {
+            "status": "success",
+            "item": createdItem
+        }
+    except Exception as e:
+        api_logger.error(f"Error in @app.post(item): {e}")
+        api_logger.error(traceback.format_exc())
 
 
 class ItemOut(BaseModel):

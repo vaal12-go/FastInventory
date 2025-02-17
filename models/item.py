@@ -8,12 +8,23 @@ from pydantic import computed_field
 # Great many to many ORM\SQLmodel explanation
 # https://stackoverflow.com/questions/74273829/how-to-correctly-use-joins-with-sqlmodel
 
+from pydantic import BaseModel
 
-class Item(SQLModel, table=True):
-    uuid: uuid_lib.UUID = Field(
-        default_factory=uuid_lib.uuid4, primary_key=True)
+
+class ItemBase(SQLModel):
     name: str
     description: str = ""
+
+
+class ItemCreate(ItemBase):
+    pass
+
+
+class Item(ItemBase, table=True):
+    uuid: uuid_lib.UUID = Field(
+        default_factory=uuid_lib.uuid4, primary_key=True)
+    # name: str
+    # description: str = ""
 
     container_uuid: uuid_lib.UUID | None = Field(
         default=None, foreign_key="item.uuid")

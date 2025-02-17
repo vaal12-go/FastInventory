@@ -22,6 +22,8 @@ from app import app
 import qr_code_handler
 import handlers
 
+import logging
+
 print("before app routers")
 
 # This route should be defined after all the rest in other case it will shadow other routes
@@ -29,9 +31,11 @@ app.mount("/", StaticFiles(directory=helpers.getHttpClientDirectory(),
                            html=True), name="static")
 
 print("After app routers")
+
+
 # def item_get_handler(item_uuid: str):
 #     return handlers.item_get_handler(item_uuid)
 
 
 # To run :
-#   pipenv run fastapi dev --host 127.0.0.1 --port 8080 main.py
+#   pipenv run fastapi dev --host 127.0.0.1 --port 8080 --log-level debug main.py
