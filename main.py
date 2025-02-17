@@ -17,7 +17,15 @@ from typing import List
 # from handlers import item_get_handler, new_item_handler
 
 from app import app
+import qr_code_handler
 import handlers
+
+
+from fastapi.staticfiles import StaticFiles
+import helpers
+# This route should be defined after all the rest in other case it will shadow other routes
+app.mount("/", StaticFiles(directory=helpers.getHttpClientDirectory(),
+                           html=True), name="static")
 
 
 # def item_get_handler(item_uuid: str):

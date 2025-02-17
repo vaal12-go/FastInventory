@@ -85,6 +85,9 @@
         </div>
       </div>
       <div class="row">
+        <div class="col text-end"></div>
+      </div>
+      <div class="row">
         <div class="p-1">
           <button
             id="new_item_submit_btn"
@@ -93,13 +96,18 @@
           >
             Save
           </button>
-          <button
-            id="item_delete_btn"
-            type="button"
-            class="btn btn-danger invisible"
-          >
-            Delete item
-          </button>
+          <span id="created_item_buttons" class="invisible">
+            <button id="item_delete_btn" type="button" class="btn btn-danger">
+              Delete item
+            </button>
+            <button
+              id="item_qr_code_generate_btn"
+              type="button"
+              class="btn btn-secondary"
+            >
+              Generate QR-code
+            </button>
+          </span>
           <button id="cancel_btn" type="button" class="btn btn-info">
             Cancel
           </button>

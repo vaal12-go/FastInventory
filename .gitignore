@@ -2,3 +2,8 @@ __pycache__/*.pyc
 database.sqlite3
 Pipfile.lock
 *.png
+font/info.txt
+font/license.txt
+font/Nasa21-l23X.ttf
+font/NovaMono.ttf
+font/OxygenMono-Regular.ttf

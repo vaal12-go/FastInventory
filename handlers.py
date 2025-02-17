@@ -140,8 +140,3 @@ def item_get_handler(item_uuid: str):
         "item_uuid": item_uuid,
         "item_uuid_type": str(type(item_uuid))
     }
-
-
-# This route should be defined after all the rest in other case it will shadow other routes
-app.mount("/", StaticFiles(directory=helpers.getHttpClientDirectory(),
-                           html=True), name="static")

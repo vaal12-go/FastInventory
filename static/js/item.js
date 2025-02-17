@@ -5,6 +5,17 @@ window.onload = () => {
     window.location.replace(window.location.origin);
   }); //document.getElementById("cancel_btn").addEventListener(
 
+  document
+    .getElementById("item_qr_code_generate_btn")
+    .addEventListener("click", () => {
+      console.log("generate code button pressed :>> ");
+      window.open(
+        window.location.origin +
+          "/generated_qr_code.html?itemUUID=" +
+          editItemUUID
+      );
+    });
+
   document.getElementById("item_delete_btn").addEventListener("click", () => {
     console.log("Delete button pressed :>> ");
     console.log("editItemUUID :>> ", editItemUUID);
@@ -37,7 +48,7 @@ window.onload = () => {
   } else {
     console.log("Editing item :>> ");
     document.getElementById("item_uuid").innerHTML = editItemUUID;
-    swapClassesOnElement("item_delete_btn", "invisible", null);
+    swapClassesOnElement("created_item_buttons", "invisible", null);
     document.getElementById("form_title").innerHTML = "Edit item";
     populateFieldsWithItem(editItemUUID);
   }
