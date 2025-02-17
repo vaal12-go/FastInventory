@@ -19,8 +19,11 @@ from typing import List
 # from handlers import item_get_handler, new_item_handler
 
 from app import app
+
 import qr_code_handler
+import item_handlers
 import handlers
+
 
 import logging
 
@@ -38,4 +41,4 @@ print("After app routers")
 
 
 # To run :
-#   pipenv run fastapi dev --host 127.0.0.1 --port 8080 --log-level debug main.py
+#   pipenv run fastapi dev --host 127.0.0.1 --port 8080 main.py

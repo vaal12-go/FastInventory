@@ -22,49 +22,22 @@ import logging
 
 import traceback
 
-logging.basicConfig(
-    filename='c:\\Users\\may13\\Desktop\\logs\\myapp.log', level=logging.INFO)
-
-api_logger = logging.getLogger("api server")
-# api_logger = logging.getLogger("uvicorn")
-
-api_logger.setLevel(logging.DEBUG)
-
-command_line_handler = logging.StreamHandler()
-
-command_line_handler.setLevel(logging.DEBUG)
-
-formatter = logging.Formatter('%(levelname)s- api - %(asctime)s - %(message)s')
-
-command_line_handler.setFormatter(formatter)
-
-api_logger.addHandler(command_line_handler)
-
-print("Set loggeer")
-api_logger.info("Logger is working")
-
-# logger = logging.getLogger("uvicorn")
-
-# # # logging.basicConfig(
-# # #     filename='c:\\Users\\may13\\Desktop\\logs\\myapp.log', level=logging.INFO)
-# logger.info('Started ************************************')
-
 
 @app.post("/upload_picture")
 # async def upload_picture_handler(file_uploaded: Annotated[bytes, File()]):
 async def upload_picture_handler(file_uploaded: UploadFile):
-    logger.info('have picture upload')
+    print('have picture upload')
     try:
         print("have picture upload")
         # print(f"file len:{len(file)}")
         # print(f"filename {file.filename}")
-        logger.info(f'have picture upload:{type(file_uploaded)}')
-        logger.info(f'have picture upload:{file_uploaded.filename}')
+        print(f'have picture upload:{type(file_uploaded)}')
+        print(f'have picture upload:{file_uploaded.filename}')
         fUploadedSave = open(f"uploaded.{file_uploaded.filename}", "wb")
         fUploadedSave.write(file_uploaded.file.read())
         fUploadedSave.close()
     except Exception as e:
-        logger.info(f"Have exception:{e}")
+        print(f"Have exception:{e}")
         print(f"Have exception:{e}")
     return {
         "error": "Not implemented4"
@@ -73,7 +46,7 @@ async def upload_picture_handler(file_uploaded: UploadFile):
 
 @app.get("/upload_picture")
 def up_test():
-    api_logger.info("Logger is working")
+    print("Logger is working")
     # logger.info('have picture upload2')
     print("Have get handler working")
     return {
@@ -83,8 +56,8 @@ def up_test():
 
 @app.patch("/item/{item_uuid}")
 async def patch_item_handler(item_uuid: uuid.UUID, item_changed: Item):
-    logger.info(f"patch request for item:{item_uuid}")
-    logger.info(f"Patched item:{item_changed}")
+    print(f"patch request for item:{item_uuid}")
+    print(f"Patched item:{item_changed}")
     session = Session(db.db_engine)
     item_to_patch = session.get(Item, item_uuid)
 
@@ -97,7 +70,7 @@ async def patch_item_handler(item_uuid: uuid.UUID, item_changed: Item):
 @app.delete("/item/{item_uuid}")
 async def delete_item_handler(item_uuid: uuid.UUID):
     try:
-        api_logger.info(f"request to delete item {item_uuid} received")
+        print(f"request to delete item {item_uuid} received")
         session = Session(db.db_engine)
         item_to_delete = session.get(Item, item_uuid)
         session.delete(item_to_delete)
@@ -106,8 +79,8 @@ async def delete_item_handler(item_uuid: uuid.UUID):
             "status": "success",
         }
     except Exception as e:
-        api_logger.error(f"Error in @app.delete(itemitem_uuid): {e}")
-        api_logger.error(traceback.format_exc())
+        print(f"Error in @app.delete(itemitem_uuid): {e}")
+        print(traceback.format_exc())
 
 
 @app.post("/item/")
@@ -123,22 +96,22 @@ async def new_item_handler(newItem: ItemCreate):
         # sqlItem.model_copy(
         #     newItem
         # )
-        api_logger.info(f"SQItem after construct:{sqlItem}")
+        print(f"SQItem after construct:{sqlItem}")
         newUUID = sqlItem.uuid
         session.add(sqlItem)
         session.commit()
-        api_logger.info(f"Item after saving:{sqlItem}")
+        print(f"Item after saving:{sqlItem}")
         createdItem = session.exec(
             select(Item).where(Item.uuid == newUUID)
         ).first()
-        api_logger.info(f"createdItem:{createdItem}")
+        print(f"createdItem:{createdItem}")
         return {
             "status": "success",
             "item": createdItem
         }
     except Exception as e:
-        api_logger.error(f"Error in @app.post(item): {e}")
-        api_logger.error(traceback.format_exc())
+        print(f"Error in @app.post(item): {e}")
+        print(traceback.format_exc())
 
 
 class ItemOut(BaseModel):
@@ -158,80 +131,3 @@ class ItemOutList(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-# class ItemWithTags(Item):
-#     @computed_field
-#     @property
-#     def slug(self) -> Any:
-#         return self.tags
-
-@app.get("/item/{item_uuid}")
-def item_get_handler(item_uuid: str):
-    session = Session(db.db_engine)
-    print(f"Have itemUUID:{item_uuid}")
-    requested_uuid = None
-    try:
-        requested_uuid = uuid.UUID(item_uuid)
-    except:
-        print(f"item_uuid:{item_uuid} supplied is not valid uuid")
-    if requested_uuid is not None:
-        print("Will return single item")
-        ret = session.get(Item, requested_uuid)
-        return ret
-    else:
-        if item_uuid == "all":
-            print("Will return all items")
-
-            # item1 = session.get(Item, uuid.UUID(
-            #     "55a25add-be08-49c2-b98b-ad4c6d14315b"))
-
-            # return item1
-
-            # print(f"item1:{item1}")
-
-            all_items = session.exec(
-                select(Item)
-            ).all()
-
-            outList = ItemOutList.parse_obj({"lst": all_items})
-            # print(f"outList:{outList}")
-
-            # print(f"all_items:{all_items}")
-            # print(f"all_items:{list(all_items)}")
-
-            ret_itms = []
-            for itm in all_items:
-                pass
-                # print(f"itm supplied:{itm}")
-                # print(f"itm.tags:{itm.tags}")
-                # print(f"itm.model_dump():{itm.model_dump()}")
-
-                # itm_out2 = ItemOut.from_orm(itm)
-                # print(f"itm_out2:{itm_out2}")
-
-                # # itm_out = ItemOut.model_validate(
-                # #     itm.model_dump(), from_attributes=True)
-                # # itm_out = itm.model_copy(update={"tags": itm.tags})
-                # itm_out = ItemOut.model_validate(itm.model_dump())
-                # print(f"itm_out before tags:{itm_out}")
-                # itm_out.tags = itm.tags
-                # # print(f"itm_out:{itm_out}")
-                # ret_itms.append(itm_out)
-                # # itm_tags = session.exec(
-                # #     select(Tag, ItemTagLink).join(ItemTagLink.tag_uuid).where(ItemTagLink.itemuud == itm.uuid)
-                # # ).all
-                # # for tag in itm_tags:
-
-                # print(f"all_items:{all_items}")
-                # itms_list = []
-                # for itm in all_items:
-                #     print(f"itm:{itm}")
-                #     print(f"itm tags:{itm.tags}")
-                #     itms_list.append(itm)
-            return outList.lst
-
-    return {
-        "item_uuid": item_uuid,
-        "item_uuid_type": str(type(item_uuid))
-    }
