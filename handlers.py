@@ -93,6 +93,7 @@ async def patch_item_handler(item_uuid: uuid.UUID, item_changed: ItemCreate):
 
 @app.delete("/item/{item_uuid}")
 async def delete_item_handler(item_uuid: uuid.UUID):
+    # TODO: when item-container is deleted set container in items which has it to null
     try:
         print(f"request to delete item {item_uuid} received")
         session = Session(db.db_engine)

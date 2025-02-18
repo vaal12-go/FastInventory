@@ -1,3 +1,5 @@
+# This is a link table for Item and Tag model
+
 from sqlmodel import Field, SQLModel, Relationship, Session, SQLModel
 import uuid as uuid_lib
 

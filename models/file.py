@@ -1,3 +1,6 @@
+# This is an example model which can be used to store files.
+# This will be used to store pictures and other files in sqlite database
+
 from sqlmodel import Field, SQLModel, LargeBinary, Column
 import uuid as uuid_lib
 
