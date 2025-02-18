@@ -6,11 +6,27 @@ function collect_item_data() {
   console.log("container_selected value :>> ", container_selected.value);
   cont_uuid = container_selected.value == -1 ? null : container_selected.value;
 
+  tgUUIDs = [];
+  selectData = $("#tags_select2_selector").select2("data");
+  console.log("selectData :>> ", selectData);
+  for (tagIdx in selectData) {
+    tag = selectData[tagIdx];
+    console.log("tag :>> ", tag);
+    newTagToSend = {
+      tag: tag.text,
+      uuid: tag.id,
+    };
+    tgUUIDs.push(newTagToSend);
+  }
+
+  console.log("tgUUIDs :>> ", tgUUIDs);
+
   new_item_request = {
     // uuid: item_uuid,
     name: document.getElementById("item_name_input").value,
     description: document.getElementById("item_description_textarea").value,
     container_uuid: cont_uuid,
+    tags_uuids: tgUUIDs,
   };
   console.log("new_item_request :>> ", new_item_request);
   return new_item_request;
@@ -37,9 +53,9 @@ function send_data(item_uuid) {
       (jsonObj) => {
         console.log("Have responce :>> ", jsonObj);
         if ((jsonObj.status = "success")) {
-          window.location.replace(
-            window.location.toLocaleString() + "?itemUUID=" + jsonObj.item.uuid
-          );
+          // window.location.replace(
+          //   window.location.toLocaleString() + "?itemUUID=" + jsonObj.item.uuid
+          // );
         }
       }
     );

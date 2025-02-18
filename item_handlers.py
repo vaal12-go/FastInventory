@@ -72,7 +72,9 @@ def item_get_handler(item_uuid: str):
     if requested_uuid is not None:
         print("Will return single item")
         ret = session.get(Item, requested_uuid)
-        return ret
+        itmOut = ItemOut.parse_obj(ret)
+        print('item_handlers.py: itmOut=', itmOut)
+        return itmOut
     else:
         if item_uuid == "all":
             print("Will return all items")

@@ -3,7 +3,8 @@ import uuid as uuid_lib
 
 from models.item_tag_link import ItemTagLink
 
-from pydantic import computed_field
+from pydantic import BaseModel, computed_field
+from typing import List
 
 # Great many to many ORM\SQLmodel explanation
 # https://stackoverflow.com/questions/74273829/how-to-correctly-use-joins-with-sqlmodel
@@ -16,7 +17,13 @@ class ItemBase(SQLModel):
         default=None, foreign_key="item.uuid")
 
 
+class TagRec(BaseModel):
+    tag: str
+    uuid: str
+
+
 class ItemCreate(ItemBase):
+    tags_uuids: List[TagRec] = []
     pass
 
 

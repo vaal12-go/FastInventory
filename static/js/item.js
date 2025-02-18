@@ -17,6 +17,7 @@ import {
 } from "https://releases.transloadit.com/uppy/v4.13.2/uppy.min.mjs";
 
 var editItemUUID = null;
+var serverItemJsonToEdit = null;
 
 window.onload = () => {
   console.log("Creating uppy :>> ");
@@ -90,10 +91,6 @@ window.onload = () => {
     document.getElementById("form_title").innerHTML = "Edit item";
     populateFieldsWithItem(editItemUUID);
   }
-
-  $("#tags_select2_selector").select2({
-    tags: true,
-  });
 
   document
     .getElementById("new_item_submit_btn")

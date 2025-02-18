@@ -4,7 +4,7 @@ import uuid
 from sqlmodel import Session, select, text
 
 import db
-from models.item import Item, ItemCreate
+from models.item import Item, ItemCreate, TagRec
 from models.tag import Tag
 
 from sqlalchemy.orm import joinedload
@@ -20,6 +20,19 @@ import logging
 
 
 import traceback
+
+
+@app.get("/tag")
+async def tag_list_handler():
+    session = Session(db.db_engine)
+    ret = session.exec(
+        select(Tag)
+    ).all()
+    print('handlers.py: ret=', ret)
+    return {
+        "status": "success",
+        "tags": ret
+    }
 
 
 @app.post("/upload_picture")
@@ -92,30 +105,40 @@ async def delete_item_handler(item_uuid: uuid.UUID):
 
 @app.post("/item/")
 async def new_item_handler(newItem: ItemCreate):
-    try:
-        print(f"Have item:{newItem}")
-        # newUUID = newItem.uuid
-        session = Session(db.db_engine)
-        sqlItem = Item()
-        sqlItem = Item.model_validate(
-            newItem
-        )
-        # sqlItem.model_copy(
-        #     newItem
-        # )
-        print(f"SQItem after construct:{sqlItem}")
-        newUUID = sqlItem.uuid
-        session.add(sqlItem)
-        session.commit()
-        print(f"Item after saving:{sqlItem}")
-        createdItem = session.exec(
-            select(Item).where(Item.uuid == newUUID)
-        ).first()
-        print(f"createdItem:{createdItem}")
-        return {
-            "status": "success",
-            "item": createdItem
-        }
-    except Exception as e:
-        print(f"Error in @app.post(item): {e}")
-        print(traceback.format_exc())
+    print(f"Have item:{newItem}")
+    session = Session(db.db_engine)
+    sqlItem = Item()
+    sqlItem = Item.model_validate(
+        newItem
+    )
+    print(f"SQItem after construct:{sqlItem}")
+    newUUID = sqlItem.uuid
+    session.add(sqlItem)
+    session.commit()
+    print(f"Item after saving:{sqlItem}")
+    createdItem = session.exec(
+        select(Item).where(Item.uuid == newUUID)
+    ).first()
+    print(f"createdItem:{createdItem}")
+
+    for tg in newItem.tags_uuids:
+        print('handlers.py: tg=', tg)
+        sql_tg = None
+        if tg.tag == tg.uuid:
+            print('handlers.py: "This is new tag=')
+            sql_tg = Tag(tag=tg.tag, description="NA (automatically created)")
+            session.add(sql_tg)
+            session.commit()
+        else:
+            print('handlers.py: "This is old tag will add"=')
+            sql_tg = session.get(Tag, uuid.UUID(tg.uuid))
+        print('handlers.py: sql_tg=', sql_tg)
+        sqlItem.tags.append(sql_tg)
+
+    session.add(sqlItem)
+    session.commit()
+
+    return {
+        "status": "success",
+        "item": createdItem
+    }
