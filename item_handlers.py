@@ -40,19 +40,13 @@ async def containers_list_handler():
     print(f"containerTagUUID:{containerTagUUID}")
     print('item_handlers.py: containerTagUUID=', containerTagUUID)
     print('item_handlers.py: type(containerTagUUID)=', type(containerTagUUID))
-    # stmt = select(Item).\
-    #     where(Tag.uuid == containerTagUUID). \
-    #     where(Tag.uuid == "itemtaglink.tag_uuid"). \
-    #     where(Item.uuid == "itemtaglink.item_uuid")
 
     stmt = select(Item). \
         join(Item.tags). \
         where(Tag.uuid == containerTagUUID)
     res = session.exec(stmt).all()
-    print('item_handlers.py: res=', res)
 
     outList = ItemOutList.parse_obj({"lst": res})
-    print('item_handlers.py: outList=', outList)
 
     return {
         "status": "success",

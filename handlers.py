@@ -14,7 +14,7 @@ from pydantic import BaseModel, computed_field
 
 from app import app
 import helpers
-from typing import Annotated
+from typing import Annotated, List
 
 import logging
 
@@ -67,18 +67,22 @@ def up_test():
 
 
 @app.patch("/item/{item_uuid}")
-async def patch_item_handler(item_uuid: uuid.UUID, item_changed: Item):
+async def patch_item_handler(item_uuid: uuid.UUID, item_changed: ItemCreate):
     print(f"patch request for item:{item_uuid}")
     print(f"Patched item:{item_changed}")
     session = Session(db.db_engine)
     item_to_patch = session.get(Item, item_uuid)
     item_to_patch.name = item_changed.name
     item_to_patch.description = item_changed.description
-    item_to_patch.container_uuid = uuid.UUID(item_changed.container_uuid)
+    item_to_patch.container_uuid = item_changed.container_uuid
     print('handlers.py: item_to_patch=', item_to_patch)
 
     session.add(item_to_patch)
     session.commit()
+
+    print('handlers:83 item_to_patch BEFORE SYNC:>>', item_to_patch)
+    synchronizeItemTags(session, item_to_patch, item_changed.tags_uuids)
+    print('handlers:83 item_to_patch AFTER SYNC:>>', item_to_patch)
 
     # item_to_patch.name = session.commit()
     return {
@@ -103,6 +107,32 @@ async def delete_item_handler(item_uuid: uuid.UUID):
         print(traceback.format_exc())
 
 
+def synchronizeItemTags(session, item: Item, tags: List[TagRec]):
+    print('handlers:107 item.tags before clear:>>', item.tags)
+    item.tags.clear()
+    session.add(item)
+    session.commit()
+    print('handlers:111 item.tags after clear:>>', item.tags)
+
+    for tg in tags:
+        print('handlers:112 tg:>>', tg)
+        sql_tg = None
+        if tg.tag == tg.uuid:
+            print('handlers.py: "This is new tag=')
+            sql_tg = Tag(tag=tg.tag, description="NA (automatically created)")
+            session.add(sql_tg)
+            session.commit()
+        else:
+            print('handlers.py: "This is old tag will add"=')
+            sql_tg = session.get(Tag, uuid.UUID(tg.uuid))
+        print('handlers.py: sql_tg=', sql_tg)
+        item.tags.append(sql_tg)
+
+    session.add(item)
+    session.commit()
+    print('handlers:129 item.tags after repopulate:>>', item.tags)
+
+
 @app.post("/item/")
 async def new_item_handler(newItem: ItemCreate):
     print(f"Have item:{newItem}")
@@ -121,22 +151,7 @@ async def new_item_handler(newItem: ItemCreate):
     ).first()
     print(f"createdItem:{createdItem}")
 
-    for tg in newItem.tags_uuids:
-        print('handlers.py: tg=', tg)
-        sql_tg = None
-        if tg.tag == tg.uuid:
-            print('handlers.py: "This is new tag=')
-            sql_tg = Tag(tag=tg.tag, description="NA (automatically created)")
-            session.add(sql_tg)
-            session.commit()
-        else:
-            print('handlers.py: "This is old tag will add"=')
-            sql_tg = session.get(Tag, uuid.UUID(tg.uuid))
-        print('handlers.py: sql_tg=', sql_tg)
-        sqlItem.tags.append(sql_tg)
-
-    session.add(sqlItem)
-    session.commit()
+    synchronizeItemTags(session, createdItem, newItem.tags_uuids)
 
     return {
         "status": "success",

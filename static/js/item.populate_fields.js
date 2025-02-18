@@ -1,6 +1,9 @@
 function populateTags() {
   console.log("Tag populate started :>> ");
-  console.log("serverItemJsonToEdit :>> ", serverItemJsonToEdit);
+  if (serverItemJsonToEdit != null) {
+    console.log("serverItemJsonToEdit :>> ", serverItemJsonToEdit);
+  }
+
   var fetchURL = `${window.location.origin}/tag`;
   console.log("fetchURL :>> ");
   fetchJSON(
@@ -16,12 +19,15 @@ function populateTags() {
       opt_array = [];
       for (tagIdx in jsonObj.tags) {
         tag = jsonObj.tags[tagIdx];
+        console.log("tag.uuid :>> ", tag.uuid);
 
         slctd = false;
-        for (tagIdx in serverItemJsonToEdit.tags) {
-          if (serverItemJsonToEdit.tags[tagIdx].uuid == tag.uuid) {
-            slctd = true;
-            break;
+        if (serverItemJsonToEdit != null) {
+          for (tagIdx in serverItemJsonToEdit.tags) {
+            if (serverItemJsonToEdit.tags[tagIdx].uuid == tag.uuid) {
+              slctd = true;
+              break;
+            }
           }
         }
 
@@ -98,12 +104,18 @@ function populateContainerSelect(selectedContainerUUID) {
           selected = true;
         }
         console.log("selected :>> ", selected);
-        addOptionToSelect(
-          "container_select",
-          container.name,
-          container.uuid,
-          selected
-        );
+        if (
+          serverItemJsonToEdit === null ||
+          serverItemJsonToEdit.uuid != container.uuid
+        ) {
+          //This is needed so this item cannot be selected as container of itself
+          addOptionToSelect(
+            "container_select",
+            container.name,
+            container.uuid,
+            selected
+          );
+        }
       }
       populateTags();
     } //(jsonObj) => {

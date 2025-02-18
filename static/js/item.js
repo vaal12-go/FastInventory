@@ -16,9 +16,6 @@ import {
   Tus,
 } from "https://releases.transloadit.com/uppy/v4.13.2/uppy.min.mjs";
 
-var editItemUUID = null;
-var serverItemJsonToEdit = null;
-
 window.onload = () => {
   console.log("Creating uppy :>> ");
   const uppy = new Uppy({

@@ -53,9 +53,9 @@ function send_data(item_uuid) {
       (jsonObj) => {
         console.log("Have responce :>> ", jsonObj);
         if ((jsonObj.status = "success")) {
-          // window.location.replace(
-          //   window.location.toLocaleString() + "?itemUUID=" + jsonObj.item.uuid
-          // );
+          window.location.replace(
+            window.location.toLocaleString() + "?itemUUID=" + jsonObj.item.uuid
+          );
         }
       }
     );
