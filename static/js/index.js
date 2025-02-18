@@ -1,19 +1,19 @@
 // Main interactivity file for index.html root page of the application
 
 itemListTemplate = `
-    <div>
-    {{uuid}} | {{name}} |
-    {{description}} | <br>
-    {{#container_uuid}}
-    Container:{{container_uuid}} | 
-    {{/container_uuid}}
-    {{#tags}}
-        >> {{tag}}
-    {{/tags}}
-
-    <a href="/item.html?itemUUID={{uuid}}">Edit<a>
-
-    <br>--------------------------------
+    <div class="row border">
+      <div class="row">
+        <h5>{{name}}</h5>
+        <a href="/item.html?itemUUID={{uuid}}">Edit</a>
+      </div>
+      <div class="row">
+        <div class="col-10">
+          {{uuid}} | | {{description}} | {{#container_uuid}}
+          Container:{{container_uuid}} | {{/container_uuid}} {{#tags}} >>
+          {{tag}} {{/tags}}
+        </div>
+        <div class="col-2"></div>
+      </div>
     </div>
 `;
 

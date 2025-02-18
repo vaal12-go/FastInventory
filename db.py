@@ -13,7 +13,7 @@ def init_db():
     sqlite_url = f"sqlite:///{sqlite_file_name}"
 
     global db_engine
+    # TODO: add dev/prod .env variable and make echo depend on those
     db_engine = create_engine(sqlite_url, echo=True)
-    print(f"db_engine in INIT:{db_engine}")
     SQLModel.metadata.create_all(db_engine)
     return db_engine
