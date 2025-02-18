@@ -1,23 +1,14 @@
-// import {
-//   Uppy,
-//   DragDrop,
-//   Dashboard,
-//   XHRUpload,
-//   // ScreenCapture,
-//   // Webcam,
-// } from "./uppy_4.13.2.min.mjs";
+// Main interactivity file for item.html (creation and editing of items)
 
 import {
   Uppy,
-  DragDrop,
   Dashboard,
   XHRUpload,
-  Webcam,
-  Tus,
-} from "https://releases.transloadit.com/uppy/v4.13.2/uppy.min.mjs";
+  Webcam, //To check if webcam module may be useful
+  // } from "https://releases.transloadit.com/uppy/v4.13.2/uppy.min.mjs";
+} from "./uppy_4.13.2.min.mjs";
 
 window.onload = () => {
-  console.log("Creating uppy :>> ");
   const uppy = new Uppy({
     debug: true,
   }).use(Dashboard, {
@@ -41,9 +32,6 @@ window.onload = () => {
   document
     .getElementById("item_qr_code_generate_btn")
     .addEventListener("click", () => {
-      console.log("generate code button pressed :>> ");
-      // uppy.upload();
-
       window.open(
         window.location.origin +
           "/generated_qr_code.html?itemUUID=" +
