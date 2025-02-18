@@ -29,7 +29,6 @@ window.onload = () => {
     hideUploadButton: true,
     hideRetryButton: true,
   });
-  console.log("Uppy created :>> ", uppy);
   uppy.use(XHRUpload, {
     endpoint: "../upload_picture",
     method: "POST",
@@ -100,6 +99,6 @@ window.onload = () => {
     .getElementById("new_item_submit_btn")
     .addEventListener("click", () => {
       console.log("Submit Butt pressed :>> ");
-      send_data(null);
+      send_data(editItemUUID);
     }); //addEventListener("click", () => {
 }; //window.onload = () => {

@@ -59,10 +59,18 @@ async def patch_item_handler(item_uuid: uuid.UUID, item_changed: Item):
     print(f"Patched item:{item_changed}")
     session = Session(db.db_engine)
     item_to_patch = session.get(Item, item_uuid)
+    item_to_patch.name = item_changed.name
+    item_to_patch.description = item_changed.description
+    item_to_patch.container_uuid = uuid.UUID(item_changed.container_uuid)
+    print('handlers.py: item_to_patch=', item_to_patch)
+
+    session.add(item_to_patch)
+    session.commit()
 
     # item_to_patch.name = session.commit()
     return {
-        "error": "not implemented"
+        "status": "success",
+        "item": item_to_patch
     }
 
 
