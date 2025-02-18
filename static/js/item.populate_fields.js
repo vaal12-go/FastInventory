@@ -14,7 +14,7 @@ function populateFieldsWithItem(itemUUID) {
       document.getElementById("item_name_input").value = jsonObj.name;
       document.getElementById("item_description_textarea").value =
         jsonObj.description;
-      populateContainerSelect(null);
+      populateContainerSelect(jsonObj.container_uuid);
     } //(jsonObj) => {
   ); //fetchJSON(
 } //function getItemByUUID(itemUUID) {
@@ -40,16 +40,19 @@ function populateContainerSelect(selectedContainerUUID) {
         -1,
         noContainerSelected
       );
+      console.log("selectedContainerUUID :>> ", selectedContainerUUID);
+
       for (contIdx in jsonObj.items) {
         container = jsonObj.items[contIdx];
         console.log("container :>> ", container);
         selected = false;
         if (
           selectedContainerUUID != null &&
-          selectedContainerUUID.container_uuid == container.uuid
+          selectedContainerUUID == container.uuid
         ) {
           selected = true;
         }
+        console.log("selected :>> ", selected);
         addOptionToSelect(
           "container_select",
           container.name,

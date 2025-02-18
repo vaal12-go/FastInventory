@@ -83,6 +83,7 @@ window.onload = () => {
   console.log("itemUUID :>> ", editItemUUID);
   if (editItemUUID === null) {
     console.log("It is null :>> Creating new item");
+    populateContainerSelect(null);
   } else {
     console.log("Editing item :>> ");
     document.getElementById("item_uuid").innerHTML = editItemUUID;

@@ -12,6 +12,8 @@ from pydantic import computed_field
 class ItemBase(SQLModel):
     name: str
     description: str = ""
+    container_uuid: uuid_lib.UUID | None = Field(
+        default=None, foreign_key="item.uuid")
 
 
 class ItemCreate(ItemBase):
@@ -23,9 +25,6 @@ class Item(ItemBase, table=True):
         default_factory=uuid_lib.uuid4, primary_key=True)
     # name: str
     # description: str = ""
-
-    container_uuid: uuid_lib.UUID | None = Field(
-        default=None, foreign_key="item.uuid")
 
     tags: list["Tag"] = Relationship(
         back_populates="items",

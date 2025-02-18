@@ -85,7 +85,7 @@ async def delete_item_handler(item_uuid: uuid.UUID):
 @app.post("/item/")
 async def new_item_handler(newItem: ItemCreate):
     try:
-        api_logger.info(f"Have item:{newItem}")
+        print(f"Have item:{newItem}")
         # newUUID = newItem.uuid
         session = Session(db.db_engine)
         sqlItem = Item()
