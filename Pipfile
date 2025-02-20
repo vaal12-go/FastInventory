@@ -8,6 +8,8 @@ fastapi = {extras = ["standard"], version = "*"}
 sqlmodel = "*"
 qrcode = {extras = ["pil"], version = "*"}
 python-multipart = "*"
+pyjwt = "*"
+passlib = {extras = ["bcrypt"], version = "*"}
 
 [dev-packages]
 

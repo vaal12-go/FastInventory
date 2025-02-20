@@ -1,6 +1,6 @@
 FROM python:3.13.2-alpine3.20@sha256:e885b40c1ed9f3134030e99a27bd61e98e376bf6d6709cccfb3c0aa6e856f56a
 
-LABEL version="0.0_18Feb2025"
+LABEL version="0.1_18Feb2025"
 LABEL description="Image for fastapi deployment"
 
 RUN /usr/local/bin/pip install --upgrade pip
@@ -17,3 +17,5 @@ VOLUME ["/deployment_temp"]
 
 # CMD ["sh"]
 CMD pipenv run fastapi run --port 8080 main.py
+
+# See notes.txt for building and running command lines

@@ -15,6 +15,7 @@ import helpers
 import qr_code_handler
 import item_handlers
 import handlers
+import user_handlers
 
 
 # This route should be defined after all the rest in other case it will shadow other routes
