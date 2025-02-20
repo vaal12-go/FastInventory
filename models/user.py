@@ -1,4 +1,22 @@
-from sqlmodel import SQLModel
+import datetime
+from passlib.context import CryptContext
+from sqlmodel import SQLModel, Field
+
+
+class Token(SQLModel, table=True):
+    # id field is only needed as sqlalchemy requires models/tables to have primary key
+    id: int = Field(primary_key=True)
+    access_token: str
+    token_type: str = "bearer"
+    user_name: str
+    created_date: datetime.datetime
+    expiration_date: datetime.datetime
+
+    def short_token(self):
+        return f"{self.access_token[:5]}...{self.access_token[-5:]}"
+
+    def __str__(self):
+        return f"models.user.Token id:{self.id} \n\ttoken:{self.short_token()}\n\texpiration:{self.expiration_date}"
 
 
 class User(SQLModel, table=True):
@@ -9,8 +27,13 @@ class User(SQLModel, table=True):
     admin: bool = False
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+# pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["bcrypt"])
 
 
 def get_password_hash(password):
     return pwd_context.hash(password)
+
+
+def verify_password(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
