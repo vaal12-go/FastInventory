@@ -2,6 +2,8 @@ import datetime
 from passlib.context import CryptContext
 from sqlmodel import SQLModel, Field
 
+# token does not need to be saved in DB. This class is only needed for "access_token" and "token_type" fields which will be returned to the client
+
 
 class Token(SQLModel, table=True):
     # id field is only needed as sqlalchemy requires models/tables to have primary key
