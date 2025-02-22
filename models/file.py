@@ -1,7 +1,7 @@
 # This is an example model which can be used to store files.
 # This will be used to store pictures and other files in sqlite database
 
-from sqlmodel import Field, SQLModel, LargeBinary, Column
+from sqlmodel import Field, SQLModel, LargeBinary, Column, Relationship
 import uuid as uuid_lib
 
 from models.item import Item
@@ -21,3 +21,5 @@ class SQLiteFile(SQLModel, table=True):
 
     item_uuid: uuid_lib.UUID | None = Field(
         default=None, foreign_key="item.uuid")
+
+    item: Item | None = Relationship(back_populates="files")

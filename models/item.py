@@ -37,3 +37,5 @@ class Item(ItemBase, table=True):
     tags: list["Tag"] = Relationship(
         back_populates="items",
         link_model=ItemTagLink)
+
+    files: list["SQLiteFile"] = Relationship(back_populates="item")

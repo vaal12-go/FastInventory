@@ -66,19 +66,13 @@ def item_get_handler(item_uuid: str):
     if requested_uuid is not None:
         print("Will return single item")
         ret = session.get(Item, requested_uuid)
+        print('\n\nitem_handlers:69 ret.files:>>', ret.files)
         itmOut = ItemOut.parse_obj(ret)
         print('item_handlers.py: itmOut=', itmOut)
         return itmOut
     else:
         if item_uuid == "all":
             print("Will return all items")
-
-            # item1 = session.get(Item, uuid.UUID(
-            #     "55a25add-be08-49c2-b98b-ad4c6d14315b"))
-
-            # return item1
-
-            # print(f"item1:{item1}")
 
             all_items = session.exec(
                 select(Item)
