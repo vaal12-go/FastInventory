@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from app import app
 from models.tag import Tag
 from models.item import Item, ItemCreate, TagRec
+
 import db
 
 
@@ -31,7 +32,6 @@ class ItemOutList(BaseModel):
 
 @app.get("/item/containers")
 async def containers_list_handler():
-    print("print at last")
     session = Session(db.db_engine)
     container_tag = session.exec(
         select(Tag).where(Tag.tag == "container")
@@ -66,9 +66,9 @@ def item_get_handler(item_uuid: str):
     if requested_uuid is not None:
         print("Will return single item")
         ret = session.get(Item, requested_uuid)
-        print('\n\nitem_handlers:69 ret.files:>>', ret.files)
+        print('item_handlers:69 ret.files:>>', ret.files)
         itmOut = ItemOut.parse_obj(ret)
-        print('item_handlers.py: itmOut=', itmOut)
+        print('\n\nitem_handlers.py: itmOut=', itmOut)
         return itmOut
     else:
         if item_uuid == "all":

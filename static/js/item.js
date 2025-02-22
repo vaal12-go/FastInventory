@@ -82,7 +82,7 @@ async function initUppy() {
     hideRetryButton: true,
   });
   uppy.use(XHRUpload, {
-    endpoint: "../upload_picture",
+    endpoint: "../upload_item_file",
     method: "POST",
     fieldName: "file_uploaded",
     // bundle: true,
@@ -106,6 +106,8 @@ async function initUppy() {
               console.error(file.error);
             });
           }
+          var file_created = result.successful[0].response.body;
+          console.log("file_created :>> ", file_created);
         });
       }
     });

@@ -2,13 +2,13 @@ import logging
 import traceback
 import uuid
 
-from fastapi import File, UploadFile, Form
+from fastapi import File, UploadFile, Form, Response
 from sqlmodel import Session, select, text
 
 import db
 from models.item import Item, ItemCreate, TagRec
 from models.tag import Tag
-from models.file import SQLiteFile
+from models.file import SQLiteFile, SQLiteFileContent
 
 from sqlalchemy.orm import joinedload
 
@@ -32,10 +32,31 @@ async def tag_list_handler():
         "tags": ret
     }
 
-# This handler is not fully functional
+
+@app.get("/item_file/{file_uuid}")
+async def get_file_handler(file_uuid: uuid.UUID):
+    # print("Hello")
+    # print('handlers:38 file_uuid:>>', file_uuid)
+    session = Session(db.db_engine)
+    fContent = session.exec(
+        select(SQLiteFileContent).where(SQLiteFileContent.uuid == file_uuid)
+    ).first()
+
+    # print('handlers:44 fContent:>>', fContent)
+    # for f in fContent:
+    #     print('handlers:47 f:>>', f)
+    # fContent = session.get(SQLiteFileContent, file_uuid)
+    # return fContent.content_bytes
+    # buffer = io.BytesIO()
+    # StreamingResponse(
+    #     buffer,
+    #     media_type="image/png",
+    #     # headers={"metadata": json.dumps(metadata)}
+    # )
+    return Response(content=fContent.content_bytes)
 
 
-@app.post("/upload_picture")
+@app.post("/upload_item_file")
 async def upload_picture_handler(
         file_uploaded: Annotated[UploadFile, File()],
         uuid_str: Annotated[str, Form()]):
@@ -51,12 +72,30 @@ async def upload_picture_handler(
     sqlFile = SQLiteFile(
         name=file_uploaded.filename,
         description=f"Description of file {file_uploaded.filename}",
-        item_uuid=uuid.UUID(uuid_str),
-        content_bytes=f_content
+        item_uuid=uuid.UUID(uuid_str)
     )
+    print('handlers:56 sqlFile:>>', sqlFile)
+    f_uuid = sqlFile.uuid
     session.add(sqlFile)
     session.commit()
 
+    sqlFile = session.get(SQLiteFile, f_uuid)
+    print('handlers:59 sqlFile:>>', type(sqlFile))
+    print('handlers:59 sqlFile:>>', sqlFile.uuid)
+    content = SQLiteFileContent(
+        uuid=sqlFile.uuid,
+        content_bytes=f_content
+    )
+    session.add(content)
+    session.commit()
+
+    # for some reason (session overload with blob?) sqlFile does not work neither in print nor in return.
+    # Have to reload variable from DB
+    sqlFile = session.get(SQLiteFile, f_uuid)
+
     return {
-        "error": "Not implemented4"
+        "status": "success",
+        "file_created": sqlFile
     }
+    # print('handlers:71 sqlFile:>>', sqlFile)
+    # return sqlFile

@@ -17,9 +17,15 @@ class SQLiteFile(SQLModel, table=True):
         default_factory=uuid_lib.uuid4, primary_key=True)
     name: str = "SAMPLE_FILE_NAME"
     description: str = ""
-    content_bytes: bytes = Field(sa_column=Column(LargeBinary))
 
     item_uuid: uuid_lib.UUID | None = Field(
         default=None, foreign_key="item.uuid")
 
     item: Item | None = Relationship(back_populates="files")
+
+
+# In order to prevent file content appearing in queries by ORM (which retrieves all fields, esp. for connected modesl). Separate table just with file content (tied by SQLiteFile uuid to it's file) will be created. Table will not be connected to SQLiteFile, so all inserts/retrievals will be done by hand by backend.
+class SQLiteFileContent(SQLModel, table=True):
+    id: int = Field(primary_key=True)
+    uuid: uuid_lib.UUID  # This will be the uuid of SQLiteFile, to which this content belongs to
+    content_bytes: bytes = Field(sa_column=Column(LargeBinary))
