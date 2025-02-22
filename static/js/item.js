@@ -8,22 +8,11 @@ import {
   // } from "https://releases.transloadit.com/uppy/v4.13.2/uppy.min.mjs";
 } from "./uppy_4.13.2.min.mjs";
 
-window.onload = () => {
-  const uppy = new Uppy({
-    debug: true,
-  }).use(Dashboard, {
-    target: "#uppy_file_upload_element",
-    singleFileFullScreen: true,
-    inline: true,
-    hideUploadButton: true,
-    hideRetryButton: true,
-  });
-  uppy.use(XHRUpload, {
-    endpoint: "../upload_picture",
-    method: "POST",
-    fieldName: "file_uploaded",
-    bundle: true,
-  });
+window.onload = async () => {
+  const urlParams = new URL(window.location.toLocaleString()).searchParams;
+  editItemUUID = urlParams.get("itemUUID");
+
+  await initUppy();
 
   document.getElementById("cancel_btn").addEventListener("click", () => {
     window.location.replace(window.location.origin);
@@ -62,9 +51,6 @@ window.onload = () => {
     );
   }); //document.getElementById("item_delete_btn").addEventListener("click", () => {
 
-  const urlParams = new URL(window.location.toLocaleString()).searchParams;
-  editItemUUID = urlParams.get("itemUUID");
-
   console.log("itemUUID :>> ", editItemUUID);
   if (editItemUUID === null) {
     console.log("It is null :>> Creating new item");
@@ -84,3 +70,43 @@ window.onload = () => {
       send_data(editItemUUID);
     }); //addEventListener("click", () => {
 }; //window.onload = () => {
+
+async function initUppy() {
+  const uppy = new Uppy({
+    debug: true,
+  }).use(Dashboard, {
+    target: "#uppy_file_upload_element",
+    singleFileFullScreen: true,
+    inline: true,
+    hideUploadButton: true,
+    hideRetryButton: true,
+  });
+  uppy.use(XHRUpload, {
+    endpoint: "../upload_picture",
+    method: "POST",
+    fieldName: "file_uploaded",
+    // bundle: true,
+    formData: true,
+  });
+
+  document
+    .getElementById("upload_pic_button")
+    .addEventListener("click", async () => {
+      console.log("Save pic clicked :>> ");
+      if (uppy.getFiles().length == 1) {
+        uppy.setMeta({
+          uuid_str: editItemUUID,
+        });
+        console.log("There is a file to be uploaded :>> ");
+        uppy.upload().then((result) => {
+          console.log("Have upload result :>> ", result);
+          if (result.failed.length > 0) {
+            console.error("Errors:");
+            result.failed.forEach((file) => {
+              console.error(file.error);
+            });
+          }
+        });
+      }
+    });
+}
