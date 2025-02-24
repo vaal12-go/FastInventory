@@ -24,6 +24,12 @@
       rel="stylesheet"
     />
 
+    <script src="https://sachinchoolur.github.io/lightslider/src/js/lightslider.js"></script>
+    <link
+      href="https://sachinchoolur.github.io/lightslider/src/css/lightslider.css"
+      rel="stylesheet"
+    />
+
     <script src="js/utils.js"></script>
     <script src="js/item.globals.js"></script>
     <script src="js/item.populate_fields.js"></script>
@@ -90,6 +96,7 @@
           </div>
         </div>
         <div class="row">
+          <!-- Left side controls -->
           <div class="col-7">
             <div class="form-group">
               <label for="item_description_textarea">Item description</label>
@@ -102,7 +109,7 @@
                 >Describe the item</small
               >
             </div>
-
+            <!-- Container selector -->
             <div class="form-group pt-3">
               <div>
                 Container:
@@ -112,10 +119,10 @@
                   aria-label=".form-select-lg example"
                 ></select>
               </div>
-              <!-- <button type="button" class="btn btn-secondary">
-                Add container
-              </button> -->
             </div>
+            <!-- END Container selector -->
+
+            <!-- Tags selector -->
             <div class="form-row border p-3">
               <div>Tags:</div>
               <div id="select2tags"></div>
@@ -125,18 +132,88 @@
                 style="width: 100%"
                 name="states[]"
                 multiple="multiple"
-              >
-                <!-- <option value="AL">Alabama</option>
-                <option value="WY">Wyoming</option> -->
-              </select>
+              ></select>
             </div>
+            <!-- END Tags selector -->
           </div>
+          <!-- END Left side controls -->
+
+          <!-- Image controls -->
           <div class="col-5">
             <div class="row p-3 justify-content-center">
-              <div class="col-10 align-self-center">
-                <!-- style="width: 400px; height: 370px; background-color: bisque" -->
+              <div class="col-12 text-center">
+                <div class="border" id="new-item-image-message">
+                  <h6>Image can be uploaded once item is created</h6>
+                </div>
+                <div class="demo" style="width: 350px">
+                  <ul id="vertical">
+                    <li
+                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-1.jpg"
+                    >
+                      <img
+                        src="http://sachinchoolur.github.io/lightslider/img/cS-1.jpg"
+                      />
+                    </li>
+                    <li
+                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-2.jpg"
+                    >
+                      <img
+                        width="350px"
+                        src="http://sachinchoolur.github.io/lightslider/img/cS-2.jpg"
+                      />
+                    </li>
+                    <li
+                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-3.jpg"
+                    >
+                      <img
+                        width="350px"
+                        src="http://sachinchoolur.github.io/lightslider/img/cS-3.jpg"
+                      />
+                    </li>
+                    <li
+                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-4.jpg"
+                    >
+                      <img
+                        width="350px"
+                        src="http://sachinchoolur.github.io/lightslider/img/cS-4.jpg"
+                      />
+                    </li>
+                    <li
+                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-5.jpg"
+                    >
+                      <img
+                        width="350px"
+                        src="http://sachinchoolur.github.io/lightslider/img/cS-5.jpg"
+                      />
+                    </li>
+                    <li
+                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-6.jpg"
+                    >
+                      <img
+                        width="350px"
+                        src="http://sachinchoolur.github.io/lightslider/img/cS-6.jpg"
+                      />
+                    </li>
+
+                    <li
+                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-13.jpg"
+                    >
+                      <img
+                        width="350px"
+                        src="http://sachinchoolur.github.io/lightslider/img/cS-13.jpg"
+                      />
+                    </li>
+                  </ul>
+                </div>
+                <!-- <img
+                  style="border"
+                  src="/img/Rocket_small_24Feb2025.png"
+                  width="200px"
+                  height="200px"
+                  id="item_preview_big_img"
+                /> -->
                 <div
-                  style="width: 350px; height: 300px; background-color: bisque"
+                  style="width: 350px; height: 100px; background-color: bisque"
                   id="uppy_file_upload_element"
                 ></div>
               </div>
@@ -147,7 +224,15 @@
               </div>
             </div>
             <div class="row">
-              <div class="col">Some picture previews here</div>
+              <div class="col-2 border p-1">
+                <img
+                  style="border"
+                  src="img/one_empty_dot.png"
+                  width="50px"
+                  height="50px"
+                  id="item_preview_img"
+                />
+              </div>
             </div>
             <div class="row">
               <div class="col">

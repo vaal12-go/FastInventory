@@ -30,9 +30,8 @@ window.onload = async () => {
 
   document.getElementById("item_delete_btn").addEventListener("click", () => {
     console.log("Delete button pressed :>> ");
-    console.log("editItemUUID :>> ", editItemUUID);
     var fetchURL = `${window.location.origin}/item/${editItemUUID}`;
-    console.log("fetchURL :>> ", fetchURL);
+    // console.log("fetchURL :>> ", fetchURL);
     fetchJSON(
       fetchURL,
       {
@@ -51,7 +50,7 @@ window.onload = async () => {
     );
   }); //document.getElementById("item_delete_btn").addEventListener("click", () => {
 
-  console.log("itemUUID :>> ", editItemUUID);
+  // console.log("itemUUID :>> ", editItemUUID);
   if (editItemUUID === null) {
     console.log("It is null :>> Creating new item");
     populateContainerSelect(null);
@@ -72,6 +71,50 @@ window.onload = async () => {
 }; //window.onload = () => {
 
 async function initUppy() {
+  var slider = $("#vertical").lightSlider({
+    gallery: true,
+    item: 1,
+    vertical: true,
+    verticalHeight: 300,
+    adaptiveHeight: true,
+    adaptiveWidth: true,
+    vThumbWidth: 50,
+    thumbItem: 7,
+    thumbMargin: 4,
+    slideMargin: 0,
+    onAfterSlide: function (el) {
+      console.log("onAfterSlide :>> ", el);
+      console.log("getCurrentSlideCount :>> ", el.getCurrentSlideCount());
+    },
+  });
+  console.log("slider :>> ", slider);
+  // slider.destroy();
+  document.getElementById("vertical").innerHTML += `<li
+                      data-thumb="/img/Rocket_small_24Feb2025.png"
+                    >
+                      <img  width="300px"
+                        src="/img/Rocket_small_24Feb2025.png"
+                      />
+                    </li>`;
+  // slider.refresh();
+  slider.destroy();
+
+  var slider = $("#vertical").lightSlider({
+    gallery: true,
+    item: 1,
+    vertical: true,
+    verticalHeight: 300,
+    adaptiveHeight: true,
+    adaptiveWidth: true,
+    vThumbWidth: 50,
+    thumbItem: 8,
+    thumbMargin: 4,
+    slideMargin: 0,
+    onAfterSlide: function (el) {
+      console.log("onAfterSlide :>> ", el);
+    },
+  });
+
   const uppy = new Uppy({
     debug: true,
   }).use(Dashboard, {
@@ -106,9 +149,15 @@ async function initUppy() {
               console.error(file.error);
             });
           }
-          var file_created = result.successful[0].response.body;
+          var responce = result.successful[0].response.body;
+          var file_created = responce.file_created;
           console.log("file_created :>> ", file_created);
-        });
-      }
-    });
-}
+          if (responce.status == "success") {
+            document
+              .getElementById("item_preview_img")
+              .setAttribute("src", `item_file/${file_created.uuid}`);
+          }
+        }); //uppy.upload().then((result) => {
+      } //if (uppy.getFiles().length == 1) {
+    }); //.addEventListener("click", async () => {
+} //async function initUppy() {
