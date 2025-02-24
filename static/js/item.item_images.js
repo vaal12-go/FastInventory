@@ -9,6 +9,33 @@ import {
 var gallery_slider = null;
 
 export async function initImageControls() {
+  document.getElementById("test-li").addEventListener("click", (evt, elem) => {
+    console.log(" test-li evt :>> ", evt);
+    console.log("elem :>> ", elem);
+  });
+
+  document.getElementById("test-img").addEventListener("click", (evt, elem) => {
+    console.log(" test-img evt :>> ", evt);
+    console.log("elem :>> ", elem);
+  });
+
+  document
+    .getElementById("vertical")
+    .addEventListener("dblclick", (evt, elem) => {
+      console.log(" vertical evt :>> ", evt);
+      console.log("elem :>> ", elem);
+      console.log(
+        "gallery_slider.getCurrentSlideCount() :>> ",
+        gallery_slider.getCurrentSlideCount()
+      );
+      console.log(
+        'evt.target.dataset["file-uuid"] :>> ',
+        evt.target.dataset["file-uuid"]
+      );
+      console.log("evt.target.dataset :>> ", evt.target.dataset.fileUuid);
+      window.open(window.location.origin + "/img/clock.png");
+    });
+
   console.log("editItemUUID :>> ", editItemUUID);
   if (editItemUUID === null) {
     // This is new item. No image
