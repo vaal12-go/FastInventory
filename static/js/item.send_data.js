@@ -40,7 +40,7 @@ function send_data(item_uuid) {
     console.log("selected_tags :>> ", selected_tags);
     new_item_request = collect_item_data();
     fetchURL = `${window.location.origin}/item/`;
-    console.log("fetchURL :>> ", fetchURL);
+    // console.log("fetchURL :>> ", fetchURL);
     fetchJSON(
       fetchURL,
       {
@@ -65,7 +65,7 @@ function send_data(item_uuid) {
     new_item_request = collect_item_data();
     new_item_request.uuid = item_uuid;
     fetchURL = `${window.location.origin}/item/` + item_uuid;
-    console.log("fetchURL :>> ", fetchURL);
+    // console.log("fetchURL :>> ", fetchURL);
     fetchJSON(
       fetchURL,
       {
@@ -78,7 +78,7 @@ function send_data(item_uuid) {
       (jsonObj) => {
         console.log("Have responce :>> ", jsonObj);
         if ((jsonObj.status = "success")) {
-          window.location.replace(window.location.origin);
+          console.log("Success patching objkect :>> ");
         }
       } //(jsonObj) => {
     ); //fetchJSON(

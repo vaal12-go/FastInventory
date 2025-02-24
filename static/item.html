@@ -34,7 +34,10 @@
     <script src="js/item.globals.js"></script>
     <script src="js/item.populate_fields.js"></script>
     <script src="js/item.send_data.js"></script>
+    <!-- <script type="module" src="js/item.item_images.js"></script> -->
     <script type="module" src="js/item.js"></script>
+
+    <link href="css/custom.css" rel="stylesheet" />
   </head>
 
   <body>
@@ -140,110 +143,79 @@
 
           <!-- Image controls -->
           <div class="col-5">
-            <div class="row p-3 justify-content-center">
+            <div id="image_controls" class="row p-3 justify-content-center">
               <div class="col-12 text-center">
-                <div class="border" id="new-item-image-message">
+                <div class="border p-3 m-2" id="new-item-image-message">
                   <h6>Image can be uploaded once item is created</h6>
                 </div>
-                <div class="demo" style="width: 350px">
-                  <ul id="vertical">
-                    <li
-                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-1.jpg"
-                    >
-                      <img
-                        src="http://sachinchoolur.github.io/lightslider/img/cS-1.jpg"
-                      />
-                    </li>
-                    <li
-                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-2.jpg"
-                    >
-                      <img
-                        width="350px"
-                        src="http://sachinchoolur.github.io/lightslider/img/cS-2.jpg"
-                      />
-                    </li>
-                    <li
-                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-3.jpg"
-                    >
-                      <img
-                        width="350px"
-                        src="http://sachinchoolur.github.io/lightslider/img/cS-3.jpg"
-                      />
-                    </li>
-                    <li
-                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-4.jpg"
-                    >
-                      <img
-                        width="350px"
-                        src="http://sachinchoolur.github.io/lightslider/img/cS-4.jpg"
-                      />
-                    </li>
-                    <li
-                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-5.jpg"
-                    >
-                      <img
-                        width="350px"
-                        src="http://sachinchoolur.github.io/lightslider/img/cS-5.jpg"
-                      />
-                    </li>
-                    <li
-                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-6.jpg"
-                    >
-                      <img
-                        width="350px"
-                        src="http://sachinchoolur.github.io/lightslider/img/cS-6.jpg"
-                      />
-                    </li>
+                <!-- Image view and upload controls -->
+                <div id="image_gallery">
+                  <div class="mt-2" style="width: 350px">
+                    <ul id="vertical">
+                      <li
+                        data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-4.jpg"
+                      >
+                        <img
+                          width="350px"
+                          src="http://sachinchoolur.github.io/lightslider/img/cS-4.jpg"
+                        />
+                      </li>
+                      <li
+                        data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-5.jpg"
+                      >
+                        <img
+                          width="350px"
+                          src="http://sachinchoolur.github.io/lightslider/img/cS-5.jpg"
+                        />
+                      </li>
+                      <li
+                        data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-6.jpg"
+                      >
+                        <img
+                          width="350px"
+                          src="http://sachinchoolur.github.io/lightslider/img/cS-6.jpg"
+                        />
+                      </li>
 
-                    <li
-                      data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-13.jpg"
+                      <li
+                        data-thumb="http://sachinchoolur.github.io/lightslider/img/thumb/cS-13.jpg"
+                      >
+                        <img
+                          width="350px"
+                          src="http://sachinchoolur.github.io/lightslider/img/cS-13.jpg"
+                        />
+                      </li>
+                    </ul>
+                  </div>
+
+                  <!-- Image upload control -->
+                  <div
+                    id="uppy_file_upload_element"
+                    class="mt-2"
+                    style="
+                      width: 350px;
+                      height: 150px;
+                      background-color: bisque;
+                    "
+                  ></div>
+                  <div class="mt-1">
+                    <button
+                      id="upload_pic_button"
+                      type="button"
+                      class="btn btn-primary"
                     >
-                      <img
-                        width="350px"
-                        src="http://sachinchoolur.github.io/lightslider/img/cS-13.jpg"
-                      />
-                    </li>
-                  </ul>
+                      Save picture
+                    </button>
+                  </div>
                 </div>
-                <!-- <img
-                  style="border"
-                  src="/img/Rocket_small_24Feb2025.png"
-                  width="200px"
-                  height="200px"
-                  id="item_preview_big_img"
-                /> -->
-                <div
-                  style="width: 350px; height: 100px; background-color: bisque"
-                  id="uppy_file_upload_element"
-                ></div>
+                <!-- END Image view and upload controls -->
               </div>
             </div>
             <div class="row">
-              <div class="col">
-                Picture will be uploaded when item is saved automatically
-              </div>
+              <div class="col">some row 1</div>
             </div>
             <div class="row">
-              <div class="col-2 border p-1">
-                <img
-                  style="border"
-                  src="img/one_empty_dot.png"
-                  width="50px"
-                  height="50px"
-                  id="item_preview_img"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <button
-                  id="upload_pic_button"
-                  type="button"
-                  class="btn btn-primary"
-                >
-                  Save picture
-                </button>
-              </div>
+              <div class="col">some row</div>
             </div>
           </div>
         </div>

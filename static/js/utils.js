@@ -40,3 +40,11 @@ function addOptionToSelect(
   }
   selectorElem.options.add(newOpt);
 } //function addOptionToSelect(selectElId,
+
+function hideDivElement(elName) {
+  document.getElementById(elName).classList.add("hiddenDiv");
+} //function hideDivElement(elName) {
+
+function showDivElement(elName) {
+  document.getElementById(elName).classList.add("visibleDiv");
+} //function hideDivElement(elName) {
