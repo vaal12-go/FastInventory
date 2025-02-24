@@ -1,9 +1,10 @@
 from sqlmodel import Field, SQLModel, Relationship, create_engine
 import uuid as uuid_lib
 
-from models.item_tag_link import ItemTagLink
-
 from sqlalchemy import UniqueConstraint
+from pydantic import BaseModel
+
+from models.item_tag_link import ItemTagLink
 
 
 class Tag(SQLModel, table=True):
@@ -16,3 +17,10 @@ class Tag(SQLModel, table=True):
     items: list["Item"] = Relationship(
         back_populates="tags", link_model=ItemTagLink
     )
+
+# This is needed for transmission of tags between item creation page and fastapi backend
+
+
+class TagRec(BaseModel):
+    tag: str
+    uuid: str

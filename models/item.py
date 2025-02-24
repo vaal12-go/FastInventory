@@ -3,6 +3,8 @@ import uuid as uuid_lib
 
 from models.item_tag_link import ItemTagLink
 
+from models.tag import TagRec
+
 from pydantic import BaseModel, computed_field
 from typing import List
 
@@ -15,12 +17,6 @@ class ItemBase(SQLModel):
     description: str = ""
     container_uuid: uuid_lib.UUID | None = Field(
         default=None, foreign_key="item.uuid")
-
-
-# This is needed for transmission of tags between item creation page and fastapi backend
-class TagRec(BaseModel):
-    tag: str
-    uuid: str
 
 
 # Class which is needed for fastapi validation for creation and modification of an Item

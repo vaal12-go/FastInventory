@@ -47,27 +47,9 @@ function populateTags() {
   ); //fetchJSON(
 } //function populateTags(itemUUID) {
 
-const itemGetter = {
-  then(onFulfilled, onRejected) {
-    var fetchURL = `${window.location.origin}/item/${editItemUUID}`;
-    fetchJSON(
-      fetchURL,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      },
-      (jsonObj) => {
-        onFulfilled(jsonObj);
-      } //(jsonObj) => {
-    ); //fetchJSON(
-  },
-}; //const itemGetter {
-
 function populateFieldsWithItem(itemUUID) {
   // console.log("itemUUID :>> ", itemUUID);
-  itemGetter.then((jsonObj) => {
+  new ItemGetter(itemUUID).then((jsonObj) => {
     // console.log("Have item responce :>> ", jsonObj);
     document.getElementById("item_name_input").value = jsonObj.name;
     document.getElementById("item_description_textarea").value =

@@ -5,8 +5,9 @@ from typing import List, Optional, Any
 from pydantic import BaseModel
 
 from app import app
-from models.tag import Tag
-from models.item import Item, ItemCreate, TagRec
+from models.tag import Tag, TagRec
+from models.item import Item, ItemCreate
+from models.file import SQLiteFile
 
 import db
 
@@ -18,6 +19,7 @@ class ItemOut(BaseModel):
     container_uuid: uuid.UUID | None = None
     # tags: Optional[List[Tag]]
     tags: Optional[List[Tag]] = []
+    files: Optional[List[SQLiteFile]] = []
 
     class Config:
         from_attributes = True

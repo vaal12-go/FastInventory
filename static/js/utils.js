@@ -48,3 +48,27 @@ function hideDivElement(elName) {
 function showDivElement(elName) {
   document.getElementById(elName).classList.add("visibleDiv");
 } //function hideDivElement(elName) {
+
+class ItemGetter {
+  item_uuid = null;
+
+  constructor(item_uuid) {
+    this.item_uuid = item_uuid;
+  }
+
+  then(onFulfilled, onRejected) {
+    var fetchURL = `${window.location.origin}/item/${this.item_uuid}`;
+    fetchJSON(
+      fetchURL,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      },
+      (jsonObj) => {
+        onFulfilled(jsonObj);
+      } //(jsonObj) => {
+    ); //fetchJSON(
+  }
+} //class ItemGetter {
