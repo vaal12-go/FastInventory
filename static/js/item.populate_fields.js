@@ -47,16 +47,24 @@ function populateTags() {
   ); //fetchJSON(
 } //function populateTags(itemUUID) {
 
-function populateFieldsWithItem(itemUUID) {
+async function populateFieldsWithItem(itemUUID) {
   // console.log("itemUUID :>> ", itemUUID);
-  new ItemGetter(itemUUID).then((jsonObj) => {
-    // console.log("Have item responce :>> ", jsonObj);
-    document.getElementById("item_name_input").value = jsonObj.name;
-    document.getElementById("item_description_textarea").value =
-      jsonObj.description;
-    serverItemJsonToEdit = jsonObj;
-    populateContainerSelect(jsonObj.container_uuid);
-  });
+  var jsonObj = await ItemGetter.getItem(itemUUID);
+  // console.log("Have item responce :>> ", jsonObj);
+  document.getElementById("item_name_input").value = jsonObj.name;
+  document.getElementById("item_description_textarea").value =
+    jsonObj.description;
+  serverItemJsonToEdit = jsonObj;
+  populateContainerSelect(jsonObj.container_uuid);
+
+  // new ItemGetter(itemUUID).then((jsonObj) => {
+  //   // console.log("Have item responce :>> ", jsonObj);
+  //   document.getElementById("item_name_input").value = jsonObj.name;
+  //   document.getElementById("item_description_textarea").value =
+  //     jsonObj.description;
+  //   serverItemJsonToEdit = jsonObj;
+  //   populateContainerSelect(jsonObj.container_uuid);
+  // });
 } //function getItemByUUID(itemUUID) {
 
 function populateContainerSelect(selectedContainerUUID) {

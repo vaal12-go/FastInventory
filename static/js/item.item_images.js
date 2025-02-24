@@ -52,15 +52,25 @@ export async function initImageControls() {
 } //export async function initImageControls() {
 
 async function updateImageGallery() {
-  new ItemGetter(editItemUUID).then(async (itemJSON) => {
-    console.log("itemJSON :>> ", itemJSON);
-    for (var fileIdx in itemJSON.files) {
-      var file = itemJSON.files[fileIdx];
-      console.log("file :>> ", file);
-      addImageToGallery(file.uuid);
-    }
-    initSlider();
-  }); //new ItemGetter(itemUUID).then((itemJSON)=>{
+  var itemJSON = await ItemGetter.getItem(editItemUUID);
+
+  console.log("itemJSON2 :>> ", itemJSON);
+  for (var fileIdx in itemJSON.files) {
+    var file = itemJSON.files[fileIdx];
+    console.log("file :>> ", file);
+    addImageToGallery(file.uuid);
+  }
+  initSlider();
+
+  //   new ItemGetter(editItemUUID).then(async (itemJSON) => {
+  //     console.log("itemJSON :>> ", itemJSON);
+  //     for (var fileIdx in itemJSON.files) {
+  //       var file = itemJSON.files[fileIdx];
+  //       console.log("file :>> ", file);
+  //       addImageToGallery(file.uuid);
+  //     }
+  //     initSlider();
+  //   }); //new ItemGetter(itemUUID).then((itemJSON)=>{
 } //async function updateImageGallery() {
 
 function initSlider() {

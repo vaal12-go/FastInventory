@@ -56,19 +56,23 @@ class ItemGetter {
     this.item_uuid = item_uuid;
   }
 
-  then(onFulfilled, onRejected) {
-    var fetchURL = `${window.location.origin}/item/${this.item_uuid}`;
-    fetchJSON(
-      fetchURL,
-      {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
+  static getItem(item_uuid) {
+    return {
+      then(onFulfilled, onRejected) {
+        var fetchURL = `${window.location.origin}/item/${item_uuid}`;
+        fetchJSON(
+          fetchURL,
+          {
+            method: "GET",
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          },
+          (jsonObj) => {
+            onFulfilled(jsonObj);
+          } //(jsonObj) => {
+        ); //fetchJSON(
       },
-      (jsonObj) => {
-        onFulfilled(jsonObj);
-      } //(jsonObj) => {
-    ); //fetchJSON(
+    };
   }
 } //class ItemGetter {
