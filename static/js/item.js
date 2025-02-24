@@ -9,23 +9,22 @@ window.onload = async () => {
   await initImageControls();
 
   document.getElementById("cancel_btn").addEventListener("click", () => {
-    window.location.replace(window.location.origin);
+    var returnURL = `${BASE_URL}html/index.html`;
+    window.location.replace(returnURL);
   }); //document.getElementById("cancel_btn").addEventListener(
 
   document
     .getElementById("item_qr_code_generate_btn")
     .addEventListener("click", () => {
       window.open(
-        window.location.origin +
-          "/generated_qr_code.html?itemUUID=" +
-          editItemUUID
+        BASE_URL + "html/generated_qr_code.html?itemUUID=" + editItemUUID
       );
     });
 
   document.getElementById("item_delete_btn").addEventListener("click", () => {
     console.log("Delete button pressed :>> ");
-    var fetchURL = `${window.location.origin}/item/${editItemUUID}`;
-    // console.log("fetchURL :>> ", fetchURL);
+    var fetchURL = `${BASE_URL}item/${editItemUUID}`;
+    console.log("fetchURL :>> ", fetchURL);
     fetchJSON(
       fetchURL,
       {
@@ -38,7 +37,8 @@ window.onload = async () => {
       (jsonObj) => {
         console.log("Have responce :>> ", jsonObj);
         if (jsonObj.status == "success") {
-          window.location.replace(window.location.origin);
+          var returnURL = `${BASE_URL}html/index.html`;
+          window.location.replace(returnURL);
         }
       }
     );

@@ -4,8 +4,8 @@ function populateTags() {
   //   console.log("serverItemJsonToEdit :>> ", serverItemJsonToEdit);
   // }
 
-  var fetchURL = `${window.location.origin}/tag`;
-  // console.log("fetchURL :>> ");
+  var fetchURL = `${BASE_URL}tag`;
+  console.log("fetchURL :>> ");
   fetchJSON(
     fetchURL,
     {
@@ -56,20 +56,11 @@ async function populateFieldsWithItem(itemUUID) {
     jsonObj.description;
   serverItemJsonToEdit = jsonObj;
   populateContainerSelect(jsonObj.container_uuid);
-
-  // new ItemGetter(itemUUID).then((jsonObj) => {
-  //   // console.log("Have item responce :>> ", jsonObj);
-  //   document.getElementById("item_name_input").value = jsonObj.name;
-  //   document.getElementById("item_description_textarea").value =
-  //     jsonObj.description;
-  //   serverItemJsonToEdit = jsonObj;
-  //   populateContainerSelect(jsonObj.container_uuid);
-  // });
 } //function getItemByUUID(itemUUID) {
 
 function populateContainerSelect(selectedContainerUUID) {
-  var fetchURL = `${window.location.origin}/item/containers`;
-  // console.log("fetchURL :>> ");
+  var fetchURL = `${BASE_URL}item/containers`;
+  console.log("fetchURL :>> ");
   fetchJSON(
     fetchURL,
     {

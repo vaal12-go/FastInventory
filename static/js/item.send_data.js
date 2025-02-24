@@ -39,7 +39,7 @@ function send_data(item_uuid) {
     selected_tags = $("#tags_select2_selector").select2("data");
     console.log("selected_tags :>> ", selected_tags);
     new_item_request = collect_item_data();
-    fetchURL = `${window.location.origin}/item/`;
+    fetchURL = `${BASE_URL}item/`;
     // console.log("fetchURL :>> ", fetchURL);
     fetchJSON(
       fetchURL,
@@ -64,7 +64,7 @@ function send_data(item_uuid) {
     console.log("Will update object :>> ");
     new_item_request = collect_item_data();
     new_item_request.uuid = item_uuid;
-    fetchURL = `${window.location.origin}/item/` + item_uuid;
+    fetchURL = `${BASE_URL}item/` + item_uuid;
     // console.log("fetchURL :>> ", fetchURL);
     fetchJSON(
       fetchURL,

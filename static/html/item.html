@@ -4,40 +4,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script> -->
+    <script src="../js/jquery_3.7.1.min.js"></script>
 
     <!-- Bootstrap related local imports -->
-    <link href="css/bootstrap.min_5.0.2.css" rel="stylesheet" />
-    <script src="js/bootstrap.bundle.min_5.0.2.js"></script>
+    <link href="../css/bootstrap.min_5.0.2.css" rel="stylesheet" />
+    <script src="../js/bootstrap.bundle.min_5.0.2.js"></script>
 
     <!-- select2 imports (https://select2.org/) -->
-    <link
+    <!-- <link
       href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
       rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    /> -->
+    <link href="../css/select2_4.1.0.min.css" rel="stylesheet" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+    <script src="../js/select2_4.1.0.min.js"></script>
 
     <!-- Uppy imports -->
     <!-- <link href="css/uppy_4.13.2.min.css" rel="stylesheet" /> -->
-    <link
+    <!-- <link
       href="https://releases.transloadit.com/uppy/v4.13.2/uppy.min.css"
       rel="stylesheet"
-    />
+    /> -->
+    <link href="../css/uppy_4.13.2.min.css" rel="stylesheet" />
 
-    <script src="https://sachinchoolur.github.io/lightslider/src/js/lightslider.js"></script>
-    <link
+    <!-- Lightslider -->
+    <!-- <link
       href="https://sachinchoolur.github.io/lightslider/src/css/lightslider.css"
       rel="stylesheet"
-    />
+    /> -->
+    <link href="../css/lightslider.css" rel="stylesheet" />
+    <!-- <script src="https://sachinchoolur.github.io/lightslider/src/js/lightslider.js"></script> -->
+    <script src="../js/lightslider.js"></script>
 
-    <script src="js/utils.js"></script>
-    <script src="js/item.globals.js"></script>
-    <script src="js/item.populate_fields.js"></script>
-    <script src="js/item.send_data.js"></script>
+    <!-- Application imports -->
+    <link href="../css/custom.css" rel="stylesheet" />
+
+    <script src="../js/common.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/item.globals.js"></script>
+    <script src="../js/item.populate_fields.js"></script>
+    <script src="../js/item.send_data.js"></script>
     <!-- <script type="module" src="js/item.item_images.js"></script> -->
-    <script type="module" src="js/item.js"></script>
-
-    <link href="css/custom.css" rel="stylesheet" />
+    <script type="module" src="../js/item.js"></script>
   </head>
 
   <body>
@@ -45,7 +54,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="index.html">
-          <img src="img/Box.png" width="80px" />FastInventory</a
+          <img src="../img/Box.png" width="80px" />FastInventory</a
         >
         <button
           class="navbar-toggler"
@@ -152,41 +161,41 @@
                 <div id="image_gallery">
                   <div class="mt-2" style="width: 370px">
                     <ul id="vertical">
-                      <li id="test-li" data-thumb="img/clock.png">
+                      <li id="test-li" data-thumb="../img/clock.png">
                         <img
                           id="test-img"
                           data-file-uuid="clock test UUID"
                           width="350px"
-                          src="img/clock.png"
+                          src="../img/clock.png"
                         />
                       </li>
-                      <li data-thumb="img/oldPhone.png">
+                      <li data-thumb="../img/oldPhone.png">
                         <img
                           data-file-uuid="oldPhone test UUID"
                           width="350px"
-                          src="img/oldPhone.png"
+                          src="../img/oldPhone.png"
                         />
                       </li>
-                      <li data-thumb="img/typeWriter.png">
+                      <li data-thumb="../img/typeWriter.png">
                         <img
                           data-file-uuid="typeWriter test UUID"
                           width="350px"
-                          src="img/typeWriter.png"
+                          src="../img/typeWriter.png"
                         />
                       </li>
 
-                      <li data-thumb="img/fileTypeIcons/text_format.png">
+                      <li data-thumb="../img/fileTypeIcons/text_format.png">
                         <img
                           data-file-uuid="typeWriter test UUID"
                           width="140px"
-                          src="img/fileTypeIcons/text_format.png"
+                          src="../img/fileTypeIcons/text_format.png"
                         />
                       </li>
-                      <li data-thumb="img/fileTypeIcons/pdf_format.png">
+                      <li data-thumb="../img/fileTypeIcons/pdf_format.png">
                         <img
                           data-file-uuid="typeWriter test UUID"
                           width="140px"
-                          src="img/fileTypeIcons/pdf_format.png"
+                          src="../img/fileTypeIcons/pdf_format.png"
                         />
                       </li>
                     </ul>

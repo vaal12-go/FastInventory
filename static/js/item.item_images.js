@@ -33,7 +33,7 @@ export async function initImageControls() {
         evt.target.dataset["file-uuid"]
       );
       console.log("evt.target.dataset :>> ", evt.target.dataset.fileUuid);
-      window.open(window.location.origin + "/img/clock.png");
+      window.open(BASE_URL + "img/clock.png");
     });
 
   console.log("editItemUUID :>> ", editItemUUID);

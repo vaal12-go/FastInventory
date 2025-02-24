@@ -11,6 +11,7 @@ function swapClassesOnElement(elID, classToRemove, classToAdd) {
 } //function swapClassesOnElement(elID, classToRemove, classToAdd) {
 
 async function fetchJSON(url, options, jsonFunction) {
+  console.log("fetchJSON url:>> ", url);
   try {
     const response = await fetch(url, options);
     // if (!response.ok) {
@@ -59,7 +60,7 @@ class ItemGetter {
   static getItem(item_uuid) {
     return {
       then(onFulfilled, onRejected) {
-        var fetchURL = `${window.location.origin}/item/${item_uuid}`;
+        var fetchURL = `${BASE_URL}item/${item_uuid}`;
         fetchJSON(
           fetchURL,
           {

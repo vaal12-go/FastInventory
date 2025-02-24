@@ -4,7 +4,7 @@ itemListTemplate = `
     <div class="row border">
       <div class="row">
         <h5>{{name}}</h5>
-        <a href="/item.html?itemUUID={{uuid}}">Edit</a>
+        <a href="./item.html?itemUUID={{uuid}}">Edit</a>
       </div>
       <div class="row">
         <div class="col-10">
@@ -18,7 +18,8 @@ itemListTemplate = `
 `;
 
 window.onload = () => {
-  fetchURL = `${window.location.origin}/item/all`;
+  fetchURL = `${BASE_URL}item/all`;
+  console.log("fetchURL :>> ", fetchURL);
   fetchJSON(
     fetchURL,
     {
