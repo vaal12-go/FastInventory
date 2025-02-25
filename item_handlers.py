@@ -17,7 +17,6 @@ class ItemOut(BaseModel):
     name: str
     description: str
     container_uuid: uuid.UUID | None = None
-    # tags: Optional[List[Tag]]
     tags: Optional[List[Tag]] = []
     files: Optional[List[SQLiteFile]] = []
 

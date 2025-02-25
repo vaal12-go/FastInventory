@@ -9,16 +9,6 @@ import {
 var gallery_slider = null;
 
 export async function initImageControls() {
-  document.getElementById("test-li").addEventListener("click", (evt, elem) => {
-    console.log(" test-li evt :>> ", evt);
-    console.log("elem :>> ", elem);
-  });
-
-  document.getElementById("test-img").addEventListener("click", (evt, elem) => {
-    console.log(" test-img evt :>> ", evt);
-    console.log("elem :>> ", elem);
-  });
-
   document
     .getElementById("vertical")
     .addEventListener("dblclick", (evt, elem) => {
@@ -39,6 +29,7 @@ export async function initImageControls() {
   console.log("editItemUUID :>> ", editItemUUID);
   if (editItemUUID === null) {
     // This is new item. No image
+    hideDivElement("image_gallery");
   } else {
     //if (editItemUUID === null) {
     // This is editing item - load images
@@ -61,16 +52,6 @@ async function updateImageGallery() {
     addImageToGallery(file.uuid);
   }
   initSlider();
-
-  //   new ItemGetter(editItemUUID).then(async (itemJSON) => {
-  //     console.log("itemJSON :>> ", itemJSON);
-  //     for (var fileIdx in itemJSON.files) {
-  //       var file = itemJSON.files[fileIdx];
-  //       console.log("file :>> ", file);
-  //       addImageToGallery(file.uuid);
-  //     }
-  //     initSlider();
-  //   }); //new ItemGetter(itemUUID).then((itemJSON)=>{
 } //async function updateImageGallery() {
 
 function initSlider() {
@@ -103,27 +84,6 @@ function addImageToGallery(img_file_uuid) {
 } //function addImageToGallery(img_file_uuid) {
 
 export async function initUppy() {
-  //   console.log("slider :>> ", slider);
-
-  // slider.refresh();
-  //   slider.destroy();
-
-  //   var slider = $("#vertical").lightSlider({
-  //     gallery: true,
-  //     item: 1,
-  //     vertical: true,
-  //     verticalHeight: 300,
-  //     adaptiveHeight: true,
-  //     adaptiveWidth: true,
-  //     vThumbWidth: 50,
-  //     thumbItem: 8,
-  //     thumbMargin: 4,
-  //     slideMargin: 0,
-  //     onAfterSlide: function (el) {
-  //       console.log("onAfterSlide :>> ", el);
-  //     },
-  //   });
-
   const uppy = new Uppy({
     debug: true,
   }).use(Dashboard, {

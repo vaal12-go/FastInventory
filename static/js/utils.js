@@ -43,6 +43,7 @@ function addOptionToSelect(
 } //function addOptionToSelect(selectElId,
 
 function hideDivElement(elName) {
+  console.log("Hiding element :>> ", elName);
   document.getElementById(elName).classList.add("hiddenDiv");
 } //function hideDivElement(elName) {
 
