@@ -1,17 +1,21 @@
 from sqlmodel import SQLModel, create_engine
 from models.item import Item
-from models.container import Container
+from models.file import SQLiteFile
+from models.tag import Tag
+from models.item_tag_link import ItemTagLink
 
 
-db_engine = "qwe2"
+import config
+
+
+db_engine = None
 
 
 def init_db():
-    sqlite_file_name = "database.sqlite3"
-    sqlite_url = f"sqlite:///{sqlite_file_name}"
+    sqlite_url = f"sqlite:///{config.SQLITE_FILE_NAME}"
 
     global db_engine
+    # TODO: add dev/prod .env variable and make echo depend on those
     db_engine = create_engine(sqlite_url, echo=True)
-    print(f"db_engine in INIT:{db_engine}")
     SQLModel.metadata.create_all(db_engine)
     return db_engine

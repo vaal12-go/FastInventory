@@ -1,26 +1,23 @@
-from fastapi import FastAPI
-import db
-from test1 import test_populate_db
-from contextlib import asynccontextmanager
+# Main module of the application
+# Dev run
+#    pipenv run fastapi dev --host 127.0.0.1 --port 8080 main.py
+
+# For prod environment (no IP as it will be managed by Docker):
+#    pipenv run fastapi run  --port 8080 main.py
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    db.db_engine = db.init_db()
-    print(f"db_engine:{db.db_engine}")
-    test_populate_db()
+from fastapi.staticfiles import StaticFiles
 
-    yield
-    # # Clean up the ML models and release the resources
-    # ml_models.clear()
+from app import app
+import helpers
 
-
-app = FastAPI(lifespan=lifespan)
+# modules with handlers have to be imported so handles are registered
+import qr_code_handler
+import item_handlers
+import handlers
+import user_handlers
 
 
-@app.get("/")
-async def root_handler():
-    return {"Hello": "World"}
-
-
-# To run : pipenv run fastapi dev --host 127.0.0.1 --port 8080 main.py
+# This route should be defined after all the rest in other case it will shadow other routes
+app.mount("/", StaticFiles(directory=helpers.getHttpClientDirectory(),
+                           html=True), name="static")
