@@ -8,3 +8,5 @@ font/Nasa21-l23X.ttf
 font/NovaMono.ttf
 font/OxygenMono-Regular.ttf
 *.TIF
+test_database.sqlite3_export_25Feb2025.sql
+test_db.sqlite3

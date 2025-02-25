@@ -38,6 +38,11 @@ async def containers_list_handler():
     container_tag = session.exec(
         select(Tag).where(Tag.tag == "container")
     ).first()
+    if container_tag == None:
+        return {
+            "status": "success",
+            "items": []
+        }
     containerTagUUID = container_tag.uuid
     print(f"containerTagUUID:{containerTagUUID}")
     print('item_handlers.py: containerTagUUID=', containerTagUUID)

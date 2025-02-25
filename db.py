@@ -5,12 +5,14 @@ from models.tag import Tag
 from models.item_tag_link import ItemTagLink
 
 
-db_engine = "qwe2"
+import config
+
+
+db_engine = None
 
 
 def init_db():
-    sqlite_file_name = "database.sqlite3"
-    sqlite_url = f"sqlite:///{sqlite_file_name}"
+    sqlite_url = f"sqlite:///{config.SQLITE_FILE_NAME}"
 
     global db_engine
     # TODO: add dev/prod .env variable and make echo depend on those
