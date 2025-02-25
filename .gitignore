@@ -10,3 +10,6 @@ font/OxygenMono-Regular.ttf
 *.TIF
 test_database.sqlite3_export_25Feb2025.sql
 test_db.sqlite3
+log.log
+deployment/deployment_files/docker_db_25Feb2025.sqlite3
+deployment/deployment_files/docker_fastapi_log.log

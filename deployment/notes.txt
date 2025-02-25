@@ -2,7 +2,7 @@ Delete image
 # docker image rm %IMAGE_NAME%
 
 Set environment name for the image
-# SET IMAGE_NAME=fastapi-deploy-container-jan25
+# SET IMAGE_NAME=fastapi-deploy-container-feb25
 
 
 # Good discussion on -f option (needed to copy content of fastinventoy dir)
@@ -16,9 +16,13 @@ Run image (with shell entrypoint)
 Image native entrypoint (should start fastapi)
 docker run -it --name %IMAGE_NAME%-c1 --rm  -p 8080:8080 %IMAGE_NAME% 
 
+With DB as external volume (PATH on host MUST! be absolute)
+docker run -v c:\Users\may13\AGVDocs\Dev\3.Python-projects\08.FastInventory\deployment\deployment_files\docker_db_25Feb2025.sqlite3:/project_dir/docker_db_25Feb2025.sqlite3 -v c:\Users\may13\AGVDocs\Dev\3.Python-projects\08.FastInventory\deployment\deployment_files\docker_fastapi_log.log:/project_dir/docker_fastapi_log.log  -it --name %IMAGE_NAME%-c1 --rm  -p 8080:8080 --entrypoint sh  %IMAGE_NAME%
+
 
 Export image (https://stackoverflow.com/a/23938978):
 docker save -o exported_%IMAGE_NAME%.tar %IMAGE_NAME%
 
 Image restore:
 docker load -i exported_%IMAGE_NAME%.tar
+
