@@ -34,7 +34,7 @@ function fileIsImage(fName) {
   let fExt = fName.substring(last_dot_idx + 1);
   console.log("fExt :>> ", fExt);
   let imgExtArray = ["png", "jpg", "jpeg"];
-  if (imgExtArray.includes(fExt)) return true;
+  if (imgExtArray.includes(fExt.toLowerCase())) return true;
   else return false;
 }
 
