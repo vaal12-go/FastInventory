@@ -16,6 +16,7 @@ DISK_BASE_PATH = r"c:\Users\may13\Desktop\Object photo disk"
 INFO_FNAME = DISK_BASE_PATH + r"\TEXTFILE\OBJECT06.TXT"
 IMAGES_BASE_PATH = DISK_BASE_PATH+r"\PHOTOS\MED_RES"
 
+TOTAL_NUM_OF_IMAGES = 120
 NUM_OF_ITEMS_TO_ADD = 5
 
 
@@ -74,7 +75,12 @@ def iterate_images():
             splitLines = line.split('\t')
 
             imgName = splitLines[0]
+            print('test_populate_db:78 imgName:>>', imgName)
             if imgName == "Filename" or imgName == "...":
+                continue
+
+            if random.randint(0, 99) > (NUM_OF_ITEMS_TO_ADD*100)/TOTAL_NUM_OF_IMAGES:
+                print("Not proceeding with image")
                 continue
 
             imgName = imgName.replace(".TIF", ".JPG")
@@ -86,6 +92,7 @@ def iterate_images():
 
             if items_added >= NUM_OF_ITEMS_TO_ADD:
                 break
+    print('test_populate_db:95 items_added:>>', items_added)
 
 
 if __name__ == "__main__":
