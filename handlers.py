@@ -37,11 +37,12 @@ async def tag_list_handler():
 async def get_file_handler(file_uuid: uuid.UUID):
     # print("Hello")
     # print('handlers:38 file_uuid:>>', file_uuid)
-    session = Session(db.db_engine)
-    fContent = session.exec(
-        select(SQLiteFileContent).where(SQLiteFileContent.uuid == file_uuid)
-    ).first()
-    return Response(content=fContent.content_bytes)
+    with Session(db.db_engine) as session:
+        fContent = session.exec(
+            select(SQLiteFileContent).where(
+                SQLiteFileContent.uuid == file_uuid)
+        ).first()
+        return Response(content=fContent.content_bytes)
 
 
 @app.post("/upload_item_file")
