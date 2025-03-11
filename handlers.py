@@ -22,21 +22,20 @@ from typing import Annotated, List
 
 @app.get("/tag")
 async def tag_list_handler():
-    session = Session(db.db_engine)
-    ret = session.exec(
-        select(Tag)
-    ).all()
-    print('handlers.py: ret=', ret)
-    return {
-        "status": "success",
-        "tags": ret
-    }
+    with Session(db.db_engine) as session:
+        ret = session.exec(
+            select(Tag)
+        ).all()
+        # print('handlers.py: ret=', ret)
+        return {
+            "status": "success",
+            "tags": ret
+        }
+# END async def tag_list_handler():
 
 
 @app.get("/item_file/{file_uuid}")
 async def get_file_handler(file_uuid: uuid.UUID):
-    # print("Hello")
-    # print('handlers:38 file_uuid:>>', file_uuid)
     with Session(db.db_engine) as session:
         fContent = session.exec(
             select(SQLiteFileContent).where(
@@ -49,12 +48,7 @@ async def get_file_handler(file_uuid: uuid.UUID):
 async def upload_picture_handler(
         file_uploaded: Annotated[UploadFile, File()],
         uuid_str: Annotated[str, Form()]):
-    # print('have picture upload 5')
-    # print('handlers:42 uuid:>>', uuid_str)
     f_content = file_uploaded.file.read()
-    # fUploadedSave = open(f"uploaded.{uuid_str}_{file_uploaded.filename}", "wb")
-    # fUploadedSave.write(f_content)
-    # fUploadedSave.close()
 
     with Session(db.db_engine) as session:
         sqlFile = SQLiteFile(
@@ -62,14 +56,14 @@ async def upload_picture_handler(
             description=f"Description of file {file_uploaded.filename}",
             item_uuid=uuid.UUID(uuid_str)
         )
-        print('handlers:56 sqlFile:>>', sqlFile)
+        # print('handlers:56 sqlFile:>>', sqlFile)
         f_uuid = sqlFile.uuid
         session.add(sqlFile)
         session.commit()
 
         sqlFile = session.get(SQLiteFile, f_uuid)
-        print('handlers:59 sqlFile:>>', type(sqlFile))
-        print('handlers:59 sqlFile:>>', sqlFile.uuid)
+        # print('handlers:59 sqlFile:>>', type(sqlFile))
+        # print('handlers:59 sqlFile:>>', sqlFile.uuid)
         content = SQLiteFileContent(
             uuid=sqlFile.uuid,
             content_bytes=f_content
@@ -86,3 +80,4 @@ async def upload_picture_handler(
             "status": "success",
             "file_created": sqlFile
         }
+# END async def upload_picture_handler(
