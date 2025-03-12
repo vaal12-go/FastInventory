@@ -99,6 +99,7 @@ def add_item(itm_name, itm_img_fName):
             select(Tag).where(Tag.tag == tag)
         ).first()
         itm.tags.append(tag_obj)
+        itm.update_search_tags_field()
 
         session.add(itm)
         session.commit()
@@ -111,21 +112,19 @@ def iterate_images():
     items_added = 0
     with open(INFO_FNAME, "r") as f:
         for line in f:
-            print(f"Line:{line}")
+            # print(f"Line:{line}")
             splitLines = line.split('\t')
-
             imgName = splitLines[0]
-            print('test_populate_db:78 imgName:>>', imgName)
             if imgName == "Filename" or imgName == "...":
                 continue
-
             if random.randint(0, 99) > (NUM_OF_ITEMS_TO_ADD*100)/TOTAL_NUM_OF_IMAGES:
-                print("Not proceeding with image")
+                # print("Not proceeding with image")
                 continue
-
+            # print('test_populate_db:78 imgName:>>', imgName)
             imgName = imgName.replace(".TIF", ".JPG")
             objName = splitLines[1]
-            print(f"Object:{objName}  Image:{imgName}")
+
+            print(f"\n\nObject:{objName}  Image:{imgName}")
             add_item(objName, imgName)
 
             items_added += 1

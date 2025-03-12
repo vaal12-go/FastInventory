@@ -12,6 +12,8 @@ from models.file import SQLiteFile
 
 import db
 
+NO_TAG_UUID_NAME = "no_tag"
+
 
 class ItemOut(BaseModel):
     uuid: uuid.UUID
@@ -68,7 +70,7 @@ MAX_ITEMS_PER_PAGE = 4
 
 
 @app.get("/item/{item_uuid}")
-def item_get_handler(item_uuid: str, page: int | None = 0):
+def item_get_handler(item_uuid: str, page: int | None = 0, tags: str | None = None):
     with Session(db.db_engine) as session:
         requested_uuid = None
         try:
@@ -82,31 +84,61 @@ def item_get_handler(item_uuid: str, page: int | None = 0):
         else:
             if item_uuid == "all":
                 print("Will return all items")
-                # print('item_handlers:87 offset:>>', offset)
-                print('item_handlers:88 page:>>', page)
+                print('item_handlers:85 tags:>>', tags)
 
-                no_of_items = session.exec(
-                    select(func.count(col(Item.uuid)))
-                ).one()
+                all_items = None
+                no_of_items = -1
+
+                no_of_pages = -1
+                if tags is not None:
+                    if tags == NO_TAG_UUID_NAME:
+                        all_items = session.exec(
+                            select(Item).where(
+                                Item.search_tags_field == ""
+                            ).
+                            order_by(Item.created_datetime.desc())
+                        ).all()
+                    else:
+                        all_items = session.exec(
+                            select(Item).where(
+                                col(Item.search_tags_field).contains(
+                                    tags)
+                            ).
+                            order_by(Item.created_datetime.desc())
+                        ).all()
+                    no_of_items = len(all_items)
+
+                else:
+                    # print('item_handlers:87 offset:>>', offset)
+                    print('item_handlers:88 page:>>', page)
+                    print('item_handlers:87 tags:>>', tags)
+
+                    no_of_items = session.exec(
+                        select(func.count(col(Item.uuid)))
+                    ).one()
+
+                    if (page*MAX_ITEMS_PER_PAGE > no_of_items):
+                        return {
+                            "status": "error",
+                            "description": f"Page requested [{page}] is out of range"
+                        }
+
+                    all_items = session.exec(
+                        select(Item).offset(page*MAX_ITEMS_PER_PAGE).
+                        limit(MAX_ITEMS_PER_PAGE).
+                        order_by(Item.created_datetime.desc())
+                    ).all()
 
                 no_of_pages = no_of_items // MAX_ITEMS_PER_PAGE
                 if no_of_items % MAX_ITEMS_PER_PAGE != 0:
                     no_of_pages += 1
 
                 print('item_handlers:92 no_of_items:>>', no_of_items)
-                print('item_handlers:97 MAX_ITEMS_PER_PAGE:>>', MAX_ITEMS_PER_PAGE)
+                print('item_handlers:97 MAX_ITEMS_PER_PAGE:>>',
+                      MAX_ITEMS_PER_PAGE)
                 print('item_handlers:97 no_of_pages:>>', no_of_pages)
-
-                if (page*MAX_ITEMS_PER_PAGE > no_of_items):
-                    return {
-                        "status": "error",
-                        "description": f"Page requested [{page}] is out of range"
-                    }
-
-                all_items = session.exec(
-                    select(Item).offset(page*MAX_ITEMS_PER_PAGE).limit(MAX_ITEMS_PER_PAGE).order_by(
-                        Item.created_datetime.desc())
-                ).all()
+                for itm in all_items:
+                    print('item_handlers:113 itm:>>', itm)
 
                 outList = ItemOutList.parse_obj({"lst": all_items})
 
@@ -142,6 +174,9 @@ async def patch_item_handler(item_uuid: uuid.UUID, item_changed: ItemCreate):
         print('handlers:83 item_to_patch BEFORE SYNC:>>', item_to_patch)
         synchronizeItemTags(session, item_to_patch, item_changed.tags_uuids)
         print('handlers:83 item_to_patch AFTER SYNC:>>', item_to_patch)
+        item_to_patch.update_search_tags_field()
+        session.add(item_to_patch)
+        session.commit()
 
         # item_to_patch.name = session.commit()
         return {

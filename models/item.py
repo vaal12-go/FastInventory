@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship, create_engine, TIMESTAMP
 import uuid as uuid_lib
 from typing import Optional
@@ -43,15 +43,28 @@ class Item(ItemBase, table=True):
 
     files: list["SQLiteFile"] = Relationship(back_populates="item")
 
+    search_tags_field: str | None = None
+
     # Working from here: https://github.com/fastapi/sqlmodel/issues/370#issuecomment-1169665476
     created_datetime: Optional[datetime] = Field(
         sa_column=Column(DateTime(timezone=False), server_default=func.now())
     )
+    # TODO: https://github.com/fastapi/sqlmodel/issues/52#issuecomment-1311987732
+    # To avoid the error:
+    # _generate_schema.py:502: UserWarning: <module 'datetime' from 'C:\\Users\\may13\\AGVDocs\\Dev\\1. DevTools\\5.Python\\python\\Lib\\datetime.py'> is not a Python type (it may be an instance of an object), Pydantic will allow any object with no validation since we cannot even enforce that the input is an instance of the given type. To get rid of this error wrap the type with `pydantic.SkipValidation`.
 
     updated_at: Optional[datetime] = Field(
         sa_column=Column(DateTime(timezone=False),
                          onupdate=func.now(), server_default=func.now())
     )
+
+    def update_search_tags_field(self):
+        search_field = ""
+        for tag in self.tags:
+            search_field = search_field + f"{tag.uuid};"
+        print('item:65 search_field:>>', search_field)
+        self.search_tags_field = search_field
+
     # updated_datetime: Optional[datetime] = Field(sa_column=Column(
     #     TIMESTAMP(timezone=False),
     #     nullable=False,
