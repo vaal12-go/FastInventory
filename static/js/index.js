@@ -1,14 +1,18 @@
 // Main interactivity file for index.html root page of the application
 
+// TODO: move helper libraries to /libs directory
+// TODO: create subfolder js files of each page to increase modularity
+// TODO: manage global state with global class, not individual variables
+
 itemListTemplate = `
     <div class="row border">
       <div class="row">
         <div class="col-1 justify-content-center text-center">
         {{#image_rec}}
-            <img src="http://127.0.0.1:8080/item_file/{{image_rec.uuid}}" width="100" height="100">
+            <img src="{{BASE_URL}}item_file/{{image_rec.uuid}}" width="100" height="100">
         {{/image_rec}}
         {{^image_rec}}
-          <img src="http://127.0.0.1:8080/img/no-photo-svgrepo-com.svg" width="50" height="50">
+          <img src="{{BASE_URL}}img/no-photo-svgrepo-com.svg" width="50" height="50">
         {{/image_rec}}
           
         </div>  
@@ -32,25 +36,26 @@ itemListTemplate = `
 function fileIsImage(fName) {
   let last_dot_idx = fName.lastIndexOf(".");
   let fExt = fName.substring(last_dot_idx + 1);
-  console.log("fExt :>> ", fExt);
+  // console.log("fExt :>> ", fExt);
   let imgExtArray = ["png", "jpg", "jpeg"];
   if (imgExtArray.includes(fExt.toLowerCase())) return true;
   else return false;
 }
 
 function findImageFileOfItem(item) {
-  console.log("item :>> ", item);
+  // console.log("item :>> ", item);
   for (let fileIdx in item.files) {
     let fileRec = item.files[fileIdx];
-    console.log("file :>> ", fileRec);
+    // console.log("file :>> ", fileRec);
     if (fileIsImage(fileRec.name)) return fileRec;
   }
   return null;
 }
 
 window.onload = () => {
+  // console.log("BASE_URL :>> ", BASE_URL);
   fetchURL = `${BASE_URL}item/all`;
-  console.log("fetchURL :>> ", fetchURL);
+  // console.log("fetchURL :>> ", fetchURL);
   fetchJSON(
     fetchURL,
     {
@@ -60,15 +65,16 @@ window.onload = () => {
       },
     },
     (jsonObj) => {
-      console.log("jsonObj :>> ", jsonObj);
+      // console.log("jsonObj :>> ", jsonObj);
       itemsHTML = "";
       for (itemIdx in jsonObj) {
         item = jsonObj[itemIdx];
         let imageFileRec = findImageFileOfItem(item);
-        console.log("imageFileRec :>> ", imageFileRec);
+        // console.log("imageFileRec :>> ", imageFileRec);
         renderRes = Mustache.render(itemListTemplate, {
           item: item,
           image_rec: imageFileRec,
+          BASE_URL: BASE_URL,
         });
         itemsHTML += renderRes;
       }

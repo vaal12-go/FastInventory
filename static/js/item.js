@@ -35,7 +35,7 @@ window.onload = async () => {
         },
       },
       (jsonObj) => {
-        console.log("Have responce :>> ", jsonObj);
+        // console.log("Have responce :>> ", jsonObj);
         if (jsonObj.status == "success") {
           var returnURL = `${BASE_URL}html/index.html`;
           window.location.replace(returnURL);
@@ -46,10 +46,10 @@ window.onload = async () => {
 
   // console.log("itemUUID :>> ", editItemUUID);
   if (editItemUUID === null) {
-    console.log("It is null :>> Creating new item");
+    // console.log("It is null :>> Creating new item");
     populateContainerSelect(null);
   } else {
-    console.log("Editing item :>> ");
+    // console.log("Editing item :>> ");
     document.getElementById("item_uuid").innerHTML = editItemUUID;
     swapClassesOnElement("created_item_buttons", "invisible", null);
     document.getElementById("form_title").innerHTML = "Edit item";
@@ -59,7 +59,7 @@ window.onload = async () => {
   document
     .getElementById("new_item_submit_btn")
     .addEventListener("click", () => {
-      console.log("Submit Butt pressed :>> ");
+      // console.log("Submit Butt pressed :>> ");
       send_data(editItemUUID);
     }); //addEventListener("click", () => {
 }; //window.onload = () => {

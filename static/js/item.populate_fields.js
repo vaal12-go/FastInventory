@@ -1,11 +1,10 @@
-function populateTags() {
-  // console.log("Tag populate started :>> ");
-  // if (serverItemJsonToEdit != null) {
-  //   console.log("serverItemJsonToEdit :>> ", serverItemJsonToEdit);
-  // }
+// HIGH: create helper library to retrieve json from server and populate fields of the form.
+// HIGH: extende helper library to collect json from form fields
+// TODO: first version of library to use element ids, but also to check if data fields can be used to tag form fields for use with library
 
+function populateTags() {
   var fetchURL = `${BASE_URL}tag`;
-  console.log("fetchURL :>> ");
+  // console.log("fetchURL :>> ");
   fetchJSON(
     fetchURL,
     {
@@ -60,7 +59,7 @@ async function populateFieldsWithItem(itemUUID) {
 
 function populateContainerSelect(selectedContainerUUID) {
   var fetchURL = `${BASE_URL}item/containers`;
-  console.log("fetchURL :>> ");
+  // console.log("fetchURL :>> ");
   fetchJSON(
     fetchURL,
     {
