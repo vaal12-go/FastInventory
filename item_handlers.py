@@ -1,5 +1,6 @@
 import sys
 import uuid
+import datetime
 from sqlmodel import Session, select
 from typing import List, Optional, Any
 from pydantic import BaseModel
@@ -19,9 +20,12 @@ class ItemOut(BaseModel):
     container_uuid: uuid.UUID | None = None
     tags: Optional[List[Tag]] = []
     files: Optional[List[SQLiteFile]] = []
+    created_datetime: Optional[datetime]
+    updated_at: Optional[datetime]
 
     class Config:
         from_attributes = True
+        arbitrary_types_allowed = True
 
 
 class ItemOutList(BaseModel):
@@ -82,7 +86,7 @@ def item_get_handler(item_uuid: str):
                 # print("Will return all items")
 
                 all_items = session.exec(
-                    select(Item).order_by(Item.)
+                    select(Item).order_by(Item.created_datetime.desc())
                 ).all()
 
                 outList = ItemOutList.parse_obj({"lst": all_items})
