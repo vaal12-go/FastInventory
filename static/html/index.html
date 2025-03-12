@@ -56,15 +56,19 @@
     </nav>
 
     <!-- Simple grid from docs: https://getbootstrap.com/docs/5.0/layout/grid/#example -->
-    <div class="container text-center">
-      <!-- <div class="row">
-        <div class="col">
-          <a href="/item.html">Create new item</a>
-        </div>
-      </div> -->
+    <div class="container-fluid text-center ps-5 pe-5">
       <div class="row text-start">
-        <div class="col"><h1>List of items</h1></div>
-        <div class="container" id="items_placeholder">ITEMS BE HERE</div>
+        <div class="col-2">
+          <h3>Tags</h3>
+          <div id="tags-search-div" class="border">Search</div>
+          <div id="tags-holder" class="border">#qwe1; #qwe2; qwe3</div>
+        </div>
+        <div class="col-10 text-center border">
+          <h3>List of items</h3>
+          <div class="container-fluid" id="items_placeholder">
+            ITEMS BE HERE
+          </div>
+        </div>
       </div>
     </div>
   </body>

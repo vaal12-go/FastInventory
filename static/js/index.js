@@ -5,30 +5,28 @@
 // TODO: manage global state with global class, not individual variables
 
 itemListTemplate = `
-    <div class="row border">
+    <div class="row border mb-1">
       <div class="row">
         <div class="col-1 justify-content-center text-center">
         {{#image_rec}}
-            <img src="{{BASE_URL}}item_file/{{image_rec.uuid}}" width="100" height="100">
+            <img src="{{BASE_URL}}item_file/{{image_rec.uuid}}" width="70" height="70">
         {{/image_rec}}
         {{^image_rec}}
-          <img src="{{BASE_URL}}img/no-photo-svgrepo-com.svg" width="50" height="50">
+          <img src="{{BASE_URL}}img/no-photo-svgrepo-com.svg" width="50px" height="50">
         {{/image_rec}}
-          
         </div>  
-        <div class="col-10">
+        <div class="col-10 text-start">
           <h5>{{item.name}}</h5>
           <a href="./item.html?itemUUID={{item.uuid}}">Edit</a>
-        </div>  
-      </div>
-      
-      <div class="row">
+          <div class="row">
         <div class="col-10">
           {{item.uuid}} | | {{item.description}} | {{#item.container_uuid}}
           Container:{{item.container_uuid}} | {{/item.container_uuid}} {{#item.tags}} >>
           {{item.tag}} {{/item.tags}}
         </div>
         <div class="col-2"></div>
+      </div>
+        </div>  
       </div>
     </div>
 `;
@@ -52,33 +50,81 @@ function findImageFileOfItem(item) {
   return null;
 }
 
-window.onload = () => {
-  // console.log("BASE_URL :>> ", BASE_URL);
-  fetchURL = `${BASE_URL}item/all`;
-  // console.log("fetchURL :>> ", fetchURL);
-  fetchJSON(
-    fetchURL,
-    {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    },
-    (jsonObj) => {
-      // console.log("jsonObj :>> ", jsonObj);
-      itemsHTML = "";
-      for (itemIdx in jsonObj) {
-        item = jsonObj[itemIdx];
-        let imageFileRec = findImageFileOfItem(item);
-        // console.log("imageFileRec :>> ", imageFileRec);
-        renderRes = Mustache.render(itemListTemplate, {
-          item: item,
-          image_rec: imageFileRec,
-          BASE_URL: BASE_URL,
-        });
-        itemsHTML += renderRes;
-      }
-      document.getElementById("items_placeholder").innerHTML = itemsHTML;
-    } //(jsonObj) => {
-  ); //fetchJSON(
+async function tag_click(elem) {
+  console.log("Have tag click. This :>> ", this);
+  console.log("elem :>> ", elem);
+  console.log("elem.id :>> ", elem.id);
+  let filtering_tag_uuid = elem.id;
+
+  let fetchURL = `${BASE_URL}item/all`;
+  let jsonObj = await fetchJSON2(fetchURL, null);
+  console_debug("index:60 jsonObj:>>", jsonObj);
+
+  let filtered_items = jsonObj.filter((item) => {
+    // console.log("item :>> ", item);
+    if (filtering_tag_uuid == "no_tag" && item.tags.length == 0) return true;
+    if (item.tags.length == 0) return false;
+    console_debug("index:66 item:>>", item);
+    let filtered_tags = item.tags.filter((tag) => {
+      console.log("tag.uuid :>> ", tag.uuid);
+      console_debug("index:69 filtering_tag_uuid:>>", filtering_tag_uuid);
+      console_debug(
+        "index:70 tag.uuid==filtering_tag_uuid:>>",
+        tag.uuid == filtering_tag_uuid
+      );
+      return tag.uuid == filtering_tag_uuid ? true : false;
+    }); //let filtered_tags = item.tags.filter((tag)=>{
+    console.log("filtered_tags :>> ", filtered_tags);
+    if (filtered_tags.length == 0) return false;
+    return true;
+  }); //let filtered_items = jsonObj.map((item)=>{
+  console.log("filtered_items :>> ", filtered_items);
+  populate_items_list(filtered_items);
+}
+
+function populate_items_list(items) {
+  itemsHTML = "";
+  for (itemIdx in items) {
+    item = items[itemIdx];
+    let imageFileRec = findImageFileOfItem(item);
+    renderRes = Mustache.render(itemListTemplate, {
+      item: item,
+      image_rec: imageFileRec,
+      BASE_URL: BASE_URL,
+    });
+    itemsHTML += renderRes;
+  }
+  document.getElementById("items_placeholder").innerHTML = itemsHTML;
+}
+
+window.onload = async () => {
+  let fetchURL = `${BASE_URL}item/all`;
+  let jsonObj = await fetchJSON2(fetchURL, null);
+  console_debug("index:56 item_list:>>", jsonObj);
+  populate_items_list(jsonObj);
+
+  //Populating tags
+  let tagsURL = `${BASE_URL}tag`;
+  let tagsResp = await fetchJSON2(tagsURL, null);
+  console_debug("index:74 tagsResp:>>", tagsResp);
+  tagsHTML = "";
+  tagsHTML += `<a href="#" id="no_tag" onclick="tag_click(this)">no_tag</a>; `;
+  for (tagIdx in tagsResp.tags) {
+    let tag = tagsResp.tags[tagIdx];
+    tagsHTML += `<a href="#" id="${tag.uuid}" onclick="tag_click(this)">${tag.tag}</a>; `;
+  }
+  document.getElementById("tags-holder").innerHTML = tagsHTML;
+
+  // fetchJSON(
+  //   fetchURL,
+  //   {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-type": "application/json; charset=UTF-8",
+  //     },
+  //   },
+  //   (jsonObj) => {
+  //     // console.log("jsonObj :>> ", jsonObj);
+  //   } //(jsonObj) => {
+  // ); //fetchJSON(
 }; //window.onload = () => {
