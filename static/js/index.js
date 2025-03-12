@@ -62,30 +62,35 @@ async function tag_click(elem) {
   let jsonObj = await fetchJSON2(fetchURL, null);
   console_debug("index:60 jsonObj:>>", jsonObj);
 
-  let filtered_items = jsonObj.filter((item) => {
+  let filtered_items = jsonObj.items.filter((item) => {
     // console.log("item :>> ", item);
     if (filtering_tag_uuid == "no_tag" && item.tags.length == 0) return true;
     if (item.tags.length == 0) return false;
     console_debug("index:66 item:>>", item);
     let filtered_tags = item.tags.filter((tag) => {
-      console.log("tag.uuid :>> ", tag.uuid);
-      console_debug("index:69 filtering_tag_uuid:>>", filtering_tag_uuid);
-      console_debug(
-        "index:70 tag.uuid==filtering_tag_uuid:>>",
-        tag.uuid == filtering_tag_uuid
-      );
+      // console.log("tag.uuid :>> ", tag.uuid);
+      // console_debug("index:69 filtering_tag_uuid:>>", filtering_tag_uuid);
+      // console_debug(
+      //   "index:70 tag.uuid==filtering_tag_uuid:>>",
+      //   tag.uuid == filtering_tag_uuid
+      // );
       return tag.uuid == filtering_tag_uuid ? true : false;
     }); //let filtered_tags = item.tags.filter((tag)=>{
-    console.log("filtered_tags :>> ", filtered_tags);
+    // console.log("filtered_tags :>> ", filtered_tags);
     if (filtered_tags.length == 0) return false;
     return true;
   }); //let filtered_items = jsonObj.map((item)=>{
-  console.log("filtered_items :>> ", filtered_items);
+  // console.log("filtered_items :>> ", filtered_items);
   populate_items_list(filtered_items);
 }
 
 function populate_items_list(items) {
   itemsHTML = "";
+  if (items.length == 0) {
+    document.getElementById("items_placeholder").innerHTML =
+      "<h5>No items in selection</h5>";
+    return;
+  }
   for (itemIdx in items) {
     item = items[itemIdx];
     let imageFileRec = findImageFileOfItem(item);
@@ -103,16 +108,65 @@ function populate_tags(tags, add_no_tag = true) {
   tagsHTML = "";
   if (add_no_tag)
     tagsHTML += `<a href="#" id="${NO_TAG_NAME_ID}" onclick="tag_click(this)">${NO_TAG_NAME_ID}</a>; `;
-  console_debug("index:106 tags presort:>>", tags);
+  // console_debug("index:106 tags presort:>>", tags);
   tags.sort((a, b) => {
     return a.tag.localeCompare(b.tag);
   });
-  console_debug("index:107 tags after sort:>>", tags);
+  // console_debug("index:107 tags after sort:>>", tags);
   for (tagIdx in tags) {
     let tag = tags[tagIdx];
     tagsHTML += `<a href="#" id="${tag.uuid}" onclick="tag_click(this)">${tag.tag}</a>; `;
   }
   document.getElementById("tags-holder").innerHTML = tagsHTML;
+}
+
+async function reload_page(server_json) {
+  populate_items_list(server_json.items);
+  generate_page_numbers(server_json);
+}
+
+async function next_page(el) {
+  // console_debug("index:125 el:>>", el);
+  // console_debug("index:125 el", el);
+  console_debug("index:126 el::", el);
+  console_debug("index:125 el.dataset.pageno:>>", el.dataset.pageno);
+  // console_debug("index:126 el.dataset:>>", el.dataset);
+  let served_json = await get_items_from_server(el.dataset.pageno);
+  await reload_page(served_json);
+}
+
+async function get_items_from_server(page = 0) {
+  let fetchURL = `${BASE_URL}item/all?page=${page}`;
+  console_debug("index:130 fetchURL:>>", fetchURL);
+  let serverRes = await fetchJSON2(fetchURL, null);
+  console_debug("index:132 serverRes:>>", serverRes);
+  return serverRes;
+}
+
+function generate_page_numbers(served_json) {
+  console_debug("index:125 served_json:>>", served_json);
+  let pagesHTML = "";
+  if (served_json.page > 0) pagesHTML = "&#x226A; ";
+  console_debug("index:128 pagesHTML:>>", pagesHTML);
+  console_debug(
+    "index:133 get_num_array(served_json.total_pages):>>",
+    get_num_array(served_json.total_pages)
+  );
+  // TODO: this will work for pages < 10, but have to be better in cases of more than 10
+  pages_arr = get_num_array(served_json.total_pages);
+  for (let pageNoIdx in pages_arr) {
+    let pageNo = pages_arr[pageNoIdx];
+    console_debug("index:138 get_obj_type(pageNo):>>", get_obj_type(pageNo));
+    visible_page_no = pageNo + 1;
+    if (pageNo == served_json.page) {
+      pagesHTML += `<span class="fs-2 fw-bold">${visible_page_no}</span> | `;
+    } else {
+      pagesHTML += `<a href="#" data-pageno="${pageNo}" onclick="next_page(this)">${visible_page_no}</a> | `;
+    }
+
+    console_debug("index:131 pagesHTML:>>", pagesHTML);
+  }
+  document.getElementById("pagination-holder").innerHTML = pagesHTML;
 }
 
 async function tag_search() {
@@ -134,10 +188,10 @@ async function tag_search() {
 }
 
 window.onload = async () => {
-  let fetchURL = `${BASE_URL}item/all`;
-  let jsonObj = await fetchJSON2(fetchURL, null);
+  let jsonObj = await get_items_from_server(0);
   // console_debug("index:56 item_list:>>", jsonObj);
-  populate_items_list(jsonObj);
+  populate_items_list(jsonObj.items);
+  generate_page_numbers(jsonObj);
 
   //Populating tags
   let tagsURL = `${BASE_URL}tag`;
@@ -148,17 +202,4 @@ window.onload = async () => {
   document
     .getElementById("tag_search_input")
     .addEventListener("input", tag_search);
-
-  // fetchJSON(
-  //   fetchURL,
-  //   {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-type": "application/json; charset=UTF-8",
-  //     },
-  //   },
-  //   (jsonObj) => {
-  //     // console.log("jsonObj :>> ", jsonObj);
-  //   } //(jsonObj) => {
-  // ); //fetchJSON(
 }; //window.onload = () => {

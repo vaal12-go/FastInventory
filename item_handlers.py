@@ -1,7 +1,7 @@
 import sys
 import uuid
 import datetime
-from sqlmodel import Session, select
+from sqlmodel import Session, select, func, col
 from typing import List, Optional, Any
 from pydantic import BaseModel
 
@@ -64,67 +64,59 @@ async def containers_list_handler():
         }
 # END async def containers_list_handler():
 
+MAX_ITEMS_PER_PAGE = 4
+
 
 @app.get("/item/{item_uuid}")
-def item_get_handler(item_uuid: str):
+def item_get_handler(item_uuid: str, page: int | None = 0):
     with Session(db.db_engine) as session:
-        # print(f"Have itemUUID:{item_uuid}")
         requested_uuid = None
         try:
             requested_uuid = uuid.UUID(item_uuid)
         except:
             print(f"item_uuid:{item_uuid} supplied is not valid uuid")
         if requested_uuid is not None:
-            # print("Will return single item")
             ret = session.get(Item, requested_uuid)
-            # print('item_handlers:69 ret.files:>>', ret.files)
             itmOut = ItemOut.parse_obj(ret)
-            # print('\n\nitem_handlers.py: itmOut=', itmOut)
             return itmOut
         else:
             if item_uuid == "all":
-                # print("Will return all items")
+                print("Will return all items")
+                # print('item_handlers:87 offset:>>', offset)
+                print('item_handlers:88 page:>>', page)
+
+                no_of_items = session.exec(
+                    select(func.count(col(Item.uuid)))
+                ).one()
+
+                no_of_pages = no_of_items // MAX_ITEMS_PER_PAGE
+                if no_of_items % MAX_ITEMS_PER_PAGE != 0:
+                    no_of_pages += 1
+
+                print('item_handlers:92 no_of_items:>>', no_of_items)
+                print('item_handlers:97 MAX_ITEMS_PER_PAGE:>>', MAX_ITEMS_PER_PAGE)
+                print('item_handlers:97 no_of_pages:>>', no_of_pages)
+
+                if (page*MAX_ITEMS_PER_PAGE > no_of_items):
+                    return {
+                        "status": "error",
+                        "description": f"Page requested [{page}] is out of range"
+                    }
 
                 all_items = session.exec(
-                    select(Item).order_by(Item.created_datetime.desc())
+                    select(Item).offset(page*MAX_ITEMS_PER_PAGE).limit(MAX_ITEMS_PER_PAGE).order_by(
+                        Item.created_datetime.desc())
                 ).all()
 
                 outList = ItemOutList.parse_obj({"lst": all_items})
-                # print(f"outList:{outList}")
 
-                # print(f"all_items:{all_items}")
-                # print(f"all_items:{list(all_items)}")
-
-                # ret_itms = []
-                # for itm in all_items:
-                #     pass
-                # print(f"itm supplied:{itm}")
-                # print(f"itm.tags:{itm.tags}")
-                # print(f"itm.model_dump():{itm.model_dump()}")
-
-                # itm_out2 = ItemOut.from_orm(itm)
-                # print(f"itm_out2:{itm_out2}")
-
-                # # itm_out = ItemOut.model_validate(
-                # #     itm.model_dump(), from_attributes=True)
-                # # itm_out = itm.model_copy(update={"tags": itm.tags})
-                # itm_out = ItemOut.model_validate(itm.model_dump())
-                # print(f"itm_out before tags:{itm_out}")
-                # itm_out.tags = itm.tags
-                # # print(f"itm_out:{itm_out}")
-                # ret_itms.append(itm_out)
-                # # itm_tags = session.exec(
-                # #     select(Tag, ItemTagLink).join(ItemTagLink.tag_uuid).where(ItemTagLink.itemuud == itm.uuid)
-                # # ).all
-                # # for tag in itm_tags:
-
-                # print(f"all_items:{all_items}")
-                # itms_list = []
-                # for itm in all_items:
-                #     print(f"itm:{itm}")
-                #     print(f"itm tags:{itm.tags}")
-                #     itms_list.append(itm)
-                return outList.lst
+                return {
+                    "status": "success",
+                    "items": outList.lst,
+                    "page": page,
+                    "total_items": no_of_items,
+                    "total_pages": no_of_pages
+                }
 
         return {
             "item_uuid": item_uuid,

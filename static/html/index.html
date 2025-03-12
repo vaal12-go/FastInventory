@@ -57,7 +57,7 @@
 
     <!-- Simple grid from docs: https://getbootstrap.com/docs/5.0/layout/grid/#example -->
     <!-- Main page container -->
-    <div class="container-fluid text-center ps-5 pe-5">
+    <div class="container-fluid text-center ps-3 pe-3">
       <div class="row text-start">
         <!-- TAGS left section -->
         <div class="col-2">
@@ -81,10 +81,39 @@
         <!-- END TAGS left section -->
 
         <!-- Items main section -->
-        <div class="col-10 text-center">
-          <h3>List of items</h3>
-          <div class="container-fluid" id="items_placeholder">
-            ITEMS BE HERE
+        <div class="col-10 text-center mt-3">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col"><h3>List of items</h3></div>
+            </div>
+            <div class="row align-items-center ps-4 pe-4 mb-2">
+              <div class="col-1"><span class="align-middle">[x] all</span></div>
+              <div class="col-4">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="item_search_input"
+                  placeholder="Search items"
+                />
+              </div>
+              <div class="col border">filter/selection gadgets</div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="container-fluid" id="items_placeholder">
+                  ITEMS BE HERE
+                </div>
+              </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="row">
+              <div class="col fs-4" id="pagination-holder">
+                &#x226A; 1 2 ... | 3 | <span class="fs-2 fw-bold">4</span> | 5 |
+                ... 6 7 &#x226B;
+              </div>
+            </div>
+            <!-- END Pagination -->
           </div>
         </div>
         <!-- END Items main section -->

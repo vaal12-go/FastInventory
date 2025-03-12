@@ -9,7 +9,7 @@ from models.tag import Tag
 db_engine = None
 
 
-def init_db(echo=True):
+def init_db(echo=False):
     sqlite_url = f"sqlite:///{configuration.SQLITE_FILE_NAME}"
 
     global db_engine

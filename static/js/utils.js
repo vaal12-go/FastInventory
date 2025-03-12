@@ -74,15 +74,15 @@ function get_obj_type(obj) {
   switch (internal_type) {
     case "[object Null]":
       return "null";
+    case "string":
+      return "string";
     case "[object Object]":
       return "object";
     case "[object Array]":
       return "array";
-    case "[object String]":
-      return "string";
     case "[object Boolean]":
       return "boolean";
-    case "[object Number]":
+    case "number":
       return "number";
     case "[object Date]":
       return "date";
@@ -91,6 +91,10 @@ function get_obj_type(obj) {
         "unknown type. Object.prototype.toString.call(obj)=>" + internal_type
       );
   }
+}
+
+function get_num_array(max_num) {
+  return [...Array(max_num).keys()];
 }
 
 function render_single_obj(obj, template = null) {
@@ -141,15 +145,15 @@ function render_obj_as_html(obj, template = null) {
 
 async function fetchJSON2(url, options, debugOverride = false) {
   // TODO: will be fully awaitable and honoring Debug parameters
-  console_debug("utils:43 url:>>", url);
+  // console_debug("utils:43 url:>>", url);
 
   try {
     const response = await fetch(url, options);
     const json = await response.json();
-    console_debug("utils:48 json:>>", json);
+    // console_debug("utils:48 json:>>", json);
     return json;
   } catch (err) {
-    console_debug("utils:51.fetchJSON2 err:>>", err);
+    // console_debug("utils:51.fetchJSON2 err:>>", err);
     throw err;
   }
 } //async function fetchJSON(url, options, jsonFunction) {
