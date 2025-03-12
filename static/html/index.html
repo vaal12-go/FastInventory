@@ -65,6 +65,20 @@
             <div class="row">
               <div class="col">
                 <h3>Tags</h3>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col border p-2">
+                <div>Selected</div>
+                <div>remove all</div>
+                <div
+                  id="selected-tags-placeholder"
+                  style="font-size: 11px"
+                ></div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
                 <div id="tags-search-div">
                   <input
                     type="text"
@@ -73,7 +87,15 @@
                     placeholder="Search tags"
                   />
                 </div>
-                <div id="tags-holder" class="mt-3 ms-2">#qwe1; #qwe2; qwe3</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div
+                  id="tags-holder"
+                  style="font-size: 12px"
+                  class="mt-3 ms-2"
+                ></div>
               </div>
             </div>
           </div>
@@ -86,6 +108,8 @@
             <div class="row">
               <div class="col"><h3>List of items</h3></div>
             </div>
+
+            <!-- Filters and selections -->
             <div class="row align-items-center ps-4 pe-4 mb-2">
               <div class="col-1"><span class="align-middle">[x] all</span></div>
               <div class="col-4">
@@ -98,6 +122,9 @@
               </div>
               <div class="col border">filter/selection gadgets</div>
             </div>
+            <!-- END Filters and selections -->
+
+            <!-- Items -->
             <div class="row">
               <div class="col">
                 <div class="container-fluid" id="items_placeholder">
@@ -105,6 +132,7 @@
                 </div>
               </div>
             </div>
+            <!-- END Items -->
 
             <!-- Pagination -->
             <div class="row">
