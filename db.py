@@ -9,12 +9,12 @@ from models.tag import Tag
 db_engine = None
 
 
-def init_db():
+def init_db(echo=True):
     sqlite_url = f"sqlite:///{configuration.SQLITE_FILE_NAME}"
 
     global db_engine
     # TODO: add dev/prod .env variable and make echo depend on those
-    db_engine = create_engine(sqlite_url, echo=True)
+    db_engine = create_engine(sqlite_url, echo=echo)
     SQLModel.metadata.create_all(db_engine)
 
     with Session(db_engine) as session:

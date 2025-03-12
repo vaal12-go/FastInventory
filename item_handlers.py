@@ -82,7 +82,7 @@ def item_get_handler(item_uuid: str):
                 # print("Will return all items")
 
                 all_items = session.exec(
-                    select(Item)
+                    select(Item).order_by(Item.)
                 ).all()
 
                 outList = ItemOutList.parse_obj({"lst": all_items})
