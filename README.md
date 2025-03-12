@@ -7,7 +7,7 @@ Web application writted with FastAPI and SQLModel to serve as a personal invento
 * Storage/retrieval of binary files from SQL database
 * QRCode generation (for labelling of inventoried items)
 
-##Updates
+## Updates
 * 12Mar2025 - images are displayed on index page. server side uses context management of the sessions. Test database population (with random pictures).
 
 ## Further development

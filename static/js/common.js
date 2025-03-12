@@ -1,3 +1,9 @@
+let GLOBAL_STATE = {
+  BASE_URL: "",
+  DEBUG_FETCH: true,
+  DEBUG: true,
+};
+
 var BASE_URL = "";
 
 function calculateBaseURL() {
@@ -10,4 +16,9 @@ function calculateBaseURL() {
   BASE_URL = window.location.href.substring(0, lastIdx);
 }
 
-calculateBaseURL();
+function initGlobalState() {
+  calculateBaseURL();
+  GLOBAL_STATE.BASE_URL = BASE_URL;
+}
+
+initGlobalState();
