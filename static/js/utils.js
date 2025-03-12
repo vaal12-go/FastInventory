@@ -1,3 +1,8 @@
+// TODO: add utils.FETCH_DEBUG variable to control if fetch URLs and responces are logged to console
+
+// TODO: add debug=false parameter to fetch URL function
+// TODO: make fetch function awaitable
+
 function swapClassesOnElement(elID, classToRemove, classToAdd) {
   el = document.getElementById(elID);
   if (el === null) {
@@ -43,6 +48,7 @@ function addOptionToSelect(
 } //function addOptionToSelect(selectElId,
 
 function hideDivElement(elName) {
+  console.log("Hiding element :>> ", elName);
   document.getElementById(elName).classList.add("hiddenDiv");
 } //function hideDivElement(elName) {
 
