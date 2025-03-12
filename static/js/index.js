@@ -31,6 +31,8 @@ itemListTemplate = `
     </div>
 `;
 
+const NO_TAG_NAME_ID = "no_tag";
+
 function fileIsImage(fName) {
   let last_dot_idx = fName.lastIndexOf(".");
   let fExt = fName.substring(last_dot_idx + 1);
@@ -97,23 +99,55 @@ function populate_items_list(items) {
   document.getElementById("items_placeholder").innerHTML = itemsHTML;
 }
 
+function populate_tags(tags, add_no_tag = true) {
+  tagsHTML = "";
+  if (add_no_tag)
+    tagsHTML += `<a href="#" id="${NO_TAG_NAME_ID}" onclick="tag_click(this)">${NO_TAG_NAME_ID}</a>; `;
+  console_debug("index:106 tags presort:>>", tags);
+  tags.sort((a, b) => {
+    return a.tag.localeCompare(b.tag);
+  });
+  console_debug("index:107 tags after sort:>>", tags);
+  for (tagIdx in tags) {
+    let tag = tags[tagIdx];
+    tagsHTML += `<a href="#" id="${tag.uuid}" onclick="tag_click(this)">${tag.tag}</a>; `;
+  }
+  document.getElementById("tags-holder").innerHTML = tagsHTML;
+}
+
+async function tag_search() {
+  let search_term = document
+    .getElementById("tag_search_input")
+    .value.toLowerCase();
+  // console_debug("index:102 search_term:>>", search_term);
+  let tagsURL = `${BASE_URL}tag`;
+  let tagsResp = await fetchJSON2(tagsURL, null);
+  // console_debug("index:74 tagsResp:>>", tagsResp);
+  let tags_filtered = tagsResp.tags.filter((tag) => {
+    return tag.tag.toLowerCase().includes(search_term);
+  });
+
+  let include_no_tag = NO_TAG_NAME_ID.toLowerCase().includes(search_term)
+    ? true
+    : false;
+  populate_tags(tags_filtered, include_no_tag);
+}
+
 window.onload = async () => {
   let fetchURL = `${BASE_URL}item/all`;
   let jsonObj = await fetchJSON2(fetchURL, null);
-  console_debug("index:56 item_list:>>", jsonObj);
+  // console_debug("index:56 item_list:>>", jsonObj);
   populate_items_list(jsonObj);
 
   //Populating tags
   let tagsURL = `${BASE_URL}tag`;
   let tagsResp = await fetchJSON2(tagsURL, null);
-  console_debug("index:74 tagsResp:>>", tagsResp);
-  tagsHTML = "";
-  tagsHTML += `<a href="#" id="no_tag" onclick="tag_click(this)">no_tag</a>; `;
-  for (tagIdx in tagsResp.tags) {
-    let tag = tagsResp.tags[tagIdx];
-    tagsHTML += `<a href="#" id="${tag.uuid}" onclick="tag_click(this)">${tag.tag}</a>; `;
-  }
-  document.getElementById("tags-holder").innerHTML = tagsHTML;
+  // console_debug("index:74 tagsResp:>>", tagsResp);
+  populate_tags(tagsResp.tags);
+
+  document
+    .getElementById("tag_search_input")
+    .addEventListener("input", tag_search);
 
   // fetchJSON(
   //   fetchURL,
