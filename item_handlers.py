@@ -1,7 +1,7 @@
 import sys
 import uuid
 import datetime
-from sqlmodel import Session, select, func, col
+from sqlmodel import Session, select, func, col, or_
 from typing import List, Optional, Any
 from pydantic import BaseModel
 
@@ -84,14 +84,36 @@ def get_items_with_tags(session, page, tags):
         print('item_handlers:84 tags:>>', tags)
 
         select_stmt = select(Item)
+        # where_clause = or_(col(Item.search_tags_field).contains(
+        #     '58adb6c7-db65-4933-8e0b-4afc26a56fd4'))
+        # initial_tag = tags_split[0]
+        # where_clause = or_(
+        #     col(Item.search_tags_field).contains(initial_tag)
+        # )
+        clausesList = []
+
         tags_split = tags.split(";")
         print('item_handlers:88 tags_split:>>', tags_split)
         for tag in tags_split:
             print('item_handlers:90 aDDING tag to select statement:>>', tag)
-            select_stmt = select_stmt.where(
-                col(Item.search_tags_field).contains(
-                    tag)
+            clausesList.append(
+                col(Item.search_tags_field).contains(tag)
             )
+            # where_clause = or_(
+            #     where_clause,
+            #     col(Item.search_tags_field).contains(tag)
+            # )
+            # select_stmt = select_stmt.where(
+            #     col(Item.search_tags_field).contains(
+            #         tag)
+            # )
+        where_clause = or_(
+            *clausesList
+        )
+        select_stmt = select_stmt = select_stmt.where(
+            where_clause
+        )
+
         all_items = session.exec(
             select_stmt.
             order_by(Item.created_datetime.desc())
