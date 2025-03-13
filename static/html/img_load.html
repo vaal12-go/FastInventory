@@ -1,0 +1,46 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <img id="test_image" />
+
+    <script>
+      // Example from: https://stackoverflow.com/a/50463054
+      async function urlContentToDataUri(url) {
+        return fetch(url)
+          .then((response) => response.blob())
+          .then(
+            (blob) =>
+              new Promise((callback) => {
+                let reader = new FileReader();
+                reader.onload = function () {
+                  callback(this.result);
+                };
+                reader.readAsDataURL(blob);
+              })
+          );
+      }
+
+      window.onload = async () => {
+        //Usage example:
+        urlContentToDataUri("http://192.168.1.12:8080/photo.jpg").then(
+          (dataUri) => console.log(dataUri)
+        );
+
+        //Usage example using await:
+        let dataUri = await urlContentToDataUri(
+          "http://192.168.1.12:8080/photoaf.jpg"
+        );
+        console.log(dataUri);
+        document.getElementById("test_image").setAttribute("src", dataUri);
+        console.log(
+          'document.getElementById("test_image") :>> ',
+          document.getElementById("test_image")
+        );
+      };
+    </script>
+  </body>
+</html>
