@@ -69,6 +69,88 @@ async def containers_list_handler():
 MAX_ITEMS_PER_PAGE = 4
 
 
+def get_items_with_tags(session, page, tags):
+    all_items = None
+    if tags == NO_TAG_UUID_NAME:
+        all_items = session.exec(
+            select(Item).where(
+                Item.search_tags_field == ""
+            ).
+            order_by(Item.created_datetime.desc())
+        ).all()
+    else:
+        print('item_handlers:87 "searchingfortaggeditem":>>',
+              "searching for tagged item")
+        print('item_handlers:84 tags:>>', tags)
+
+        select_stmt = select(Item)
+        tags_split = tags.split(";")
+        print('item_handlers:88 tags_split:>>', tags_split)
+        for tag in tags_split:
+            print('item_handlers:90 aDDING tag to select statement:>>', tag)
+            select_stmt = select_stmt.where(
+                col(Item.search_tags_field).contains(
+                    tag)
+            )
+        all_items = session.exec(
+            select_stmt.
+            order_by(Item.created_datetime.desc())
+        ).all()
+    return all_items
+
+
+def get_all_items(session, page: int | None = 0, tags: str | None = None):
+    print('item_handlers:73 page:>>', page)
+    print('item_handlers:74 tags:>>', tags)
+    all_items = None
+    no_of_items = -1
+    no_of_pages = -1
+    if tags is not None and tags != "":
+        all_items = get_items_with_tags(session, page, tags)
+        no_of_items = len(all_items)
+    else:  # This will just return all items (honoring page)
+        # print('item_handlers:87 offset:>>', offset)
+        # print('item_handlers:88 page:>>', page)
+        # print('item_handlers:87 tags:>>', tags)
+        print('item_handlers:107', 'Returning items only with page honored ')
+        no_of_items = session.exec(
+            select(func.count(col(Item.uuid)))
+        ).one()
+
+        if (page*MAX_ITEMS_PER_PAGE > no_of_items):
+            return {
+                "status": "error",
+                "description": f"Page requested [{page}] is out of range"
+            }
+
+        all_items = session.exec(
+            select(Item).offset(page*MAX_ITEMS_PER_PAGE).
+            limit(MAX_ITEMS_PER_PAGE).
+            order_by(Item.created_datetime.desc())
+        ).all()
+
+    no_of_pages = no_of_items // MAX_ITEMS_PER_PAGE
+    if no_of_items % MAX_ITEMS_PER_PAGE != 0:
+        no_of_pages += 1
+
+    print('item_handlers:92 no_of_items:>>', no_of_items)
+    print('item_handlers:97 MAX_ITEMS_PER_PAGE:>>',
+          MAX_ITEMS_PER_PAGE)
+    print('item_handlers:97 no_of_pages:>>', no_of_pages)
+    for itm in all_items:
+        print('item_handlers:113 itm:>>', itm)
+
+    outList = ItemOutList.parse_obj({"lst": all_items})
+
+    return {
+        "status": "success",
+        "items": outList.lst,
+        "page": page,
+        "total_items": no_of_items,
+        "total_pages": no_of_pages
+    }
+
+
 @app.get("/item/{item_uuid}")
 def item_get_handler(item_uuid: str, page: int | None = 0, tags: str | None = None):
     with Session(db.db_engine) as session:
@@ -85,70 +167,9 @@ def item_get_handler(item_uuid: str, page: int | None = 0, tags: str | None = No
             if item_uuid == "all":
                 print("Will return all items")
                 print('item_handlers:85 tags:>>', tags)
-
-                all_items = None
-                no_of_items = -1
-
-                no_of_pages = -1
-                if tags is not None:
-                    if tags == NO_TAG_UUID_NAME:
-                        all_items = session.exec(
-                            select(Item).where(
-                                Item.search_tags_field == ""
-                            ).
-                            order_by(Item.created_datetime.desc())
-                        ).all()
-                    else:
-                        all_items = session.exec(
-                            select(Item).where(
-                                col(Item.search_tags_field).contains(
-                                    tags)
-                            ).
-                            order_by(Item.created_datetime.desc())
-                        ).all()
-                    no_of_items = len(all_items)
-
-                else:
-                    # print('item_handlers:87 offset:>>', offset)
-                    print('item_handlers:88 page:>>', page)
-                    print('item_handlers:87 tags:>>', tags)
-
-                    no_of_items = session.exec(
-                        select(func.count(col(Item.uuid)))
-                    ).one()
-
-                    if (page*MAX_ITEMS_PER_PAGE > no_of_items):
-                        return {
-                            "status": "error",
-                            "description": f"Page requested [{page}] is out of range"
-                        }
-
-                    all_items = session.exec(
-                        select(Item).offset(page*MAX_ITEMS_PER_PAGE).
-                        limit(MAX_ITEMS_PER_PAGE).
-                        order_by(Item.created_datetime.desc())
-                    ).all()
-
-                no_of_pages = no_of_items // MAX_ITEMS_PER_PAGE
-                if no_of_items % MAX_ITEMS_PER_PAGE != 0:
-                    no_of_pages += 1
-
-                print('item_handlers:92 no_of_items:>>', no_of_items)
-                print('item_handlers:97 MAX_ITEMS_PER_PAGE:>>',
-                      MAX_ITEMS_PER_PAGE)
-                print('item_handlers:97 no_of_pages:>>', no_of_pages)
-                for itm in all_items:
-                    print('item_handlers:113 itm:>>', itm)
-
-                outList = ItemOutList.parse_obj({"lst": all_items})
-
-                return {
-                    "status": "success",
-                    "items": outList.lst,
-                    "page": page,
-                    "total_items": no_of_items,
-                    "total_pages": no_of_pages
-                }
+                res = get_all_items(session, page, tags)
+                print('item_handlers:153 res:>>', res)
+                return res
 
         return {
             "item_uuid": item_uuid,

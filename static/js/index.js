@@ -58,19 +58,19 @@ function findImageFileOfItem(item) {
 }
 
 async function tag_click(elem) {
-  // console.log("Have tag click. This :>> ", this);
+  console.log("Have tag click. This :>> ", this);
   // console.log("elem :>> ", elem);
   // console.log("tag_click elem.id :>> ", elem.id);
   let filtering_tag_uuid = elem.id;
 
   GLOBAL_STATE.items_selection_criteria.tags_selected.push(filtering_tag_uuid);
-  // console_debug(
-  //   "index:62 tag_click GLOBAL_STATE.items_selection_criteria.tags_selected::",
-  //   GLOBAL_STATE.items_selection_criteria.tags_selected
-  // );
+  console_debug(
+    "index:62 tag_click GLOBAL_STATE.items_selection_criteria.tags_selected::",
+    GLOBAL_STATE.items_selection_criteria.tags_selected
+  );
   populate_tags();
-
-  let jsonObj = await get_items_from_server(0, filtering_tag_uuid);
+  GLOBAL_STATE.items_selection_criteria.page = 0; //Page to be nulled as new tag is added
+  let jsonObj = await get_items_from_server(0);
   // console_debug("index:56 item_list:>>", jsonObj);
   reload_page(jsonObj);
 } //async function tag_click(elem) {
@@ -165,7 +165,9 @@ async function next_page(el) {
   await reload_page(served_json);
 }
 
-async function get_items_from_server(page = 0, tags = "") {
+async function get_items_from_server() {
+  let page = GLOBAL_STATE.items_selection_criteria.page;
+  let tags = GLOBAL_STATE.items_selection_criteria.tags_selected.join(";");
   let fetchURL = `${BASE_URL}item/all?page=${page}&tags=${tags}`;
   console_debug("index:130 fetchURL:>>", fetchURL);
   let serverRes = await fetchJSON2(fetchURL, null);
@@ -202,18 +204,7 @@ async function tag_search() {
   let search_term = document
     .getElementById("tag_search_input")
     .value.toLowerCase();
-  console_debug("index:102 search_term:>>", search_term);
-
-  // let tagsURL = `${BASE_URL}tag`;
-  // let tagsResp = await fetchJSON2(tagsURL, null);
-  // // console_debug("index:74 tagsResp:>>", tagsResp);
-  // let tags_filtered = tagsResp.tags.filter((tag) => {
-  //   return tag.tag.toLowerCase().includes(search_term);
-  // });
-
-  // let include_no_tag = NO_TAG_NAME_ID.toLowerCase().includes(search_term)
-  //   ? true
-  //   : false;
+  // console_debug("index:102 search_term:>>", search_term);
   populate_tags(search_term);
 } //async function tag_search() {
 
