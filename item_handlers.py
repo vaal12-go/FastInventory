@@ -87,25 +87,18 @@ def split_search_term(search_term):
 
 def get_items_with_tags(session, page, tags, search_term: str | None = None):
     all_items = None
-    print('item_handlers:74 search_term:>>', search_term)
+    # print('item_handlers:74 search_term:>>', search_term)
 
     select_stmt = select(Item)
     tags_clause = (1 == 1)
     search_clause_name = (1 == 1)
 
+    # PROCESS TAGs clauses
     if tags == NO_TAG_UUID_NAME:
         tags_clause = (Item.search_tags_field == "")
-        # all_items = session.exec(
-        #     select(Item).where(
-        #         Item.search_tags_field == ""
-        #     ).
-        #     order_by(Item.created_datetime.desc())
-        # ).all()
 
     clausesList = []
-
     tags_split = tags.split(";")
-
     for tag in tags_split:
         if tag == NO_TAG_UUID_NAME:
             clausesList.append((Item.search_tags_field == ""))
@@ -115,22 +108,21 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
             )
     tags_clause = or_(*clausesList)
 
-    # else: #if tags == NO_TAG_UUID_NAME:
-
+    # PARSE and PROCESS search_term clauses
     if search_term is not None and search_term != "":
         search_clause_name = (1 == 0)
         split_search_list = split_search_term(search_term)
-        print('item_handlers:82 split_search_list:>>', split_search_list)
+        # print('item_handlers:82 split_search_list:>>', split_search_list)
 
         for term in split_search_list:
-            print('item_handlers:84 term:>>', term)
+            # print('item_handlers:84 term:>>', term)
             search_clause_name = or_(
                 search_clause_name,
                 func.lower(col(Item.name)).contains(term.lower())
             )
 
     # print('item_handlers:108 search_clause_name:>>', search_clause_name)
-    print('item_handlers:131 tags_clause:>>', tags_clause)
+    # print('item_handlers:131 tags_clause:>>', tags_clause)
     where_clause = and_(
         tags_clause,
         search_clause_name
@@ -145,7 +137,7 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
         order_by(Item.created_datetime.desc())
     ).all()
 
-    print('item_handlers:122 all_items:>>', all_items)
+    # print('item_handlers:122 all_items:>>', all_items)
 
     return all_items
 # def get_items_with_tags(session, page, tags):
@@ -153,8 +145,8 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
 
 def get_all_items(session, page: int | None = 0,
                   tags: str | None = None, search_term: str | None = None):
-    print('item_handlers:73 page:>>', page)
-    print('item_handlers:74 tags:>>', tags)
+    # print('item_handlers:73 page:>>', page)
+    # print('item_handlers:74 tags:>>', tags)
     all_items = None
     no_of_items = -1
     no_of_pages = -1
@@ -162,39 +154,16 @@ def get_all_items(session, page: int | None = 0,
     all_items = get_items_with_tags(session, page, tags, search_term)
     no_of_items = len(all_items)
 
-    # print('item_handlers:173 all_items:>>', all_items)
-
-    # if tags is not None and tags != "":
-    #     all_items = get_items_with_tags(session, page, tags, search_term)
-    #     no_of_items = len(all_items)
-    # else:  # This will just return all items (honoring page)
-    #     print('item_handlers:107', 'Returning items only with page honored ')
-    #     no_of_items = session.exec(
-    #         select(func.count(col(Item.uuid)))
-    #     ).one()
-
-    #     if (page*MAX_ITEMS_PER_PAGE > no_of_items):
-    #         return {
-    #             "status": "error",
-    #             "description": f"Page requested [{page}] is out of range"
-    #         }
-
-    #     all_items = session.exec(
-    #         select(Item).offset(page*MAX_ITEMS_PER_PAGE).
-    #         limit(MAX_ITEMS_PER_PAGE).
-    #         order_by(Item.created_datetime.desc())
-    #     ).all()
-
     no_of_pages = no_of_items // MAX_ITEMS_PER_PAGE
     if no_of_items % MAX_ITEMS_PER_PAGE != 0:
         no_of_pages += 1
 
-    print('item_handlers:92 no_of_items:>>', no_of_items)
-    print('item_handlers:97 MAX_ITEMS_PER_PAGE:>>',
-          MAX_ITEMS_PER_PAGE)
-    print('item_handlers:97 no_of_pages:>>', no_of_pages)
-    for itm in all_items:
-        print('item_handlers:113 itm:>>', itm)
+    # print('item_handlers:92 no_of_items:>>', no_of_items)
+    # print('item_handlers:97 MAX_ITEMS_PER_PAGE:>>',
+        #   MAX_ITEMS_PER_PAGE)
+    # print('item_handlers:97 no_of_pages:>>', no_of_pages)
+    # for itm in all_items:
+    #     print('item_handlers:113 itm:>>', itm)
 
     outList = ItemOutList.parse_obj({"lst": all_items})
 

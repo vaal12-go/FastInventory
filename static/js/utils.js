@@ -17,6 +17,8 @@ function swapClassesOnElement(elID, classToRemove, classToAdd) {
 
 async function fetchJSON(url, options, jsonFunction) {
   console.log("fetchJSON url:>> ", url);
+  // TODO: move to fetchJSON2 json retrieval
+  // TODO: add error messages
   try {
     const response = await fetch(url, options);
     // if (!response.ok) {
@@ -143,6 +145,16 @@ function render_obj_as_html(obj, template = null) {
   return "not implemented";
 }
 
+async function fetchHTML(url, debugOverride = false) {
+  // TODO: will be fully awaitable and honoring Debug parameters
+  // console_debug("utils:43 url:>>", url);
+  try {
+    return await (await fetch(url)).text();
+  } catch (err) {
+    throw err;
+  }
+} //async function fetchHTML(url, debugOverride = false) {
+
 async function fetchJSON2(url, options, debugOverride = false) {
   // TODO: will be fully awaitable and honoring Debug parameters
   // console_debug("utils:43 url:>>", url);
@@ -175,7 +187,7 @@ function addOptionToSelect(
 } //function addOptionToSelect(selectElId,
 
 function hideDivElement(elName) {
-  console.log("Hiding element :>> ", elName);
+  // console.log("Hiding element :>> ", elName);
   document.getElementById(elName).classList.add("hiddenDiv");
 } //function hideDivElement(elName) {
 

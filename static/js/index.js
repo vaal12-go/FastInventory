@@ -81,7 +81,8 @@ async function tag_click(elem) {
   console.log("Have tag click. This :>> ", this);
   // console.log("elem :>> ", elem);
   // console.log("tag_click elem.id :>> ", elem.id);
-  let filtering_tag_uuid = elem.id;
+  let filtering_tag_uuid = elem.dataset.taguuid;
+  console_debug("index:85 filtering_tag_uuid::", filtering_tag_uuid);
 
   GLOBAL_STATE.items_selection_criteria.tags_selected.push(filtering_tag_uuid);
   console_debug(
@@ -105,7 +106,7 @@ function populate_items_list(items) {
   for (itemIdx in items) {
     item = items[itemIdx];
     let imageFileRec = findImageFileOfItem(item);
-    console_debug("index:96 item::", item);
+    // console_debug("index:96 item::", item);
     renderRes = Mustache.render(itemListTemplate, {
       item: item,
       image_rec: imageFileRec,
@@ -117,23 +118,23 @@ function populate_items_list(items) {
 }
 
 async function remove_tag_from_selected(elem) {
-  console_debug("index:99 elem::", elem);
-  console_debug("index:100 elem.dataset.taguuid::", elem.dataset.taguuid);
-  console_debug(
-    "index:100 GLOBAL_STATE.items_selection_criteria.tags_selected::",
-    GLOBAL_STATE.items_selection_criteria.tags_selected
-  );
+  // console_debug("index:99 elem::", elem);
+  // console_debug("index:100 elem.dataset.taguuid::", elem.dataset.taguuid);
+  // console_debug(
+  //   "index:100 GLOBAL_STATE.items_selection_criteria.tags_selected::",
+  //   GLOBAL_STATE.items_selection_criteria.tags_selected
+  // );
   let idx_to_remove =
     GLOBAL_STATE.items_selection_criteria.tags_selected.indexOf(
       elem.dataset.taguuid
     );
-  console_debug("index:108 idx_to_remove::", idx_to_remove);
+  // console_debug("index:108 idx_to_remove::", idx_to_remove);
 
   GLOBAL_STATE.items_selection_criteria.tags_selected.splice(idx_to_remove, 1);
-  console_debug(
-    "index:100 GLOBAL_STATE.items_selection_criteria.tags_selected::",
-    GLOBAL_STATE.items_selection_criteria.tags_selected
-  );
+  // console_debug(
+  //   "index:100 GLOBAL_STATE.items_selection_criteria.tags_selected::",
+  //   GLOBAL_STATE.items_selection_criteria.tags_selected
+  // );
 
   populate_tags();
 
@@ -141,6 +142,27 @@ async function remove_tag_from_selected(elem) {
   console_debug("index:56 item_list:>>", jsonObj);
   reload_page(jsonObj);
 }
+
+TAG_SELECTED_TEMPLATE = `
+      <div class="row">
+        <div class="col">
+          {{tag.tag}}..
+            <a href="#" data-taguuid="{{tag.uuid}}" onclick="remove_tag_from_selected(this)">
+              [x]
+            </a>
+        </div>
+      </div>
+      `;
+
+TAG_UNSELECTED_TEMPLATE = `
+      <div class="row">
+        <div class="col">
+            <a href="#" data-taguuid="{{tag.uuid}}" onclick="tag_click(this)">
+              {{tag.tag}}
+            </a>
+        </div>
+      </div>
+      `;
 
 function populate_tags(visible_tag_filter = "") {
   // console_debug("index:94 populate_tags::", "");
@@ -162,15 +184,16 @@ function populate_tags(visible_tag_filter = "") {
     if (
       GLOBAL_STATE.items_selection_criteria.tags_selected.includes(tag.uuid)
     ) {
-      console.log("Adding to selected :>> ");
-      tagsSelectedHTML += `<div class="row"><div class="col">${tag.tag}..<a href="#" data-taguuid="${tag.uuid}" onclick="remove_tag_from_selected(this)">[x]</a></div></div>`;
+      // console.log("Adding to selected :>> ");
+      tagsSelectedHTML += Mustache.render(TAG_SELECTED_TEMPLATE, { tag: tag });
     } else {
       if (
         visible_tag_filter != "" &&
         !tag.tag.toLowerCase().includes(visible_tag_filter)
       )
         continue;
-      tagsHTML += `<a href="#" id="${tag.uuid}" onclick="tag_click(this)">${tag.tag}</a>; `;
+      tagsHTML += Mustache.render(TAG_UNSELECTED_TEMPLATE, { tag: tag });
+      // `<a href="#" id="${tag.uuid}" onclick="tag_click(this)">${tag.tag}</a>; `;
     }
   }
   document.getElementById("selected-tags-placeholder").innerHTML =
@@ -191,11 +214,11 @@ async function next_page(el) {
 }
 
 async function get_items_from_server() {
-  console_debug("index:169 get_items_from_server");
-  console_debug(
-    "index:169 GLOBAL_STATE.items_selection_criteria::",
-    GLOBAL_STATE.items_selection_criteria
-  );
+  // console_debug("index:169 get_items_from_server");
+  // console_debug(
+  //   "index:169 GLOBAL_STATE.items_selection_criteria::",
+  //   GLOBAL_STATE.items_selection_criteria
+  // );
   let page = GLOBAL_STATE.items_selection_criteria.page;
   let tags = GLOBAL_STATE.items_selection_criteria.tags_selected.join(";");
   let urlParams = `page=${
@@ -204,9 +227,9 @@ async function get_items_from_server() {
     GLOBAL_STATE.items_selection_criteria.search_phrase
   )}`;
   let fetchURL = `${BASE_URL}item/all?${urlParams}`;
-  console_debug("index:130 fetchURL:>>", fetchURL);
+  // console_debug("index:130 fetchURL:>>", fetchURL);
   let serverRes = await fetchJSON2(fetchURL, null);
-  console_debug("index:132 serverRes:>>", serverRes);
+  // console_debug("index:132 serverRes:>>", serverRes);
   return serverRes;
 }
 
@@ -255,6 +278,16 @@ async function item_search() {
 }
 
 window.onload = async () => {
+  // TODO: move templates to external HTML files for better management
+  item_list_remote_template = await fetchHTML(
+    `${BASE_URL}html/templates/item_list_template.html`
+  );
+
+  console_debug(
+    "index:286 item_list_remote_template::",
+    item_list_remote_template
+  );
+
   GLOBAL_STATE.items_selection_criteria = {
     tags: [NO_TAG_TAG],
     tags_selected: [],
