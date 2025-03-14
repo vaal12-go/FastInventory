@@ -91,7 +91,7 @@ async function tag_click(elem) {
   populate_tags();
   GLOBAL_STATE.items_selection_criteria.page = 0; //Page to be nulled as new tag is added
   let jsonObj = await get_items_from_server();
-  // console_debug("index:56 item_list:>>", jsonObj);
+  console_debug("index:56 item_list:>>", jsonObj);
   reload_page(jsonObj);
 } //async function tag_click(elem) {
 
@@ -116,7 +116,7 @@ function populate_items_list(items) {
   document.getElementById("items_placeholder").innerHTML = itemsHTML;
 }
 
-function remove_tag_from_selected(elem) {
+async function remove_tag_from_selected(elem) {
   console_debug("index:99 elem::", elem);
   console_debug("index:100 elem.dataset.taguuid::", elem.dataset.taguuid);
   console_debug(
@@ -136,6 +136,10 @@ function remove_tag_from_selected(elem) {
   );
 
   populate_tags();
+
+  let jsonObj = await get_items_from_server();
+  console_debug("index:56 item_list:>>", jsonObj);
+  reload_page(jsonObj);
 }
 
 function populate_tags(visible_tag_filter = "") {

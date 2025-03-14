@@ -93,6 +93,30 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
     tags_clause = (1 == 1)
     search_clause_name = (1 == 1)
 
+    if tags == NO_TAG_UUID_NAME:
+        tags_clause = (Item.search_tags_field == "")
+        # all_items = session.exec(
+        #     select(Item).where(
+        #         Item.search_tags_field == ""
+        #     ).
+        #     order_by(Item.created_datetime.desc())
+        # ).all()
+
+    clausesList = []
+
+    tags_split = tags.split(";")
+
+    for tag in tags_split:
+        if tag == NO_TAG_UUID_NAME:
+            clausesList.append((Item.search_tags_field == ""))
+        else:
+            clausesList.append(
+                col(Item.search_tags_field).contains(tag)
+            )
+    tags_clause = or_(*clausesList)
+
+    # else: #if tags == NO_TAG_UUID_NAME:
+
     if search_term is not None and search_term != "":
         search_clause_name = (1 == 0)
         split_search_list = split_search_term(search_term)
@@ -105,9 +129,8 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
                 func.lower(col(Item.name)).contains(term.lower())
             )
 
-    # tags_clause = (1 == 1)
-    # search_clause_name = (1 == 1)
-
+    # print('item_handlers:108 search_clause_name:>>', search_clause_name)
+    print('item_handlers:131 tags_clause:>>', tags_clause)
     where_clause = and_(
         tags_clause,
         search_clause_name
@@ -125,41 +148,6 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
     print('item_handlers:122 all_items:>>', all_items)
 
     return all_items
-
-    if tags == NO_TAG_UUID_NAME:
-        all_items = session.exec(
-            select(Item).where(
-                Item.search_tags_field == ""
-            ).
-            order_by(Item.created_datetime.desc())
-        ).all()
-    else:
-        # print('item_handlers:87 "searchingfortaggeditem":>>',
-        #       "searching for tagged item")
-        # print('item_handlers:84 tags:>>', tags)
-
-        clausesList = []
-
-        tags_split = tags.split(";")
-        # print('item_handlers:88 tags_split:>>', tags_split)
-        for tag in tags_split:
-            # print('item_handlers:90 aDDING tag to select statement:>>', tag)
-            clausesList.append(
-                col(Item.search_tags_field).contains(tag)
-            )
-
-        tags_clause = or_(
-            *clausesList
-        )
-
-        # where_clause = and_(
-        #     where_clause,
-        #     col(Item.name).contains(search_term)
-        # )
-
-        # where_clause
-
-    return all_items
 # def get_items_with_tags(session, page, tags):
 
 
@@ -174,7 +162,7 @@ def get_all_items(session, page: int | None = 0,
     all_items = get_items_with_tags(session, page, tags, search_term)
     no_of_items = len(all_items)
 
-    print('item_handlers:173 all_items:>>', all_items)
+    # print('item_handlers:173 all_items:>>', all_items)
 
     # if tags is not None and tags != "":
     #     all_items = get_items_with_tags(session, page, tags, search_term)
