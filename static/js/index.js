@@ -18,13 +18,33 @@ itemListTemplate = `
         <div class="col-10 text-start">
           <h5>{{item.name}}</h5>
           <a href="./item.html?itemUUID={{item.uuid}}">Edit</a>
-          <div class="row">
-        <div class="col-10">
-          {{item.uuid}} | | {{item.description}} | {{#item.container_uuid}}
-          Container:{{item.container_uuid}} | {{/item.container_uuid}} {{#item.tags}} >>
-          {{item.tag}} {{/item.tags}}
         </div>
-        <div class="col-2"></div>
+        <div class="row text-start">
+          <div class="col-1"></div>
+          <div class="col-10">
+            UUID:{{item.uuid}} 
+          </div>
+        </div>
+        <div class="row text-start">
+          <div class="col-1"></div>
+          <div class="col-10">
+            Description: {{item.description}}
+          </div>
+        </div>
+        {{#item.container_uuid}}
+        <div class="row text-start">
+          <div class="col-1"></div>
+          <div class="col-10">
+              Container: {{item.container_uuid}} | 
+          </div>
+        </div>
+        {{/item.container_uuid}}
+        <div class="row text-start">
+          <div class="col-1"></div>
+          <div class="col-10">
+              Tags: {{#item.tags}} {{tag}}; {{/item.tags}}
+          </div>
+        </div>
       </div>
         </div>  
       </div>
@@ -85,6 +105,7 @@ function populate_items_list(items) {
   for (itemIdx in items) {
     item = items[itemIdx];
     let imageFileRec = findImageFileOfItem(item);
+    console_debug("index:96 item::", item);
     renderRes = Mustache.render(itemListTemplate, {
       item: item,
       image_rec: imageFileRec,
@@ -226,7 +247,7 @@ async function item_search() {
     GLOBAL_STATE.items_selection_criteria.search_phrase
   );
   let jsonObj = await get_items_from_server();
-  // reload_page(jsonObj);
+  reload_page(jsonObj);
 }
 
 window.onload = async () => {

@@ -69,6 +69,22 @@ async def containers_list_handler():
 MAX_ITEMS_PER_PAGE = 4
 
 
+def split_search_term(search_term):
+    print('item_handlers:72 search_term:>>', search_term)
+    quotes_split = search_term.split('"')
+    print('item_handlers:74 quotes_split:>>', quotes_split)
+    i = 0
+    ret_list = []
+    while i < len(quotes_split):
+        if i % 2 == 0:
+            ret_list = ret_list + quotes_split[i].split(" ")
+        else:
+            ret_list.append(quotes_split[i])
+        i += 1
+
+    return [x for x in ret_list if x != ""]
+
+
 def get_items_with_tags(session, page, tags, search_term: str | None = None):
     all_items = None
     print('item_handlers:74 search_term:>>', search_term)
@@ -77,10 +93,11 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
     tags_clause = (1 == 1)
     search_clause_name = (1 == 1)
 
-    if search_term is not None:
+    if search_term is not None and search_term != "":
         search_clause_name = (1 == 0)
-        split_search_list = search_term.split(" ")
+        split_search_list = split_search_term(search_term)
         print('item_handlers:82 split_search_list:>>', split_search_list)
+
         for term in split_search_list:
             print('item_handlers:84 term:>>', term)
             search_clause_name = or_(
@@ -88,12 +105,15 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
                 func.lower(col(Item.name)).contains(term.lower())
             )
 
+    # tags_clause = (1 == 1)
+    # search_clause_name = (1 == 1)
+
     where_clause = and_(
         tags_clause,
         search_clause_name
     )
 
-    select_stmt = select_stmt = select_stmt.where(
+    select_stmt = select_stmt.where(
         where_clause
     )
 
@@ -101,6 +121,8 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
         select_stmt.
         order_by(Item.created_datetime.desc())
     ).all()
+
+    print('item_handlers:122 all_items:>>', all_items)
 
     return all_items
 
@@ -151,6 +173,8 @@ def get_all_items(session, page: int | None = 0,
 
     all_items = get_items_with_tags(session, page, tags, search_term)
     no_of_items = len(all_items)
+
+    print('item_handlers:173 all_items:>>', all_items)
 
     # if tags is not None and tags != "":
     #     all_items = get_items_with_tags(session, page, tags, search_term)
