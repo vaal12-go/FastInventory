@@ -1,7 +1,7 @@
 import sys
 import uuid
 import datetime
-from sqlmodel import Session, select, func, col, or_
+from sqlmodel import Session, select, func, col, or_, and_
 from typing import List, Optional, Any
 from pydantic import BaseModel
 
@@ -69,8 +69,41 @@ async def containers_list_handler():
 MAX_ITEMS_PER_PAGE = 4
 
 
-def get_items_with_tags(session, page, tags):
+def get_items_with_tags(session, page, tags, search_term: str | None = None):
     all_items = None
+    print('item_handlers:74 search_term:>>', search_term)
+
+    select_stmt = select(Item)
+    tags_clause = (1 == 1)
+    search_clause_name = (1 == 1)
+
+    if search_term is not None:
+        search_clause_name = (1 == 0)
+        split_search_list = search_term.split(" ")
+        print('item_handlers:82 split_search_list:>>', split_search_list)
+        for term in split_search_list:
+            print('item_handlers:84 term:>>', term)
+            search_clause_name = or_(
+                search_clause_name,
+                func.lower(col(Item.name)).contains(term.lower())
+            )
+
+    where_clause = and_(
+        tags_clause,
+        search_clause_name
+    )
+
+    select_stmt = select_stmt = select_stmt.where(
+        where_clause
+    )
+
+    all_items = session.exec(
+        select_stmt.
+        order_by(Item.created_datetime.desc())
+    ).all()
+
+    return all_items
+
     if tags == NO_TAG_UUID_NAME:
         all_items = session.exec(
             select(Item).where(
@@ -79,77 +112,66 @@ def get_items_with_tags(session, page, tags):
             order_by(Item.created_datetime.desc())
         ).all()
     else:
-        print('item_handlers:87 "searchingfortaggeditem":>>',
-              "searching for tagged item")
-        print('item_handlers:84 tags:>>', tags)
+        # print('item_handlers:87 "searchingfortaggeditem":>>',
+        #       "searching for tagged item")
+        # print('item_handlers:84 tags:>>', tags)
 
-        select_stmt = select(Item)
-        # where_clause = or_(col(Item.search_tags_field).contains(
-        #     '58adb6c7-db65-4933-8e0b-4afc26a56fd4'))
-        # initial_tag = tags_split[0]
-        # where_clause = or_(
-        #     col(Item.search_tags_field).contains(initial_tag)
-        # )
         clausesList = []
 
         tags_split = tags.split(";")
-        print('item_handlers:88 tags_split:>>', tags_split)
+        # print('item_handlers:88 tags_split:>>', tags_split)
         for tag in tags_split:
-            print('item_handlers:90 aDDING tag to select statement:>>', tag)
+            # print('item_handlers:90 aDDING tag to select statement:>>', tag)
             clausesList.append(
                 col(Item.search_tags_field).contains(tag)
             )
-            # where_clause = or_(
-            #     where_clause,
-            #     col(Item.search_tags_field).contains(tag)
-            # )
-            # select_stmt = select_stmt.where(
-            #     col(Item.search_tags_field).contains(
-            #         tag)
-            # )
-        where_clause = or_(
+
+        tags_clause = or_(
             *clausesList
         )
-        select_stmt = select_stmt = select_stmt.where(
-            where_clause
-        )
 
-        all_items = session.exec(
-            select_stmt.
-            order_by(Item.created_datetime.desc())
-        ).all()
+        # where_clause = and_(
+        #     where_clause,
+        #     col(Item.name).contains(search_term)
+        # )
+
+        # where_clause
+
     return all_items
+# def get_items_with_tags(session, page, tags):
 
 
-def get_all_items(session, page: int | None = 0, tags: str | None = None):
+def get_all_items(session, page: int | None = 0,
+                  tags: str | None = None, search_term: str | None = None):
     print('item_handlers:73 page:>>', page)
     print('item_handlers:74 tags:>>', tags)
     all_items = None
     no_of_items = -1
     no_of_pages = -1
-    if tags is not None and tags != "":
-        all_items = get_items_with_tags(session, page, tags)
-        no_of_items = len(all_items)
-    else:  # This will just return all items (honoring page)
-        # print('item_handlers:87 offset:>>', offset)
-        # print('item_handlers:88 page:>>', page)
-        # print('item_handlers:87 tags:>>', tags)
-        print('item_handlers:107', 'Returning items only with page honored ')
-        no_of_items = session.exec(
-            select(func.count(col(Item.uuid)))
-        ).one()
 
-        if (page*MAX_ITEMS_PER_PAGE > no_of_items):
-            return {
-                "status": "error",
-                "description": f"Page requested [{page}] is out of range"
-            }
+    all_items = get_items_with_tags(session, page, tags, search_term)
+    no_of_items = len(all_items)
 
-        all_items = session.exec(
-            select(Item).offset(page*MAX_ITEMS_PER_PAGE).
-            limit(MAX_ITEMS_PER_PAGE).
-            order_by(Item.created_datetime.desc())
-        ).all()
+    # if tags is not None and tags != "":
+    #     all_items = get_items_with_tags(session, page, tags, search_term)
+    #     no_of_items = len(all_items)
+    # else:  # This will just return all items (honoring page)
+    #     print('item_handlers:107', 'Returning items only with page honored ')
+    #     no_of_items = session.exec(
+    #         select(func.count(col(Item.uuid)))
+    #     ).one()
+
+    #     if (page*MAX_ITEMS_PER_PAGE > no_of_items):
+    #         return {
+    #             "status": "error",
+    #             "description": f"Page requested [{page}] is out of range"
+    #         }
+
+    #     all_items = session.exec(
+    #         select(Item).offset(page*MAX_ITEMS_PER_PAGE).
+    #         limit(MAX_ITEMS_PER_PAGE).
+    #         order_by(Item.created_datetime.desc())
+    #     ).all()
 
     no_of_pages = no_of_items // MAX_ITEMS_PER_PAGE
     if no_of_items % MAX_ITEMS_PER_PAGE != 0:
@@ -171,10 +193,12 @@ def get_all_items(session, page: int | None = 0, tags: str | None = None):
         "total_items": no_of_items,
         "total_pages": no_of_pages
     }
+# def get_all_items(session, page: int | None = 0, tags: str | None = None):
 
 
 @app.get("/item/{item_uuid}")
-def item_get_handler(item_uuid: str, page: int | None = 0, tags: str | None = None):
+def item_get_handler(item_uuid: str, page: int | None = 0,
+                     tags: str | None = None, search_term: str | None = None):
     with Session(db.db_engine) as session:
         requested_uuid = None
         try:
@@ -189,8 +213,9 @@ def item_get_handler(item_uuid: str, page: int | None = 0, tags: str | None = No
             if item_uuid == "all":
                 print("Will return all items")
                 print('item_handlers:85 tags:>>', tags)
-                res = get_all_items(session, page, tags)
-                print('item_handlers:153 res:>>', res)
+                print('item_handlers:191 search_term:>>', search_term)
+                res = get_all_items(session, page, tags, search_term)
+                # print('item_handlers:153 res:>>', res)
                 return res
 
         return {

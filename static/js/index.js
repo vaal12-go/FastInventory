@@ -70,7 +70,7 @@ async function tag_click(elem) {
   );
   populate_tags();
   GLOBAL_STATE.items_selection_criteria.page = 0; //Page to be nulled as new tag is added
-  let jsonObj = await get_items_from_server(0);
+  let jsonObj = await get_items_from_server();
   // console_debug("index:56 item_list:>>", jsonObj);
   reload_page(jsonObj);
 } //async function tag_click(elem) {
@@ -166,9 +166,19 @@ async function next_page(el) {
 }
 
 async function get_items_from_server() {
+  console_debug("index:169 get_items_from_server");
+  console_debug(
+    "index:169 GLOBAL_STATE.items_selection_criteria::",
+    GLOBAL_STATE.items_selection_criteria
+  );
   let page = GLOBAL_STATE.items_selection_criteria.page;
   let tags = GLOBAL_STATE.items_selection_criteria.tags_selected.join(";");
-  let fetchURL = `${BASE_URL}item/all?page=${page}&tags=${tags}`;
+  let urlParams = `page=${
+    GLOBAL_STATE.items_selection_criteria.page
+  }&tags=${tags}&search_term=${encodeURI(
+    GLOBAL_STATE.items_selection_criteria.search_phrase
+  )}`;
+  let fetchURL = `${BASE_URL}item/all?${urlParams}`;
   console_debug("index:130 fetchURL:>>", fetchURL);
   let serverRes = await fetchJSON2(fetchURL, null);
   console_debug("index:132 serverRes:>>", serverRes);
@@ -208,12 +218,24 @@ async function tag_search() {
   populate_tags(search_term);
 } //async function tag_search() {
 
+async function item_search() {
+  GLOBAL_STATE.items_selection_criteria.search_phrase =
+    document.getElementById("item_search_input").value;
+  console_debug(
+    "index:213 GLOBAL_STATE.items_selection_criteria.search_phrase::",
+    GLOBAL_STATE.items_selection_criteria.search_phrase
+  );
+  let jsonObj = await get_items_from_server();
+  // reload_page(jsonObj);
+}
+
 window.onload = async () => {
   GLOBAL_STATE.items_selection_criteria = {
     tags: [NO_TAG_TAG],
     tags_selected: [],
     page: 0,
     containing_words: [],
+    search_phrase: "",
   };
 
   let jsonObj = await get_items_from_server(0);
@@ -228,13 +250,13 @@ window.onload = async () => {
     return a.tag.localeCompare(b.tag);
   });
 
-  console_debug(
-    "index:185 GLOBAL_STATE.items_selection_criteria.tags::",
-    GLOBAL_STATE.items_selection_criteria.tags
-  );
   populate_tags();
 
   document
     .getElementById("tag_search_input")
     .addEventListener("input", tag_search);
+
+  document
+    .getElementById("item_search_input")
+    .addEventListener("input", item_search);
 }; //window.onload = () => {
