@@ -70,9 +70,9 @@ MAX_ITEMS_PER_PAGE = 4
 
 
 def split_search_term(search_term):
-    print('item_handlers:72 search_term:>>', search_term)
+    # print('item_handlers:72 search_term:>>', search_term)
     quotes_split = search_term.split('"')
-    print('item_handlers:74 quotes_split:>>', quotes_split)
+    # print('item_handlers:74 quotes_split:>>', quotes_split)
     i = 0
     ret_list = []
     while i < len(quotes_split):
@@ -81,7 +81,6 @@ def split_search_term(search_term):
         else:
             ret_list.append(quotes_split[i])
         i += 1
-
     return [x for x in ret_list if x != ""]
 
 

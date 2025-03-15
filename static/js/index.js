@@ -16,7 +16,7 @@ itemListTemplate = `
         {{/image_rec}}
         </div>  
         <div class="col-10 text-start">
-          <h5>{{item.name}}</h5>
+          <h5>{{{item.name}}}</h5>
           <a href="./item.html?itemUUID={{item.uuid}}">Edit</a>
         </div>
         <div class="row text-start">
@@ -50,6 +50,27 @@ itemListTemplate = `
       </div>
     </div>
 `;
+
+TAG_SELECTED_TEMPLATE = `
+      <div class="row">
+        <div class="col">
+          {{tag.tag}}..
+            <a href="#" data-taguuid="{{tag.uuid}}" onclick="remove_tag_from_selected(this)">
+              [x]
+            </a>
+        </div>
+      </div>
+      `;
+
+TAG_UNSELECTED_TEMPLATE = `
+      <div class="row">
+        <div class="col">
+            <a href="#" data-taguuid="{{tag.uuid}}" onclick="tag_click(this)">
+              {{tag.tag}}
+            </a>
+        </div>
+      </div>
+      `;
 
 const NO_TAG_NAME_ID = "no_tag";
 const NO_TAG_TAG = {
@@ -96,6 +117,38 @@ async function tag_click(elem) {
   reload_page(jsonObj);
 } //async function tag_click(elem) {
 
+function parse_search_term() {
+  let term = GLOBAL_STATE.items_selection_criteria.search_phrase;
+  quote_split_term = term.split('"');
+  // console_debug("index:123 quote_split_term::", quote_split_term);
+  quoted_strs = [];
+  quotes_array = quote_split_term.filter((currVal, idx, arr) => {
+    // console_debug("index:126 currVal::", currVal);
+    if (currVal == "") return false;
+    if (idx % 2 == 0) return true;
+    else {
+      // console_debug("index:130 pushing");
+      quoted_strs.push(currVal);
+      return false;
+    }
+  });
+  // console_debug("index:134 quotes_array::", quotes_array);
+
+  ret_array = [];
+  quotes_array.forEach((currVal, idx, arr) => {
+    ret_array.push(...currVal.split(" "));
+  });
+  ret_array = ret_array.filter((currVal, idx, arr) => {
+    if (currVal.trim() == "") return false;
+    return true;
+  });
+  // console_debug("index:140 ret_array::", ret_array);
+  // console_debug("index:141 quotes_array::", quotes_array);
+
+  ret_array.push(...quoted_strs);
+  return ret_array;
+} //function parse_search_term() {
+
 function populate_items_list(items) {
   itemsHTML = "";
   if (items.length == 0) {
@@ -103,10 +156,27 @@ function populate_items_list(items) {
       "<h5>No items in selection</h5>";
     return;
   }
+  let parsed_search_terms = parse_search_term();
+  // console_debug("index:139 parsed_search_terms::", parsed_search_terms);
   for (itemIdx in items) {
     item = items[itemIdx];
     let imageFileRec = findImageFileOfItem(item);
     // console_debug("index:96 item::", item);
+    for (termIdx in parsed_search_terms) {
+      term = parsed_search_terms[termIdx].toLowerCase();
+      // console_debug("index:167 term::", term);
+      term_pos = item.name.toLowerCase().search(term);
+      // console_debug("index:169 term_pos::", term_pos);
+      if (term_pos >= 0) {
+        actual_string = item.name.substring(term_pos, term.length);
+        // console_debug("index:170 actual_string::", actual_string);
+        item.name = item.name.replaceAll(
+          actual_string,
+          `<span style="background: yellow;">${actual_string}</span>`
+        );
+      }
+    }
+
     renderRes = Mustache.render(itemListTemplate, {
       item: item,
       image_rec: imageFileRec,
@@ -115,7 +185,7 @@ function populate_items_list(items) {
     itemsHTML += renderRes;
   }
   document.getElementById("items_placeholder").innerHTML = itemsHTML;
-}
+} //function populate_items_list(items) {
 
 async function remove_tag_from_selected(elem) {
   // console_debug("index:99 elem::", elem);
@@ -142,27 +212,6 @@ async function remove_tag_from_selected(elem) {
   console_debug("index:56 item_list:>>", jsonObj);
   reload_page(jsonObj);
 }
-
-TAG_SELECTED_TEMPLATE = `
-      <div class="row">
-        <div class="col">
-          {{tag.tag}}..
-            <a href="#" data-taguuid="{{tag.uuid}}" onclick="remove_tag_from_selected(this)">
-              [x]
-            </a>
-        </div>
-      </div>
-      `;
-
-TAG_UNSELECTED_TEMPLATE = `
-      <div class="row">
-        <div class="col">
-            <a href="#" data-taguuid="{{tag.uuid}}" onclick="tag_click(this)">
-              {{tag.tag}}
-            </a>
-        </div>
-      </div>
-      `;
 
 function populate_tags(visible_tag_filter = "") {
   // console_debug("index:94 populate_tags::", "");
@@ -214,11 +263,6 @@ async function next_page(el) {
 }
 
 async function get_items_from_server() {
-  // console_debug("index:169 get_items_from_server");
-  // console_debug(
-  //   "index:169 GLOBAL_STATE.items_selection_criteria::",
-  //   GLOBAL_STATE.items_selection_criteria
-  // );
   let page = GLOBAL_STATE.items_selection_criteria.page;
   let tags = GLOBAL_STATE.items_selection_criteria.tags_selected.join(";");
   let urlParams = `page=${
@@ -227,9 +271,7 @@ async function get_items_from_server() {
     GLOBAL_STATE.items_selection_criteria.search_phrase
   )}`;
   let fetchURL = `${BASE_URL}item/all?${urlParams}`;
-  // console_debug("index:130 fetchURL:>>", fetchURL);
   let serverRes = await fetchJSON2(fetchURL, null);
-  // console_debug("index:132 serverRes:>>", serverRes);
   return serverRes;
 }
 
@@ -278,15 +320,25 @@ async function item_search() {
 }
 
 window.onload = async () => {
+  const arrs = [
+    [0, 2],
+    [1, 7],
+    [7, 9],
+    [15, 25],
+  ];
+
+  res_arr = reduce_overlapping_arrays(arrs);
+  console_debug("index:331 res_arr::", res_arr);
+
   // TODO: move templates to external HTML files for better management
   item_list_remote_template = await fetchHTML(
     `${BASE_URL}html/templates/item_list_template.html`
   );
 
-  console_debug(
-    "index:286 item_list_remote_template::",
-    item_list_remote_template
-  );
+  // console_debug(
+  //   "index:286 item_list_remote_template::",
+  //   item_list_remote_template
+  // );
 
   GLOBAL_STATE.items_selection_criteria = {
     tags: [NO_TAG_TAG],
