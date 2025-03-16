@@ -1,3 +1,19 @@
+function reduce_arrays(arr_of_segments) {
+  sorted_arr = arr_of_segments.sort((a, b) => {
+    return a[1] < b[1] ? -1 : 1;
+  });
+
+  console_debug("array_reducer:6 sorted_arr::", sorted_arr);
+  // arr_of_segments.reduce(
+  //   (accum, currVal, currIdx, arr) => {
+  //     while(currIdx<arr.length) {
+
+  //     }
+  //   }, //(accum, currVal, currIdx, arr)=>{
+  //   []
+  // );
+} //function reduce_arrays(arr_of_segments) {
+
 function reduce_two_arrays(arr1, arr2) {
   //   console_debug("array_reducer:2 arr1::", arr1);
   //   console_debug("array_reducer:3 arr2::", arr2);

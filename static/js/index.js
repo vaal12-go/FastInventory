@@ -132,7 +132,8 @@ function parse_search_term() {
       return false;
     }
   });
-  // console_debug("index:134 quotes_array::", quotes_array);
+  console_debug("index:134 quotes_array::", quotes_array);
+  console_debug("index:136 quoted_strs::", quoted_strs);
 
   ret_array = [];
   quotes_array.forEach((currVal, idx, arr) => {
@@ -149,6 +150,25 @@ function parse_search_term() {
   return ret_array;
 } //function parse_search_term() {
 
+function find_search_terms_in_string(search_str, search_term_arr) {
+  console_debug("index:153 search_str::", search_str);
+  console_debug("index:154 search_term_arr::", search_term_arr);
+
+  res_arr = [];
+  search_str = search_str.toLowerCase();
+  search_term_arr.forEach((search_term) => {
+    term_pos = search_str.search(search_term);
+    while (term_pos >= 0) {
+      end_pos = term_pos + search_term.length;
+      res_arr.push([term_pos, end_pos]);
+      // console_debug("index:164 res_arr::", res_arr);
+      term_pos = search_str.indexOf(search_term, end_pos);
+    }
+  });
+  console_debug("index:168 res_arr::", res_arr);
+  return res_arr;
+} //function find_search_terms_in_string(search_str, search_term_arr) {
+
 function populate_items_list(items) {
   itemsHTML = "";
   if (items.length == 0) {
@@ -157,25 +177,30 @@ function populate_items_list(items) {
     return;
   }
   let parsed_search_terms = parse_search_term();
-  // console_debug("index:139 parsed_search_terms::", parsed_search_terms);
   for (itemIdx in items) {
     item = items[itemIdx];
     let imageFileRec = findImageFileOfItem(item);
-    // console_debug("index:96 item::", item);
-    for (termIdx in parsed_search_terms) {
-      term = parsed_search_terms[termIdx].toLowerCase();
-      // console_debug("index:167 term::", term);
-      term_pos = item.name.toLowerCase().search(term);
-      // console_debug("index:169 term_pos::", term_pos);
-      if (term_pos >= 0) {
-        actual_string = item.name.substring(term_pos, term.length);
-        // console_debug("index:170 actual_string::", actual_string);
-        item.name = item.name.replaceAll(
-          actual_string,
-          `<span style="background: yellow;">${actual_string}</span>`
-        );
+    if (parsed_search_terms.length > 0) {
+      console_debug("index:182 parsed_search_terms::", parsed_search_terms);
+      positions_arr = find_search_terms_in_string(
+        item.name,
+        parsed_search_terms
+      );
+      console_debug("index:188 positions_arr::", positions_arr);
+
+      for (termIdx in parsed_search_terms) {
+        term = parsed_search_terms[termIdx].toLowerCase();
+        term_pos = item.name.toLowerCase().search(term);
+
+        if (term_pos >= 0) {
+          actual_string = item.name.substring(term_pos, term.length);
+          item.name = item.name.replaceAll(
+            actual_string,
+            `<span style="background: yellow;">${actual_string}</span>`
+          );
+        }
       }
-    }
+    } //if(parsed_search_terms.length>0) {
 
     renderRes = Mustache.render(itemListTemplate, {
       item: item,
@@ -214,12 +239,6 @@ async function remove_tag_from_selected(elem) {
 }
 
 function populate_tags(visible_tag_filter = "") {
-  // console_debug("index:94 populate_tags::", "");
-  // console_debug("index:95 visible_tag_filter::", visible_tag_filter);
-  // console_debug(
-  //   "index:96 GLOBAL_STATE.items_selection_criteria.tags_selected::",
-  //   GLOBAL_STATE.items_selection_criteria.tags_selected
-  // );
   // TODO: move completely to global state management, or create separate object, which will manage tags selection
   let tags = GLOBAL_STATE.items_selection_criteria.tags;
   tagsHTML = "";
@@ -229,7 +248,6 @@ function populate_tags(visible_tag_filter = "") {
 
   for (tagIdx in tags) {
     let tag = tags[tagIdx];
-    // console_debug("index:109 tag::", tag);
     if (
       GLOBAL_STATE.items_selection_criteria.tags_selected.includes(tag.uuid)
     ) {
@@ -242,14 +260,11 @@ function populate_tags(visible_tag_filter = "") {
       )
         continue;
       tagsHTML += Mustache.render(TAG_UNSELECTED_TEMPLATE, { tag: tag });
-      // `<a href="#" id="${tag.uuid}" onclick="tag_click(this)">${tag.tag}</a>; `;
     }
   }
   document.getElementById("selected-tags-placeholder").innerHTML =
     tagsSelectedHTML;
-  // console_debug("index:118 tagsSelectedHTML::", tagsSelectedHTML);
   document.getElementById("tags-holder").innerHTML = tagsHTML;
-  // console_debug("index:128 tagsHTML::", tagsHTML);
 } //function populate_tags(tags, add_no_tag = true) {
 
 async function reload_page(server_json) {
@@ -276,26 +291,18 @@ async function get_items_from_server() {
 }
 
 function generate_page_numbers(served_json) {
-  // console_debug("index:125 served_json:>>", served_json);
   let pagesHTML = "";
   if (served_json.page > 0) pagesHTML = "&#x226A; ";
-  // console_debug("index:128 pagesHTML:>>", pagesHTML);
-  // console_debug(
-  //   "index:133 get_num_array(served_json.total_pages):>>",
-  //   get_num_array(served_json.total_pages)
-  // );
   // TODO: this will work for pages < 10, but have to be better in cases of more than 10
   pages_arr = get_num_array(served_json.total_pages);
   for (let pageNoIdx in pages_arr) {
     let pageNo = pages_arr[pageNoIdx];
-    // console_debug("index:138 get_obj_type(pageNo):>>", get_obj_type(pageNo));
     visible_page_no = pageNo + 1;
     if (pageNo == served_json.page) {
       pagesHTML += `<span class="fs-2 fw-bold">${visible_page_no}</span> | `;
     } else {
       pagesHTML += `<a href="#" data-pageno="${pageNo}" onclick="next_page(this)">${visible_page_no}</a> | `;
     }
-    // console_debug("index:131 pagesHTML:>>", pagesHTML);
   }
   document.getElementById("pagination-holder").innerHTML = pagesHTML;
 } //function generate_page_numbers(served_json) {
@@ -327,8 +334,10 @@ window.onload = async () => {
     [15, 25],
   ];
 
-  res_arr = reduce_overlapping_arrays(arrs);
-  console_debug("index:331 res_arr::", res_arr);
+  reduced_arrays = reduce_arrays(arrs);
+
+  // res_arr = reduce_overlapping_arrays(arrs);
+  // console_debug("index:331 res_arr::", res_arr);
 
   // TODO: move templates to external HTML files for better management
   item_list_remote_template = await fetchHTML(
@@ -348,7 +357,8 @@ window.onload = async () => {
     search_phrase: "",
   };
 
-  let jsonObj = await get_items_from_server(0);
+  let jsonObj = await get_items_from_server();
+  console_debug("index:359 jsonObj::", jsonObj);
   reload_page(jsonObj);
 
   //Populating tags
