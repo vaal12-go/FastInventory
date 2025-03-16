@@ -96,6 +96,16 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
     if tags == NO_TAG_UUID_NAME:
         tags_clause = (Item.search_tags_field == "")
 
+    # if len(tags) == 0:
+    #     tags_clause = or_(
+    #         tags_clause,
+    #         Item.search_tags_field == "",
+    #         Item.search_tags_field is None,
+    #     )
+    # print('item_handlers:104 tags:>>', (tags is None))
+    # print('item_handlers:105 len(tags):>>', len(tags))
+    # print('item_handlers:105 tags_clause:>>', tags_clause)
+
     clausesList = []
     tags_split = tags.split(";")
     for tag in tags_split:
@@ -122,14 +132,21 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
 
     # print('item_handlers:108 search_clause_name:>>', search_clause_name)
     # print('item_handlers:131 tags_clause:>>', tags_clause)
-    where_clause = and_(
-        tags_clause,
-        search_clause_name
-    )
+    if len(tags) > 0:
+        where_clause = and_(
+            tags_clause,
+            search_clause_name
+        )
+    else:
+        where_clause = search_clause_name
 
     select_stmt = select_stmt.where(
         where_clause
     )
+
+    print("Statement:", select_stmt.compile())
+
+    print('item_handlers:134 select_stmt:>>', select_stmt)
 
     all_items = session.exec(
         select_stmt.
@@ -166,6 +183,7 @@ def get_all_items(session, page: int | None = 0,
 
     outList = ItemOutList.parse_obj({"lst": all_items})
 
+    print('item_handlers:169 outList:>>', outList)
     return {
         "status": "success",
         "items": outList.lst,
@@ -285,9 +303,14 @@ async def new_item_handler(newItem: ItemCreate):
     print(f"Have item:{newItem}")
     with Session(db.db_engine) as session:
         sqlItem = Item()
-        sqlItem = Item.model_validate(
-            newItem
-        )
+        sqlItem.name = newItem.name
+        session.add(sqlItem)
+        session.commit()
+
+        # sqlItem = Item.model_validate(
+        #     newItem
+        # )
+        sqlItem.copy(update=newItem.dict())
         print(f"SQItem after construct:{sqlItem}")
         newUUID = sqlItem.uuid
         session.add(sqlItem)

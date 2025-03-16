@@ -18,7 +18,7 @@ from typing import List
 
 class ItemBase(SQLModel):
     name: str
-    description: str = ""
+    description: str | None = ""
     container_uuid: uuid_lib.UUID | None = Field(
         default=None, foreign_key="item.uuid")
 
