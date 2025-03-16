@@ -1,129 +1,67 @@
+function highlight_string(
+  str2highlight,
+  positions_arr,
+  highlight_start = '<span style="background:yellow;">',
+  highlight_end = "</span>"
+) {
+  if (str2highlight.trim().length == 0) return str2highlight;
+
+  reduced_positions = reduce_arrays(positions_arr);
+  console_debug("array_reducer:8 reduced_positions::", reduced_positions);
+
+  str_pieces_arr = reduced_positions.reduce((accum, currVal, currIdx, arr) => {
+    if (currIdx == 0 && currVal[0] > 0) {
+      accum.push(str2highlight.substring(0, currVal[0]));
+    }
+
+    if (currIdx > 0) {
+      prevVal = arr[currIdx - 1];
+      inter_str = str2highlight.substring(prevVal[1], currVal[0]);
+      accum.push(inter_str);
+    }
+    subLine = str2highlight.substring(currVal[0], currVal[1]);
+    accum.push(`<span style="background:yellow;">${subLine}</span>`);
+    if (currIdx == arr.length - 1 && currVal[1] < item.name.length) {
+      accum.push(str2highlight.substring(currVal[1]));
+    }
+    return accum;
+  }, []); //reduced_positions.reduce((accum, currVal, currIdx, arr) => {
+  return str_pieces_arr.join("");
+} //function highlight_string(str2highlight, positions_arr,
+
 function reduce_arrays(arr_of_segments) {
   sorted_arr = arr_of_segments.sort((a, b) => {
+    if (a[0] > b[0]) return 1;
     return a[1] < b[1] ? -1 : 1;
   });
 
-  console_debug("array_reducer:6 sorted_arr::", sorted_arr);
-  // arr_of_segments.reduce(
-  //   (accum, currVal, currIdx, arr) => {
-  //     while(currIdx<arr.length) {
-
-  //     }
-  //   }, //(accum, currVal, currIdx, arr)=>{
-  //   []
-  // );
-} //function reduce_arrays(arr_of_segments) {
-
-function reduce_two_arrays(arr1, arr2) {
-  //   console_debug("array_reducer:2 arr1::", arr1);
-  //   console_debug("array_reducer:3 arr2::", arr2);
-  //shuffle arrays, so arr1[1]<=arr2[1]
-  // This will remove a lot of duplicating logic in checks below
-  if (arr1[1] > arr2[1]) {
-    // console_debug("rearranging arrays");
-    [arr2, arr1] = [arr1, arr2];
-    // console_debug("array_reducer:2 arr1::", arr1);
-    // console_debug("array_reducer:3 arr2::", arr2);
-  }
-
-  if (arr1[1] < arr2[0]) {
-    // Non-overlapping arrays, returning both
-    return {
-      result: "non-overlapping arrays",
-      arr1: arr1,
-      arr2: arr2,
-    };
-  }
-
-  if (arr1[0] >= arr2[0] && arr1[1] <= arr2[1]) {
-    // arr2 encircles or equal to arr1
-    return {
-      result: "one array encircle or equal to other",
-      arr1: arr2,
-    };
-  } else {
-    // arr2 is continuation of arr1
-    return {
-      result: "one array is a continuation of the other",
-      arr1: [arr1[0], arr2[1]],
-    };
-  }
-} //function reduce_two_arrays(arr1, arr2) {
-
-function reduce_array_actual(array_of_overlapping_arrays) {
-  res = array_of_overlapping_arrays.reduce((accum, currVal, idx, array) => {
-    // console_debug("array_reducer:28 idx::", idx);
-    // console_debug("array_reducer:7 currVal::", currVal);
-
-    currIdx = 0;
-    currArray = currVal;
-    //First will check accumulated arrays if they have been reduced with this
-    while (currIdx < idx) {
-      //   console_debug("array_reducer:46 currIdx::", currIdx);
-      res = reduce_two_arrays(currVal, array[currIdx]);
-      //   console_debug("array_reducer:48 BEFORE VALUES res::", res);
-      switch (res.result) {
-        case "non-overlapping arrays":
-          // will do nothing - other array already in accum, this one will be added to accum
-          break;
-        case "one array encircle or equal to other":
-          accum.splice(currIdx, 1);
-          currArray = res.arr1;
-          break;
-        case "one array is a continuation of the other":
-          accum.splice(currIdx, 1);
-          currArray = res.arr1;
-          break;
+  idx2Skip = -1;
+  let reduced_arr = sorted_arr.reduce(
+    (accum, currVal, currIdx, arr) => {
+      if (currIdx <= idx2Skip) return accum;
+      nextIdx = currIdx + 1;
+      while (nextIdx < arr.length) {
+        nextVal = arr[nextIdx];
+        if (currVal[1] < nextVal[0]) {
+          accum.push(currVal);
+          return accum;
+        } else {
+          // Some kind of intersection exists
+          if (currVal[1] < nextVal[1]) {
+            currVal[1] = nextVal[1];
+          }
+          if (nextVal[0] < currVal[0]) {
+            currVal[0] = nextVal[0];
+          }
+        }
+        idx2Skip = nextIdx;
+        nextIdx++;
       }
-      currIdx++;
-    }
-
-    //Second will reduce everything after this idx
-    if (idx == array.length - 1) {
-      //Last element - nothing to reduceanymore
-      accum.push(currArray);
+      accum.push(currVal);
       return accum;
-    }
-
-    currIdx = idx + 1;
-    //   currArray = currVal;
-    while (currIdx < array.length) {
-      //   console_debug("array_reducer:46 currIdx::", currIdx);
-      res = reduce_two_arrays(currArray, array[currIdx]);
-      //   console_debug("array_reducer:48 AFTER VALUES res::", res);
-      switch (res.result) {
-        case "non-overlapping arrays":
-          // will do nothing - will be handled later when this non-overlapping array is being analyzed
-          break;
-        case "one array encircle or equal to other":
-          currArray = res.arr1;
-          break;
-        case "one array is a continuation of the other":
-          currArray = res.arr1;
-          break;
-      }
-
-      currIdx++;
-    }
-    accum.push(currArray);
-    // console_debug("array_reducer:93 accum::", accum);
-    return accum;
-  }, []); //reduced_arr = array_of_overlapping_arrays.reduce(
-  return res;
-}
-
-function reduce_overlapping_arrays(array_of_overlapping_arrays) {
-  console_debug("array_reducer:2 INITIAL array::", array_of_overlapping_arrays);
-
-  currArr = array_of_overlapping_arrays;
-  //   currLen = currArr.length;
-  prevLen = currArr.length + 1;
-  while (currArr.length < prevLen) {
-    prevLen = currArr.length;
-    currArr = reduce_array_actual(currArr);
-    // break;
-  }
-  //   console_debug("array_reducer:109 currArr AFTER BREAK::", currArr);
-
-  return currArr;
-} //function reduce_overlapping_arrays(array_of_overlapping_arrays) {
+    }, //(accum, currVal, currIdx, arr)=>{
+    []
+  );
+  // console_debug("array_reducer:13 reduced_arr::", reduced_arr);
+  return reduced_arr;
+} //function reduce_arrays(arr_of_segments) {

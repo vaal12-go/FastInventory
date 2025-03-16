@@ -28,7 +28,7 @@ itemListTemplate = `
         <div class="row text-start">
           <div class="col-1"></div>
           <div class="col-10">
-            Description: {{item.description}}
+            Description: {{{item.description}}}
           </div>
         </div>
         {{#item.container_uuid}}
@@ -132,8 +132,8 @@ function parse_search_term() {
       return false;
     }
   });
-  console_debug("index:134 quotes_array::", quotes_array);
-  console_debug("index:136 quoted_strs::", quoted_strs);
+  // console_debug("index:134 quotes_array::", quotes_array);
+  // console_debug("index:136 quoted_strs::", quoted_strs);
 
   ret_array = [];
   quotes_array.forEach((currVal, idx, arr) => {
@@ -151,9 +151,6 @@ function parse_search_term() {
 } //function parse_search_term() {
 
 function find_search_terms_in_string(search_str, search_term_arr) {
-  console_debug("index:153 search_str::", search_str);
-  console_debug("index:154 search_term_arr::", search_term_arr);
-
   res_arr = [];
   search_str = search_str.toLowerCase();
   search_term_arr.forEach((search_term) => {
@@ -161,11 +158,9 @@ function find_search_terms_in_string(search_str, search_term_arr) {
     while (term_pos >= 0) {
       end_pos = term_pos + search_term.length;
       res_arr.push([term_pos, end_pos]);
-      // console_debug("index:164 res_arr::", res_arr);
       term_pos = search_str.indexOf(search_term, end_pos);
     }
   });
-  console_debug("index:168 res_arr::", res_arr);
   return res_arr;
 } //function find_search_terms_in_string(search_str, search_term_arr) {
 
@@ -179,27 +174,25 @@ function populate_items_list(items) {
   let parsed_search_terms = parse_search_term();
   for (itemIdx in items) {
     item = items[itemIdx];
+    // console_debug("index:177 item.name::", item.name);
     let imageFileRec = findImageFileOfItem(item);
     if (parsed_search_terms.length > 0) {
-      console_debug("index:182 parsed_search_terms::", parsed_search_terms);
+      // console_debug("index:182 parsed_search_terms::", parsed_search_terms);
       positions_arr = find_search_terms_in_string(
         item.name,
         parsed_search_terms
       );
-      console_debug("index:188 positions_arr::", positions_arr);
+      // console_debug("index:188 positions_arr::", positions_arr);
 
-      for (termIdx in parsed_search_terms) {
-        term = parsed_search_terms[termIdx].toLowerCase();
-        term_pos = item.name.toLowerCase().search(term);
+      // console_debug("index:210 highlighted_str::", highlighted_str);
+      item.name = highlight_string(item.name, positions_arr);
+      // console_debug("index:189 item.description::", item.description);
 
-        if (term_pos >= 0) {
-          actual_string = item.name.substring(term_pos, term.length);
-          item.name = item.name.replaceAll(
-            actual_string,
-            `<span style="background: yellow;">${actual_string}</span>`
-          );
-        }
-      }
+      descr_postitions = find_search_terms_in_string(
+        item.description,
+        parsed_search_terms
+      );
+      item.description = highlight_string(item.description, descr_postitions);
     } //if(parsed_search_terms.length>0) {
 
     renderRes = Mustache.render(itemListTemplate, {
@@ -243,8 +236,6 @@ function populate_tags(visible_tag_filter = "") {
   let tags = GLOBAL_STATE.items_selection_criteria.tags;
   tagsHTML = "";
   tagsSelectedHTML = "";
-  // if (add_no_tag)
-  //   tagsHTML += `<a href="#" id="${NO_TAG_NAME_ID}" onclick="tag_click(this)">${NO_TAG_NAME_ID}</a>; `;
 
   for (tagIdx in tags) {
     let tag = tags[tagIdx];
@@ -327,27 +318,10 @@ async function item_search() {
 }
 
 window.onload = async () => {
-  const arrs = [
-    [0, 2],
-    [1, 7],
-    [7, 9],
-    [15, 25],
-  ];
-
-  reduced_arrays = reduce_arrays(arrs);
-
-  // res_arr = reduce_overlapping_arrays(arrs);
-  // console_debug("index:331 res_arr::", res_arr);
-
   // TODO: move templates to external HTML files for better management
   item_list_remote_template = await fetchHTML(
     `${BASE_URL}html/templates/item_list_template.html`
   );
-
-  // console_debug(
-  //   "index:286 item_list_remote_template::",
-  //   item_list_remote_template
-  // );
 
   GLOBAL_STATE.items_selection_criteria = {
     tags: [NO_TAG_TAG],

@@ -64,10 +64,3 @@ class Item(ItemBase, table=True):
             search_field = search_field + f"{tag.uuid};"
         print('item:65 search_field:>>', search_field)
         self.search_tags_field = search_field
-
-    # updated_datetime: Optional[datetime] = Field(sa_column=Column(
-    #     TIMESTAMP(timezone=False),
-    #     nullable=False,
-    #     # server_default=text("CURRENT_TIMESTAMP"),
-    #     # server_onupdate=text("CURRENT_TIMESTAMP"),
-    # ))
