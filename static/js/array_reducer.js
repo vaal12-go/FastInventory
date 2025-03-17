@@ -7,7 +7,7 @@ function highlight_string(
   if (str2highlight.trim().length == 0) return str2highlight;
 
   reduced_positions = reduce_arrays(positions_arr);
-  console_debug("array_reducer:8 reduced_positions::", reduced_positions);
+  // console_debug("array_reducer:8 reduced_positions::", reduced_positions);
 
   str_pieces_arr = reduced_positions.reduce((accum, currVal, currIdx, arr) => {
     if (currIdx == 0 && currVal[0] > 0) {

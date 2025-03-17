@@ -20,6 +20,7 @@ Web application writted with FastAPI and SQLModel to serve as a personal invento
 ## Further development
 * Deployment with docker and nginx
 * Integration with IP Webcam android application (so pictures taken from phone will be automatically saved to DB) - in works
+* URL replacement with search parameters, so search criteria (and tags) can be bookmarked on the index page
 * Authentification
 * Load testing (search/retrieval/db size) with tens of thousands items.
 * Separate databases for each user

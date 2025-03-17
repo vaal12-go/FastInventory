@@ -99,11 +99,11 @@ function findImageFileOfItem(item) {
 }
 
 async function tag_click(elem) {
-  console.log("Have tag click. This :>> ", this);
+  // console.log("Have tag click. This :>> ", this);
   // console.log("elem :>> ", elem);
   // console.log("tag_click elem.id :>> ", elem.id);
   let filtering_tag_uuid = elem.dataset.taguuid;
-  console_debug("index:85 filtering_tag_uuid::", filtering_tag_uuid);
+  // console_debug("index:85 filtering_tag_uuid::", filtering_tag_uuid);
 
   GLOBAL_STATE.items_selection_criteria.tags_selected.push(filtering_tag_uuid);
   console_debug(
@@ -113,7 +113,7 @@ async function tag_click(elem) {
   populate_tags();
   GLOBAL_STATE.items_selection_criteria.page = 0; //Page to be nulled as new tag is added
   let jsonObj = await get_items_from_server();
-  console_debug("index:56 item_list:>>", jsonObj);
+  // console_debug("index:56 item_list:>>", jsonObj);
   reload_page(jsonObj);
 } //async function tag_click(elem) {
 
@@ -313,11 +313,26 @@ async function item_search() {
     "index:213 GLOBAL_STATE.items_selection_criteria.search_phrase::",
     GLOBAL_STATE.items_selection_criteria.search_phrase
   );
+  console_debug("index:316 window.location::", window.location);
+
+  // URL replacement without reloading window
+  window.history.replaceState(
+    {},
+    "Same old same old",
+    `${window.location.origin}${
+      window.location.pathname
+    }?search_terms=${encodeURI(
+      GLOBAL_STATE.items_selection_criteria.search_phrase
+    )}`
+  );
   let jsonObj = await get_items_from_server();
   reload_page(jsonObj);
 }
 
 window.onload = async () => {
+  // TODO: populate URL parameters from tags selected and search term and parse those here for reloading
+  console_debug("index:316 window.location::", window.location);
+
   // TODO: move templates to external HTML files for better management
   item_list_remote_template = await fetchHTML(
     `${BASE_URL}html/templates/item_list_template.html`
