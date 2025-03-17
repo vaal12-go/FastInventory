@@ -51,7 +51,11 @@
             </li> -->
             <!-- <li class="nav-item"></li> -->
           </ul>
+<<<<<<< HEAD
+          <span class="navbar-text"> version:0.3 14Mar2025</span>
+=======
           <span class="navbar-text"> version:0.3 16Mar2025</span>
+>>>>>>> raspberry/Releases
         </div>
       </div>
     </nav>
