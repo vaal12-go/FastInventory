@@ -13,3 +13,7 @@ test_db.sqlite3
 log.log
 deployment/deployment_files/docker_db_25Feb2025.sqlite3
 deployment/deployment_files/docker_fastapi_log.log
+*.sqlite3.bak
+*.sqlite3.bak*
+error_*.txt
+.vscode/settings.json

@@ -13,6 +13,7 @@
 
     <script src="../js/common.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/array_reducer.js"></script>
     <script src="../js/index.js"></script>
   </head>
 
@@ -39,6 +40,9 @@
             <!-- <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li> -->
+            <!-- <li class="nav-item">
+              <a class="nav-link active" href="tags_list.html">Tags list</a>
+            </li> -->
             <li class="nav-item">
               <a class="nav-link active" href="item.html">Create new item</a>
             </li>
@@ -47,22 +51,114 @@
             </li> -->
             <!-- <li class="nav-item"></li> -->
           </ul>
-          <span class="navbar-text"> version:0.2 12Mar2025 </span>
+          <span class="navbar-text"> version:0.3 16Mar2025</span>
         </div>
       </div>
     </nav>
 
     <!-- Simple grid from docs: https://getbootstrap.com/docs/5.0/layout/grid/#example -->
-    <div class="container text-center">
-      <!-- <div class="row">
-        <div class="col">
-          <a href="/item.html">Create new item</a>
-        </div>
-      </div> -->
+    <!-- Main page container -->
+    <div class="container-fluid text-center ps-3 pe-3">
       <div class="row text-start">
-        <div class="col"><h1>List of items</h1></div>
-        <div class="container" id="items_placeholder">ITEMS BE HERE</div>
+        <!-- TAGS left section -->
+        <div class="col-2">
+          <div class="container border-end mt-3">
+            <div class="row">
+              <div class="col">
+                <h3>Tags</h3>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col">
+                <div>Filter tags</div>
+                <div
+                  id="selected-tags-placeholder"
+                  style="font-size: 11px"
+                  class="mt-1 ms-2"
+                >
+                  qwe2
+                </div>
+                <!-- <div>remove all</div> -->
+                <!-- <div
+                  id="selected-tags-placeholder"
+                  style="font-size: 11px"
+                ></div> -->
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div id="tags-search-div">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="tag_search_input"
+                    placeholder="Search tags"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div
+                  id="tags-holder"
+                  style="font-size: 11px"
+                  class="mt-1 ms-2"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END TAGS left section -->
+
+        <!-- Items main section -->
+        <div class="col-10 text-center mt-3">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col"><h3>List of items</h3></div>
+            </div>
+
+            <!-- Filters and selections -->
+            <div class="row align-items-center ps-4 pe-4 mb-2">
+              <!-- TODO: add selection checkboxes to items, 'select all' checkbox and delete button for mass deletion of items -->
+              <!-- <div class="col-1"><span class="align-middle">[x] all</span></div> -->
+              <div class="col-4">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="item_search_input"
+                  placeholder="Search items"
+                />
+              </div>
+              <!-- <div class="col border">filter/selection gadgets</div> -->
+            </div>
+            <!-- END Filters and selections -->
+
+            <!-- Items -->
+            <div class="row">
+              <div class="col">
+                <div class="container-fluid" id="items_placeholder">
+                  ITEMS BE HERE
+                </div>
+              </div>
+            </div>
+            <!-- END Items -->
+
+            <!-- Pagination -->
+            <div class="row">
+              <div class="col-3 fs-6">
+                Pagination may not work properly in this update
+              </div>
+              <div class="col-9 fs-4" id="pagination-holder">
+                &#x226A; 1 2 ... | 3 | <span class="fs-2 fw-bold">4</span> | 5 |
+                ... 6 7 &#x226B;
+              </div>
+            </div>
+            <!-- END Pagination -->
+          </div>
+        </div>
+        <!-- END Items main section -->
       </div>
     </div>
+    <!-- END Main page container -->
   </body>
 </html>

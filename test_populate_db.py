@@ -1,13 +1,15 @@
 import os
 import uuid
 import random
+import datetime
 
 from dotenv import load_dotenv
 
-from sqlmodel import Field, Session
+from sqlmodel import Field, Session, select
 
 
 from models.item import Item
+from models.tag import Tag
 from models.file import SQLiteFile, SQLiteFileContent
 import db
 import configuration
@@ -19,12 +21,33 @@ IMAGES_BASE_PATH = DISK_BASE_PATH+r"\PHOTOS\MED_RES"
 TOTAL_NUM_OF_IMAGES = 120
 NUM_OF_ITEMS_TO_ADD = 5
 
+TAGS = [
+    "container", "electronics", "materials", "usb cable", "HDMI cable",
+    "cable", "Ethernet", "kitchen supplies", "medical supplies", "book",
+    "test_auto_added_item"
+]
 
-def init_db():
+
+def add_tags():
+    with Session(db.db_engine) as session:
+        for tag in TAGS:
+            # print(f"Tag to add:{tag}")
+            tag_in_db = session.exec(
+                select(Tag).where(Tag.tag == tag)
+            ).first()
+            # print('test_populate_db:35 tag_in_db:>>', tag_in_db)
+            if tag_in_db is None:
+                new_tag = Tag(
+                    tag=tag, description="test_populate added tag. Description.")
+                session.add(new_tag)
+                session.commit()
+
+
+def init_db(echo=True):
     load_dotenv()
     configuration.SQLITE_FILE_NAME = os.getenv(
         "SQLITE_FILE_NAME", configuration.SQLITE_FILE_NAME)
-    db.db_engine = db.init_db()
+    db.db_engine = db.init_db(echo)
 
 
 def addImage(img_file_name, item_uuid, session):
@@ -56,12 +79,30 @@ def addImage(img_file_name, item_uuid, session):
 
 def add_item(itm_name, itm_img_fName):
     with Session(db.db_engine) as session:
-        itm = Item(name=f"{itm_name} auto_add",
+        today = datetime.datetime.now()
+
+        itm = Item(name=f"{itm_name} {today.strftime('%d%b%Y')} auto_add",
                    description=f"Autoadded item description #{itm_name}")
         print(f"Adding item:{itm}")
         session.add(itm)
         session.commit()
-        print(f"Item added:{itm}")
+
+        test_autoadd_item = "test_auto_added_item"
+        tag_obj = tag_in_db = session.exec(
+            select(Tag).where(Tag.tag == test_autoadd_item)
+        ).first()
+        itm.tags.append(tag_obj)
+
+        tag = TAGS[random.randint(0, len(TAGS)-1)]
+        # print('test_populate_db:87 tag:>>', tag)
+        tag_obj = tag_in_db = session.exec(
+            select(Tag).where(Tag.tag == tag)
+        ).first()
+        itm.tags.append(tag_obj)
+        itm.update_search_tags_field()
+
+        session.add(itm)
+        session.commit()
 
         if itm_img_fName is not None:
             addImage(itm_img_fName, itm.uuid, session)
@@ -71,21 +112,19 @@ def iterate_images():
     items_added = 0
     with open(INFO_FNAME, "r") as f:
         for line in f:
-            print(f"Line:{line}")
+            # print(f"Line:{line}")
             splitLines = line.split('\t')
-
             imgName = splitLines[0]
-            print('test_populate_db:78 imgName:>>', imgName)
             if imgName == "Filename" or imgName == "...":
                 continue
-
             if random.randint(0, 99) > (NUM_OF_ITEMS_TO_ADD*100)/TOTAL_NUM_OF_IMAGES:
-                print("Not proceeding with image")
+                # print("Not proceeding with image")
                 continue
-
+            # print('test_populate_db:78 imgName:>>', imgName)
             imgName = imgName.replace(".TIF", ".JPG")
             objName = splitLines[1]
-            print(f"Object:{objName}  Image:{imgName}")
+
+            print(f"\n\nObject:{objName}  Image:{imgName}")
             add_item(objName, imgName)
 
             items_added += 1
@@ -96,6 +135,13 @@ def iterate_images():
 
 
 if __name__ == "__main__":
-    print("I am main program")
-    init_db()
+    init_db(echo=False)
+
+    print("\n\n***********************************")
+    print("***********************************")
+    add_tags()
     iterate_images()
+
+
+# To run:
+#    pipenv run python test_populate_db.py
