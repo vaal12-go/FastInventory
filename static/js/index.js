@@ -4,73 +4,11 @@
 // TODO: create subfolder js files of each page to increase modularity
 // TODO: manage global state with global class, not individual variables
 
-itemListTemplate = `
-    <div class="row border mb-1">
-      <div class="row">
-        <div class="col-1 justify-content-center text-center">
-        {{#image_rec}}
-            <img src="{{BASE_URL}}item_file/{{image_rec.uuid}}" width="70" height="70">
-        {{/image_rec}}
-        {{^image_rec}}
-          <img src="{{BASE_URL}}img/no-photo-svgrepo-com.svg" width="50px" height="50">
-        {{/image_rec}}
-        </div>  
-        <div class="col-10 text-start">
-          <h5>{{{item.name}}}</h5>
-          <a href="./item.html?itemUUID={{item.uuid}}">Edit</a>
-        </div>
-        <div class="row text-start">
-          <div class="col-1"></div>
-          <div class="col-10">
-            UUID:{{item.uuid}} 
-          </div>
-        </div>
-        <div class="row text-start">
-          <div class="col-1"></div>
-          <div class="col-10">
-            Description: {{{item.description}}}
-          </div>
-        </div>
-        {{#item.container_uuid}}
-        <div class="row text-start">
-          <div class="col-1"></div>
-          <div class="col-10">
-              Container: {{item.container_uuid}} | 
-          </div>
-        </div>
-        {{/item.container_uuid}}
-        <div class="row text-start">
-          <div class="col-1"></div>
-          <div class="col-10">
-              Tags: {{#item.tags}} {{tag}}; {{/item.tags}}
-          </div>
-        </div>
-      </div>
-        </div>  
-      </div>
-    </div>
-`;
+itemListTemplate = ``;
 
-TAG_SELECTED_TEMPLATE = `
-      <div class="row">
-        <div class="col">
-          {{tag.tag}}..
-            <a href="#" data-taguuid="{{tag.uuid}}" onclick="remove_tag_from_selected(this)">
-              [x]
-            </a>
-        </div>
-      </div>
-      `;
+TAG_SELECTED_TEMPLATE = ``;
 
-TAG_UNSELECTED_TEMPLATE = `
-      <div class="row">
-        <div class="col">
-            <a href="#" data-taguuid="{{tag.uuid}}" onclick="tag_click(this)">
-              {{tag.tag}}
-            </a>
-        </div>
-      </div>
-      `;
+TAG_UNSELECTED_TEMPLATE = ``;
 
 const NO_TAG_NAME_ID = "no_tag";
 const NO_TAG_TAG = {
@@ -79,90 +17,26 @@ const NO_TAG_TAG = {
   description: NO_TAG_NAME_ID,
 };
 
-function fileIsImage(fName) {
-  let last_dot_idx = fName.lastIndexOf(".");
-  let fExt = fName.substring(last_dot_idx + 1);
-  // console.log("fExt :>> ", fExt);
-  let imgExtArray = ["png", "jpg", "jpeg"];
-  if (imgExtArray.includes(fExt.toLowerCase())) return true;
-  else return false;
-}
-
 function findImageFileOfItem(item) {
-  // console.log("item :>> ", item);
   for (let fileIdx in item.files) {
     let fileRec = item.files[fileIdx];
-    // console.log("file :>> ", fileRec);
     if (fileIsImage(fileRec.name)) return fileRec;
   }
   return null;
 }
 
 async function tag_click(elem) {
-  // console.log("Have tag click. This :>> ", this);
-  // console.log("elem :>> ", elem);
-  // console.log("tag_click elem.id :>> ", elem.id);
   let filtering_tag_uuid = elem.dataset.taguuid;
-  // console_debug("index:85 filtering_tag_uuid::", filtering_tag_uuid);
-
   GLOBAL_STATE.items_selection_criteria.tags_selected.push(filtering_tag_uuid);
-  console_debug(
-    "index:62 tag_click GLOBAL_STATE.items_selection_criteria.tags_selected::",
-    GLOBAL_STATE.items_selection_criteria.tags_selected
-  );
+  // console_debug(
+  //   "index:62 tag_click GLOBAL_STATE.items_selection_criteria.tags_selected::",
+  //   GLOBAL_STATE.items_selection_criteria.tags_selected
+  // );
   populate_tags();
   GLOBAL_STATE.items_selection_criteria.page = 0; //Page to be nulled as new tag is added
   let jsonObj = await get_items_from_server();
-  // console_debug("index:56 item_list:>>", jsonObj);
   reload_page(jsonObj);
 } //async function tag_click(elem) {
-
-function parse_search_term() {
-  let term = GLOBAL_STATE.items_selection_criteria.search_phrase;
-  quote_split_term = term.split('"');
-  // console_debug("index:123 quote_split_term::", quote_split_term);
-  quoted_strs = [];
-  quotes_array = quote_split_term.filter((currVal, idx, arr) => {
-    // console_debug("index:126 currVal::", currVal);
-    if (currVal == "") return false;
-    if (idx % 2 == 0) return true;
-    else {
-      // console_debug("index:130 pushing");
-      quoted_strs.push(currVal);
-      return false;
-    }
-  });
-  // console_debug("index:134 quotes_array::", quotes_array);
-  // console_debug("index:136 quoted_strs::", quoted_strs);
-
-  ret_array = [];
-  quotes_array.forEach((currVal, idx, arr) => {
-    ret_array.push(...currVal.split(" "));
-  });
-  ret_array = ret_array.filter((currVal, idx, arr) => {
-    if (currVal.trim() == "") return false;
-    return true;
-  });
-  // console_debug("index:140 ret_array::", ret_array);
-  // console_debug("index:141 quotes_array::", quotes_array);
-
-  ret_array.push(...quoted_strs);
-  return ret_array;
-} //function parse_search_term() {
-
-function find_search_terms_in_string(search_str, search_term_arr) {
-  res_arr = [];
-  search_str = search_str.toLowerCase();
-  search_term_arr.forEach((search_term) => {
-    term_pos = search_str.search(search_term);
-    while (term_pos >= 0) {
-      end_pos = term_pos + search_term.length;
-      res_arr.push([term_pos, end_pos]);
-      term_pos = search_str.indexOf(search_term, end_pos);
-    }
-  });
-  return res_arr;
-} //function find_search_terms_in_string(search_str, search_term_arr) {
 
 function populate_items_list(items) {
   itemsHTML = "";
@@ -334,8 +208,16 @@ window.onload = async () => {
   console_debug("index:316 window.location::", window.location);
 
   // TODO: move templates to external HTML files for better management
-  item_list_remote_template = await fetchHTML(
+  itemListTemplate = await fetchHTML(
     `${BASE_URL}html/templates/item_list_template.html`
+  );
+
+  TAG_SELECTED_TEMPLATE = await fetchHTML(
+    `${BASE_URL}html/templates/tag_selected_template.html`
+  );
+
+  TAG_UNSELECTED_TEMPLATE = await fetchHTML(
+    `${BASE_URL}html/templates/tag_unselected_template.html`
   );
 
   GLOBAL_STATE.items_selection_criteria = {
