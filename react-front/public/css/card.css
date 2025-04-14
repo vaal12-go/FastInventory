@@ -6,12 +6,13 @@
 }
 
 .inventory-card-title {
-    /* width: 210px; */
-    /* float: left; */
+    font-size: small;
+    text-align: justify;
 }
 
 .inventory-card-body {
     clear: both;
+    text-align: end;
 }
 
 .inventory-card-img {
@@ -26,7 +27,8 @@
     background-color: rgb(242, 242, 229);
     padding: 3px;
     margin-right: 3px;
-    margin-bottom: 3px;
+    margin-bottom: 10px;
     float: left;
+    font-size: smaller;
 }
 
