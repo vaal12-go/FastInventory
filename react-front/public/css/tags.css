@@ -1,0 +1,27 @@
+
+
+.tag-unselected {
+    background-color: rgb(237, 245, 162);
+    padding: 3px;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    float: left;
+    font-size: small;
+}
+
+.tag-selected {
+    background-color: rgb(96, 234, 244);
+    padding: 3px;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    float: left;
+    font-size: small;
+}
+
+.tag-selected::after {
+    content: url("https://47d9ff2a-28cb-4d41-9232-c82085911742.mdnplay.dev/shared-assets/images/examples/warning.svg");
+    display: inline-block;
+    padding-left: 2px;
+    width: 12px;
+    height: 12px;
+}

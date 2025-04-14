@@ -9,6 +9,7 @@
     <script src="js/bootstrap.bundle.min_5.0.2.js"></script>
 
     <link href="css/card.css" rel="stylesheet" />
+    <link href="css/tags.css" rel="stylesheet" />
 
 </head>
 
@@ -46,20 +47,24 @@
                             <h3>Tags</h3>
                         </div>
                     </div>
-                    <div class="row mb-3">
+
+                    <div class="row">
                         <div class="col">
-                            <div>Filter tags</div>
-                            <div id="selected-tags-placeholder" style="font-size: 11px" class="mt-1 ms-2">
-                                qwe2
-                            </div>
-                            <!-- <div>remove all</div> -->
-                            <!-- <div
-                  id="selected-tags-placeholder"
-                  style="font-size: 11px"
-                ></div> -->
+                            <div class="rounded-1 tag-selected">Book</div>
+                            <div class="rounded-1 tag-selected">Pen</div>
+
                         </div>
                     </div>
+
                     <div class="row">
+                        <div class="col">
+                            <div id="tags-holder" style="font-size: 11px" class="mt-1 ms-2"></div>
+                        </div>
+                    </div>
+
+
+                    
+                    <div class="row mb-1">
                         <div class="col">
                             <div id="tags-search-div">
                                 <input type="text" class="form-control" id="tag_search_input"
@@ -67,11 +72,16 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col">
-                            <div id="tags-holder" style="font-size: 11px" class="mt-1 ms-2"></div>
+                            <div class="rounded-1 tag-unselected">USB</div>
+                            <div class="rounded-1 tag-unselected">Cable</div>
+                            <div class="rounded-1 tag-unselected">Display</div>
+
                         </div>
                     </div>
+                    
                 </div>
             </div>
             <!-- END TAGS left section -->
@@ -80,17 +90,20 @@
             <div class="col-10  mt-3">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-2">
                             <h3>List of items</h3>
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control" id="item_search_input" placeholder="Search items" />
                         </div>
                     </div>
 
                     <!-- Filters and selections -->
-                    <div class="row  ps-4 pe-4 mb-2">
+                    <div class="row pe-4 mb-3">
                         <!-- TODO: add selection checkboxes to items, 'select all' checkbox and delete button for mass deletion of items -->
                         <!-- <div class="col-1"><span class="align-middle">[x] all</span></div> -->
                         <div class="col-4">
-                            <input type="text" class="form-control" id="item_search_input" placeholder="Search items" />
+                            
                         </div>
                         <!-- <div class="col border">filter/selection gadgets</div> -->
                     </div>
@@ -109,14 +122,18 @@
                                     <div class="card-body">
                                         <img src="img/toolbox.jpg" alt="" class="inventory-card-img border">
                                         <p class="card-title inventory-card-title">
-                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear End</p>
-                                        
-                                        <p class="card-text inventory-card-body fs-6">
-                                            UUID:2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6
+                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item
+                                            description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear
+                                            End</p>
+                                        <div class="rounded-1 inventory-card-tag"> book</div>
+                                        <div class="rounded-1 inventory-card-tag">test_auto_added_item</div>
+
+                                        <p class="card-text inventory-card-body" style="font-size: xx-small;">
+                                            UUID: <span
+                                                style="font-weight: bolder;">2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6</span>
                                         </p>
-                                        <p class="card-text inventory-card-body fs-6">
-                                            Tags: book; test_auto_added_item;
-                                        </p>
+
+
                                         <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                                     </div>
                                 </div>
@@ -124,99 +141,122 @@
 
                                 <!-- ITEM -->
                                 <div class="card inventory-card me-1 mb-1">
-                                    <h4 class="card-header">Title</h4>
+                                    <h4 class="card-header"><a href="#">Title</a></h4>
                                     <div class="card-body">
                                         <img src="img/toolbox.jpg" alt="" class="inventory-card-img border">
                                         <p class="card-title inventory-card-title">
-                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear End</p>
-                                        
-                                        <p class="card-text inventory-card-body fs-6">
-                                            UUID:2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6
+                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item
+                                            description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear
+                                            End</p>
+                                        <div class="rounded-1 inventory-card-tag"> book</div>
+                                        <div class="rounded-1 inventory-card-tag">test_auto_added_item</div>
+
+                                        <p class="card-text inventory-card-body" style="font-size: xx-small;">
+                                            UUID: <span
+                                                style="font-weight: bolder;">2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6</span>
                                         </p>
-                                        <p class="card-text inventory-card-body fs-6">
-                                            Tags: book; test_auto_added_item;
-                                        </p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+
+
+                                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                                     </div>
                                 </div>
                                 <!-- ITEM END -->
+
 
                                 <!-- ITEM -->
                                 <div class="card inventory-card me-1 mb-1">
-                                    <h4 class="card-header">Title</h4>
+                                    <h4 class="card-header"><a href="#">Title</a></h4>
                                     <div class="card-body">
                                         <img src="img/toolbox.jpg" alt="" class="inventory-card-img border">
                                         <p class="card-title inventory-card-title">
-                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear End</p>
-                                        
-                                        <p class="card-text inventory-card-body fs-6">
-                                            UUID:2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6
+                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item
+                                            description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear
+                                            End</p>
+                                        <div class="rounded-1 inventory-card-tag"> book</div>
+                                        <div class="rounded-1 inventory-card-tag">test_auto_added_item</div>
+
+                                        <p class="card-text inventory-card-body" style="font-size: xx-small;">
+                                            UUID: <span
+                                                style="font-weight: bolder;">2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6</span>
                                         </p>
-                                        <p class="card-text inventory-card-body fs-6">
-                                            Tags: book; test_auto_added_item;
-                                        </p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+
+
+                                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                                     </div>
                                 </div>
                                 <!-- ITEM END -->
+
 
                                 <!-- ITEM -->
                                 <div class="card inventory-card me-1 mb-1">
-                                    <h4 class="card-header">Title</h4>
+                                    <h4 class="card-header"><a href="#">Title</a></h4>
                                     <div class="card-body">
                                         <img src="img/toolbox.jpg" alt="" class="inventory-card-img border">
                                         <p class="card-title inventory-card-title">
-                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear End</p>
-                                        
-                                        <p class="card-text inventory-card-body fs-6">
-                                            UUID:2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6
+                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item
+                                            description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear
+                                            End</p>
+                                        <div class="rounded-1 inventory-card-tag"> book</div>
+                                        <div class="rounded-1 inventory-card-tag">test_auto_added_item</div>
+
+                                        <p class="card-text inventory-card-body" style="font-size: xx-small;">
+                                            UUID: <span
+                                                style="font-weight: bolder;">2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6</span>
                                         </p>
-                                        <p class="card-text inventory-card-body fs-6">
-                                            Tags: book; test_auto_added_item;
-                                        </p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+
+
+                                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                                     </div>
                                 </div>
                                 <!-- ITEM END -->
+
 
                                 <!-- ITEM -->
                                 <div class="card inventory-card me-1 mb-1">
-                                    <h4 class="card-header">Title</h4>
+                                    <h4 class="card-header"><a href="#">Title</a></h4>
                                     <div class="card-body">
                                         <img src="img/toolbox.jpg" alt="" class="inventory-card-img border">
                                         <p class="card-title inventory-card-title">
-                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear End</p>
-                                        
-                                        <p class="card-text inventory-card-body fs-6">
-                                            UUID:2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6
+                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item
+                                            description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear
+                                            End</p>
+                                        <div class="rounded-1 inventory-card-tag"> book</div>
+                                        <div class="rounded-1 inventory-card-tag">test_auto_added_item</div>
+
+                                        <p class="card-text inventory-card-body" style="font-size: xx-small;">
+                                            UUID: <span
+                                                style="font-weight: bolder;">2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6</span>
                                         </p>
-                                        <p class="card-text inventory-card-body fs-6">
-                                            Tags: book; test_auto_added_item;
-                                        </p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+
+
+                                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                                     </div>
                                 </div>
                                 <!-- ITEM END -->
+
 
                                 <!-- ITEM -->
                                 <div class="card inventory-card me-1 mb-1">
-                                    <h4 class="card-header">Title</h4>
+                                    <h4 class="card-header"><a href="#">Title</a></h4>
                                     <div class="card-body">
                                         <img src="img/toolbox.jpg" alt="" class="inventory-card-img border">
                                         <p class="card-title inventory-card-title">
-                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear End</p>
-                                        
-                                        <p class="card-text inventory-card-body fs-6">
-                                            UUID:2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6
+                                            Description: Autoadded item description #Piggy Bank-Rear EndAutoadded item
+                                            description #Piggy Bank-Rear EndAutoadded item description #Piggy Bank-Rear
+                                            End</p>
+                                        <div class="rounded-1 inventory-card-tag"> book</div>
+                                        <div class="rounded-1 inventory-card-tag">test_auto_added_item</div>
+
+                                        <p class="card-text inventory-card-body" style="font-size: xx-small;">
+                                            UUID: <span
+                                                style="font-weight: bolder;">2f584eb4-f864-4564-9e2c-c9e0bcd1d8f6</span>
                                         </p>
-                                        <p class="card-text inventory-card-body fs-6">
-                                            Tags: book; test_auto_added_item;
-                                        </p>
-                                        <a href="#" class="btn btn-primary">Go somewhere</a>
+
+
+                                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
                                     </div>
                                 </div>
                                 <!-- ITEM END -->
-
 
 
                                 <!-- ITEMS END -->

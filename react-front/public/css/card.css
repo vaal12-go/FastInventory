@@ -21,3 +21,12 @@
     margin-bottom: 3 px;
     float: left;
 }
+
+.inventory-card-tag {
+    background-color: rgb(242, 242, 229);
+    padding: 3px;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    float: left;
+}
+
