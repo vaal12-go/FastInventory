@@ -1,7 +1,6 @@
 
 
 export function InventoryItem({ item }) {
-
     return (
         <div>
             {/* <!-- ITEM --> */}

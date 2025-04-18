@@ -20,27 +20,31 @@ export function InventoryItems() {
         console.error('error :>> ', { err: error });
         return (
             <>
-                {/* <div>failed to load: {error.message} </div>
-        <div>{error.stack} </div> */}
+                <div>failed to load: </div>
+                {error.message ?
+                    <div> {error.message} </div> : ""
+                }
+                {
+                    error.stack ? <div>{error.stack}</div> : ""
+                }
             </>
         )
     }
 
     if (isLoading) {
         return (
-            <div>loading...</div>
+            <div>Items loading...</div>
         )
     }
 
     console.log('data: :>> ', data);
     return (
         <>
-            {/* Inventory items list: {JSON.stringify(data)} */}
             {
-                data.items.map((itm)=>{
+                data.items.map((itm) => {
                     // console.log("drawing item:", itm)
                     return (
-                        <InventoryItem item={itm}/>
+                        <InventoryItem item={itm} />
                     )
                 })
             }
