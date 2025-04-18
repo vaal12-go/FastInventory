@@ -95,15 +95,17 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
     if tags == NO_TAG_UUID_NAME:
         tags_clause = (Item.search_tags_field == "")
 
-    clausesList = []
-    tags_split = tags.split(";")
-    for tag in tags_split:
-        if tag == NO_TAG_UUID_NAME:
-            clausesList.append((Item.search_tags_field == ""))
-        else:
-            clausesList.append(
-                col(Item.search_tags_field).contains(tag)
-            )
+    clausesList = [False]
+    print(f"tags:{tags}")
+    if tags != None:
+        tags_split = tags.split(";")
+        for tag in tags_split:
+            if tag == NO_TAG_UUID_NAME:
+                clausesList.append((Item.search_tags_field == ""))
+            else:
+                clausesList.append(
+                    col(Item.search_tags_field).contains(tag)
+                )
     tags_clause = or_(*clausesList)
 
     # PARSE and PROCESS search_term clauses
@@ -117,7 +119,7 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
                 func.lower(col(Item.name)).contains(term.lower())
             )
 
-    if len(tags) > 0:
+    if tags !=None :
         where_clause = and_(
             tags_clause,
             search_clause_name
@@ -157,7 +159,7 @@ def get_all_items(session, page: int | None = 0,
 
     outList = ItemOutList.parse_obj({"lst": all_items})
 
-    # print('item_handlers:169 outList:>>', outList)
+    print('item_handlers:169 outList:>>', outList)
     return {
         "status": "success",
         "items": outList.lst,

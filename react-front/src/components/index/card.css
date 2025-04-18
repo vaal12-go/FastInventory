@@ -13,6 +13,7 @@
 .inventory-card-body {
     clear: both;
     text-align: end;
+    font-size: xx-small;
 }
 
 .inventory-card-img {
@@ -30,5 +31,9 @@
     margin-bottom: 10px;
     float: left;
     font-size: smaller;
+}
+
+.inventory-card-uuid {
+    font-weight: bolder;
 }
 

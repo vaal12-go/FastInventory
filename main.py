@@ -7,6 +7,7 @@
 
 
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 from app import app
 import helpers
@@ -16,6 +17,19 @@ import qr_code_handler
 import item_handlers
 import handlers
 import user_handlers
+
+origins = [
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 
 # This route should be defined after all the rest in other case it will shadow other routes
