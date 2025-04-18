@@ -38,7 +38,7 @@ export function InventoryItems() {
             {/* Inventory items list: {JSON.stringify(data)} */}
             {
                 data.items.map((itm)=>{
-                    console.log("drawing item:", itm)
+                    // console.log("drawing item:", itm)
                     return (
                         <InventoryItem item={itm}/>
                     )
