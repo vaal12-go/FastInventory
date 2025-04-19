@@ -29,7 +29,7 @@ export function Tag({tag, selected, onSelectClick, onUnselectClick}) {
                     :
                 <div className="rounded-1 tag-unselected" 
                         key={"unselected_tag_"+tag.uuid}>
-                        <a href="#" onClick={onSelectClickHandler()}>{tag.tag}</a>
+                        <a className="tag-unselected-link" href="#" onClick={onSelectClickHandler()}>{tag.tag}</a>
                 </div>
     )    
 }

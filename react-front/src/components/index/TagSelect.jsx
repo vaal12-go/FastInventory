@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 
 
 async function fetchTags() {
-    console.log('Fetching :>> ');
+    // console.log('Fetching :>> ');
     const url = "http://127.0.0.1:8080/tag"
     const tagsRes = await fetch(url)
     const tagsJSON = await tagsRes.json()
@@ -27,6 +27,7 @@ export function TagSelect() {
 
     const [tagsSelected, setTagsSelected] = useState([])
     const [tagsUnSelected, setTagsUnSelected] = useState([])
+    const [tagFilterText, setTagFilterText] = useState("")
 
     // Testing URL: http://localhost:5173/?tags=efc745cf-2952-4ffb-9ee9-f588d770fbe5,b6230611-71c3-4aae-b87b-4602786d3c1a
     // container and electronics
@@ -38,15 +39,7 @@ export function TagSelect() {
 
     // console.log('data :>> ', data);
 
-    function onTagSelected(evt, tag) {
-        console.log('tag Selected in  TagSelect:>> ', tag);
-    }
-
-    function onTagUnselected(evt, tag) {
-        console.log('TagUnselected in  TagSelect evt :>> ', evt);
-        console.log('tagsSelected :>> ', tagsSelected);
-        const newTagsSelected = tagsSelected.filter((old_tag) => old_tag.uuid != tag.uuid)
-        console.log('newTagsSelected :>> ', newTagsSelected);
+    function setSelectedTagsURLParam(newTagsSelected) {
         const newURLTags = newTagsSelected.reduce((url_str, new_tag) => {
             if (url_str.length == 0)
                 url_str += new_tag.uuid
@@ -56,7 +49,6 @@ export function TagSelect() {
         }, "")
         console.log('newURLTags :>> ', newURLTags);
         setSearchParams((params) => {
-            
             if(newURLTags.length==0)
                 params.delete("tags")
             else 
@@ -66,6 +58,21 @@ export function TagSelect() {
         const splitTags = populateSelectedTagsArray();
         setTagsSelected(splitTags.selected);
         setTagsUnSelected(splitTags.unselected)
+    }//function setSelectedTagsURLParam(newTagsSelected) {
+
+    function onTagSelected(evt, tag) {
+        // console.log('tag Selected in TagSelect:>> ', tag);
+        const newTagsSelected = [...tagsSelected];
+        newTagsSelected.push(tag);
+        setSelectedTagsURLParam(newTagsSelected);
+    }
+
+    function onTagUnselected(evt, tag) {
+        // console.log('TagUnselected in  TagSelect evt :>> ', evt);
+        // console.log('tagsSelected :>> ', tagsSelected);
+        const newTagsSelected = tagsSelected.filter((old_tag) => old_tag.uuid != tag.uuid)
+        // console.log('newTagsSelected :>> ', newTagsSelected);
+        setSelectedTagsURLParam(newTagsSelected);
     }
 
     function populateSelectedTagsArray() {
@@ -73,7 +80,7 @@ export function TagSelect() {
         let unselectedTagArr = []
         if (data) {
             unselectedTagArr = [...data.tags]
-            console.log('data  in retrieveTags:>> ', data);
+            // console.log('data  in retrieveTags:>> ', data);
             const tagsSelectedStr = searchParams.get("tags")
             if (tagsSelectedStr != "" && !(tagsSelectedStr === null)) {
                 const tagsStrArr = tagsSelectedStr.split(",")
@@ -97,6 +104,11 @@ export function TagSelect() {
         setTagsSelected(splitTags.selected);
         setTagsUnSelected(splitTags.unselected)
     }, [data])
+
+    function onTagFilterChange(evt, filterText) {
+        // console.log('filterText :>> ', filterText);
+        setTagFilterText(filterText)
+    }
 
 
     if (error) {
@@ -122,12 +134,13 @@ export function TagSelect() {
         <>
             <TagsSelected
                 tags={tagsSelected}
-                onTagUnselected={onTagUnselected}
-            />
-            <TagsTextFilter />
+                onTagUnselected={onTagUnselected}/>
+            <TagsTextFilter 
+                onChange={onTagFilterChange}/>
             <UnselectedTags
                 tags={tagsUnSelected}
-                onTagSelected={onTagSelected} />
+                onTagSelected={onTagSelected}
+                filterText={tagFilterText} />
         </>
     )
 }

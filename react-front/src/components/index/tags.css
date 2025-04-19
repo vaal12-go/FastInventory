@@ -18,6 +18,10 @@
     font-size: small;
 }
 
+.tag-unselected-link {
+    text-decoration: none;
+}
+
 /* .tag-selected::after {
     content: url("https://47d9ff2a-28cb-4d41-9232-c82085911742.mdnplay.dev/shared-assets/images/examples/warning.svg");
     display: inline-block;

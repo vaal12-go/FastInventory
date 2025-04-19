@@ -1,11 +1,11 @@
 import { Tag } from "./Tag";
 
 
-export function UnselectedTags({ tags, onTagSelected }) {
-    // console.log('tags :>> ', tags);
+export function UnselectedTags({ tags, onTagSelected, filterText }) {
+    // console.log('UnselectedTags filterText :>> ', filterText);
     function tagSelected(evt, tag) {
-        console.log('tag Selected :>> ', tag);
-        if(onTagSelected) {
+        // console.log('tag Selected :>> ', tag);
+        if (onTagSelected) {
             onTagSelected(evt, tag)
         }
     }
@@ -15,13 +15,13 @@ export function UnselectedTags({ tags, onTagSelected }) {
                 {
                     tags.map(
                         (tag) => {
-                            // console.log('tag :>> ', tag);
-                            return (
-                                <Tag tag={tag}
-                                    selected={false}
-                                    key={tag.uuid}
-                                    onSelectClick={tagSelected} />
-                            )
+                            if (filterText == "" || tag.tag.toLowerCase().includes(filterText.toLowerCase()))
+                                return (
+                                    <Tag tag={tag}
+                                        selected={false}
+                                        key={tag.uuid}
+                                        onSelectClick={tagSelected} />
+                                )
                         }
                     )
                 }
