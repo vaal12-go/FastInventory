@@ -1,16 +1,18 @@
 from sqlmodel import SQLModel, create_engine, Session, select
-from models.item import Item
-import configuration
-from models.item_tag_link import ItemTagLink
-from models.file import SQLiteFile
-from models.tag import Tag
+
+from ..models.item import Item
+from .configuration import SQLITE_FILE_NAME
+from ..models.item_tag_link import ItemTagLink
+from ..models.file import SQLiteFile
+from ..models.tag import Tag
 
 
 db_engine = None
 
 
-def init_db(echo=False):
-    sqlite_url = f"sqlite:///{configuration.SQLITE_FILE_NAME}"
+def init_db(db_f_name=SQLITE_FILE_NAME, echo=False):
+    sqlite_url = f"sqlite:///{db_f_name}"
+    print(f"sqliteURL:{sqlite_url}")
 
     global db_engine
     # TODO: add dev/prod .env variable and make echo depend on those

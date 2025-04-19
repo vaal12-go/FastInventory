@@ -4,7 +4,7 @@
 from sqlmodel import Field, SQLModel, LargeBinary, Column, Relationship
 import uuid as uuid_lib
 
-from models.item import Item
+from .item import Item
 
 # SQLAlchemy
 # https://stackoverflow.com/questions/1779701/example-using-blob-in-sqlalchemy

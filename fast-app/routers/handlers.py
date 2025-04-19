@@ -1,26 +1,29 @@
 import logging
 import traceback
 import uuid
+from typing import Annotated, List
 
 from fastapi import File, UploadFile, Form, Response
 from sqlmodel import Session, select, text
-
-import db
-from models.item import Item, ItemCreate, TagRec
-from models.tag import Tag
-from models.file import SQLiteFile, SQLiteFileContent
-
 from sqlalchemy.orm import joinedload
-
-
 from pydantic import BaseModel, computed_field
 
-from app import app
-import helpers
-from typing import Annotated, List
 
 
-@app.get("/tag")
+from ..db import db
+from ..models.item import Item, ItemCreate, TagRec
+from ..models.tag import Tag
+from ..models.file import SQLiteFile, SQLiteFileContent
+
+
+
+# from app import app
+from .main_router import main_router
+from ..internal import helpers
+
+
+
+@main_router.get("/tag")
 async def tag_list_handler():
     with Session(db.db_engine) as session:
         ret = session.exec(
@@ -34,7 +37,7 @@ async def tag_list_handler():
 # END async def tag_list_handler():
 
 
-@app.get("/item_file/{file_uuid}")
+@main_router.get("/item_file/{file_uuid}")
 async def get_file_handler(file_uuid: uuid.UUID):
     with Session(db.db_engine) as session:
         fContent = session.exec(
@@ -44,7 +47,7 @@ async def get_file_handler(file_uuid: uuid.UUID):
         return Response(content=fContent.content_bytes)
 
 
-@app.post("/upload_item_file")
+@main_router.post("/upload_item_file")
 async def upload_picture_handler(
         file_uploaded: Annotated[UploadFile, File()],
         uuid_str: Annotated[str, Form()]):

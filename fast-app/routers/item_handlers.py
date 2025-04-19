@@ -5,12 +5,13 @@ from sqlmodel import Session, select, func, col, or_, and_
 from typing import List, Optional, Any
 from pydantic import BaseModel
 
-from app import app
-from models.tag import Tag, TagRec
-from models.item import Item, ItemCreate
-from models.file import SQLiteFile
+from .main_router import main_router
+# from app import app
+from ..models.tag import Tag, TagRec
+from ..models.item import Item, ItemCreate
+from ..models.file import SQLiteFile
 
-import db
+from ..db import db
 
 NO_TAG_UUID_NAME = "no_tag"
 
@@ -37,7 +38,7 @@ class ItemOutList(BaseModel):
         from_attributes = True
 
 
-@app.get("/item/containers")
+@main_router.get("/item/containers")
 async def containers_list_handler():
     with Session(db.db_engine) as session:
         container_tag = session.exec(
@@ -96,7 +97,7 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
         tags_clause = (Item.search_tags_field == "")
 
     clausesList = [False]
-    print(f"tags:{tags}")
+    # print(f"tags:{tags}")
     if tags != None:
         tags_split = tags.split(";")
         for tag in tags_split:
@@ -159,7 +160,7 @@ def get_all_items(session, page: int | None = 0,
 
     outList = ItemOutList.parse_obj({"lst": all_items})
 
-    print('item_handlers:169 outList:>>', outList)
+    # print('item_handlers:169 outList:>>', outList)
     return {
         "status": "success",
         "items": outList.lst,
@@ -170,7 +171,7 @@ def get_all_items(session, page: int | None = 0,
 # def get_all_items(session, page: int | None = 0, tags: str | None = None):
 
 
-@app.get("/item/{item_uuid}")
+@main_router.get("/item/{item_uuid}")
 def item_get_handler(item_uuid: str, page: int | None = 0,
                      tags: str | None = None, search_term: str | None = None):
     with Session(db.db_engine) as session:
@@ -185,7 +186,7 @@ def item_get_handler(item_uuid: str, page: int | None = 0,
             return itmOut
         else:
             if item_uuid == "all":
-                # print("Will return all items")
+                print("Will return all items")
                 # print('item_handlers:85 tags:>>', tags)
                 # print('item_handlers:191 search_term:>>', search_term)
                 res = get_all_items(session, page, tags, search_term)
@@ -199,7 +200,7 @@ def item_get_handler(item_uuid: str, page: int | None = 0,
 # END def item_get_handler(item_uuid: str):
 
 
-@app.patch("/item/{item_uuid}")
+@main_router.patch("/item/{item_uuid}")
 async def patch_item_handler(item_uuid: uuid.UUID, item_changed: ItemCreate):
     print(f"patch request for item:{item_uuid}")
     print(f"Patched item:{item_changed}")
@@ -228,7 +229,7 @@ async def patch_item_handler(item_uuid: uuid.UUID, item_changed: ItemCreate):
 # END async def patch_item_handler(item_uuid: uuid.UUID, item_changed: ItemCreate):
 
 
-@app.delete("/item/{item_uuid}")
+@main_router.delete("/item/{item_uuid}")
 async def delete_item_handler(item_uuid: uuid.UUID):
     # TODO: when item-container is deleted set container in items which has it to null
     # HIGH: remove linked files and content of such files
@@ -274,7 +275,7 @@ def synchronizeItemTags(session, item: Item, tags: List[TagRec]):
 # END def synchronizeItemTags(session, item: Item, tags: List[TagRec]):
 
 
-@app.post("/item/")
+@main_router.post("/item/")
 async def new_item_handler(newItem: ItemCreate):
     print(f"Have item:{newItem}")
     with Session(db.db_engine) as session:

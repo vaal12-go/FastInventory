@@ -6,12 +6,13 @@ from PIL import Image, ImageFont, ImageDraw
 import io
 from fastapi.responses import StreamingResponse
 
-from app import app
+from .main_router import main_router
+# from app import app
 import db
 from models.item import Item
 
 
-@app.get("/item-qr-code/{item_uuid}.png")
+@main_router.get("/item-qr-code/{item_uuid}.png")
 async def item_qr_code_handler(item_uuid: uuid.UUID):
     print(f"Have request for QR code for item:{item_uuid}")
     session = Session(db.db_engine)

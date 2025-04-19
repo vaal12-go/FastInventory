@@ -4,13 +4,14 @@ import uuid as uuid_lib
 from typing import Optional
 from sqlalchemy import Column, DateTime
 from sqlalchemy.sql import func
-
-from models.item_tag_link import ItemTagLink
-
-from models.tag import TagRec
-
 from pydantic import BaseModel, computed_field
 from typing import List
+
+
+from .item_tag_link import ItemTagLink
+from .tag import TagRec
+
+
 
 # Great many to many ORM\SQLmodel explanation
 # https://stackoverflow.com/questions/74273829/how-to-correctly-use-joins-with-sqlmodel

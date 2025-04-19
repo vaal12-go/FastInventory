@@ -4,7 +4,7 @@ import uuid as uuid_lib
 from sqlalchemy import UniqueConstraint
 from pydantic import BaseModel
 
-from models.item_tag_link import ItemTagLink
+from .item_tag_link import ItemTagLink
 
 
 class Tag(SQLModel, table=True):
