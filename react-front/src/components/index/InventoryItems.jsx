@@ -13,7 +13,7 @@ async function fetchInventoryItems() {
 }
 
 export function InventoryItems() {
-    console.log('InventoryItems :>> ');
+    // console.log('InventoryItems :>> ');
     const { data, error, isLoading } = useSWR('/api/user', fetchInventoryItems)
 
     if (error) {

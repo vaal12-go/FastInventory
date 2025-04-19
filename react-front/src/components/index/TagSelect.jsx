@@ -30,8 +30,13 @@ export function TagSelect() {
 
     // Testing URL: http://localhost:5173/?tags=efc745cf-2952-4ffb-9ee9-f588d770fbe5,b6230611-71c3-4aae-b87b-4602786d3c1a
     // container and electronics
+    // {
+    // "tag": "container",
+    // "description": "Automatically created description for 'container' tag.",
+    // "uuid": "efc745cf-2952-4ffb-9ee9-f588d770fbe5"
+    // }
 
-    console.log('data :>> ', data);
+    // console.log('data :>> ', data);
 
     function onTagSelected(evt, tag) {
         console.log('tag Selected in  TagSelect:>> ', tag);
@@ -39,44 +44,60 @@ export function TagSelect() {
 
     function onTagUnselected(evt, tag) {
         console.log('TagUnselected in  TagSelect evt :>> ', evt);
+        console.log('tagsSelected :>> ', tagsSelected);
+        const newTagsSelected = tagsSelected.filter((old_tag) => old_tag.uuid != tag.uuid)
+        console.log('newTagsSelected :>> ', newTagsSelected);
+        const newURLTags = newTagsSelected.reduce((url_str, new_tag) => {
+            if (url_str.length == 0)
+                url_str += new_tag.uuid
+            else
+                url_str += `,${new_tag.uuid}`
+            return url_str
+        }, "")
+        console.log('newURLTags :>> ', newURLTags);
+        setSearchParams((params) => {
+            
+            if(newURLTags.length==0)
+                params.delete("tags")
+            else 
+                params.set("tags", newURLTags)
+            return params
+        })
+        const splitTags = populateSelectedTagsArray();
+        setTagsSelected(splitTags.selected);
+        setTagsUnSelected(splitTags.unselected)
     }
 
-    useEffect(() => {
-        function retrieveTags() {
-            const selectedTagArr = []
-            let unselectedTagArr = []
-            if (data) {
-                unselectedTagArr = [...data.tags]
-                // console.log('data  in retrieveTags:>> ', data);
-                const tagsSelectedStr = searchParams.get("tags")
-                if (tagsSelectedStr != "" && !(tagsSelectedStr===null)) {
-                    // console.log('tagsSelectedStr :>> ', tagsSelectedStr);
-                    const tagsStrArr = tagsSelectedStr.split(",")
-                    // console.log('unselectedTagArr :>> ', unselectedTagArr);
-                    tagsStrArr.map((tag) => {
-                        // console.log('Searching tags :>> ', tag);
-                        const fullTagObjArr = unselectedTagArr.filter((fullTag) => fullTag.uuid == tag)
-                        if (fullTagObjArr) {
-                            selectedTagArr.push(fullTagObjArr[0])
-                            unselectedTagArr = unselectedTagArr.filter((unselectedTag) => unselectedTag.uuid != tag)
-                        }
-                    })
-                }//if(tagsSelectedStr!="") {
-                // console.log('selectedTagArr :>> ', selectedTagArr);
-                // console.log('unselectedTagArr :>> ', unselectedTagArr);
-            }; //if(data) {
-            return {
-                selected: selectedTagArr,
-                unselected: unselectedTagArr
-            }
+    function populateSelectedTagsArray() {
+        const selectedTagArr = []
+        let unselectedTagArr = []
+        if (data) {
+            unselectedTagArr = [...data.tags]
+            console.log('data  in retrieveTags:>> ', data);
+            const tagsSelectedStr = searchParams.get("tags")
+            if (tagsSelectedStr != "" && !(tagsSelectedStr === null)) {
+                const tagsStrArr = tagsSelectedStr.split(",")
+                tagsStrArr.map((tag) => {
+                    const fullTagObjArr = unselectedTagArr.filter((fullTag) => fullTag.uuid == tag)
+                    if (fullTagObjArr) {
+                        selectedTagArr.push(fullTagObjArr[0])
+                        unselectedTagArr = unselectedTagArr.filter((unselectedTag) => unselectedTag.uuid != tag)
+                    }
+                })
+            }//if(tagsSelectedStr!="") {
+        }; //if(data) {
+        return {
+            selected: selectedTagArr,
+            unselected: unselectedTagArr
+        }
+    } //function populateSelectedTagsArray() {
 
-        };//function retrieveTags() {
-        const splitTags = retrieveTags();
+    useEffect(() => {
+        const splitTags = populateSelectedTagsArray();
         setTagsSelected(splitTags.selected);
         setTagsUnSelected(splitTags.unselected)
     }, [data])
 
-    // console.log('tagsSelected :>> ', tagsSelected);
 
     if (error) {
         console.error('error :>> ', { err: error });
@@ -95,16 +116,16 @@ export function TagSelect() {
         )
     }
 
-    console.log('tagsData :>> ', data);
+    // console.log('tagsData :>> ', data);
 
     return (
         <>
-            <TagsSelected 
-                tags={tagsSelected} 
+            <TagsSelected
+                tags={tagsSelected}
                 onTagUnselected={onTagUnselected}
             />
             <TagsTextFilter />
-            <UnselectedTags 
+            <UnselectedTags
                 tags={tagsUnSelected}
                 onTagSelected={onTagSelected} />
         </>
