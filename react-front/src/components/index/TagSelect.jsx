@@ -33,6 +33,14 @@ export function TagSelect() {
 
     console.log('data :>> ', data);
 
+    function onTagSelected(evt, tag) {
+        console.log('tag Selected in  TagSelect:>> ', tag);
+    }
+
+    function onTagUnselected(evt, tag) {
+        console.log('TagUnselected in  TagSelect evt :>> ', evt);
+    }
+
     useEffect(() => {
         function retrieveTags() {
             const selectedTagArr = []
@@ -41,20 +49,21 @@ export function TagSelect() {
                 unselectedTagArr = [...data.tags]
                 // console.log('data  in retrieveTags:>> ', data);
                 const tagsSelectedStr = searchParams.get("tags")
-                // console.log('tagsSelectedStr :>> ', tagsSelectedStr);
-                const tagsStrArr = tagsSelectedStr.split(",")
-
-                console.log('unselectedTagArr :>> ', unselectedTagArr);
-                tagsStrArr.map((tag) => {
-                    console.log('Searching tags :>> ', tag);
-                    const fullTagObjArr = unselectedTagArr.filter((fullTag) => fullTag.uuid == tag)
-                    if (fullTagObjArr) {
-                        selectedTagArr.push(fullTagObjArr[0])
-                        unselectedTagArr = unselectedTagArr.filter((unselectedTag) => unselectedTag.uuid != tag)
-                    }
-                })
-                console.log('selectedTagArr :>> ', selectedTagArr);
-                console.log('unselectedTagArr :>> ', unselectedTagArr);
+                if (tagsSelectedStr != "" && !(tagsSelectedStr===null)) {
+                    // console.log('tagsSelectedStr :>> ', tagsSelectedStr);
+                    const tagsStrArr = tagsSelectedStr.split(",")
+                    // console.log('unselectedTagArr :>> ', unselectedTagArr);
+                    tagsStrArr.map((tag) => {
+                        // console.log('Searching tags :>> ', tag);
+                        const fullTagObjArr = unselectedTagArr.filter((fullTag) => fullTag.uuid == tag)
+                        if (fullTagObjArr) {
+                            selectedTagArr.push(fullTagObjArr[0])
+                            unselectedTagArr = unselectedTagArr.filter((unselectedTag) => unselectedTag.uuid != tag)
+                        }
+                    })
+                }//if(tagsSelectedStr!="") {
+                // console.log('selectedTagArr :>> ', selectedTagArr);
+                // console.log('unselectedTagArr :>> ', unselectedTagArr);
             }; //if(data) {
             return {
                 selected: selectedTagArr,
@@ -67,7 +76,7 @@ export function TagSelect() {
         setTagsUnSelected(splitTags.unselected)
     }, [data])
 
-    console.log('tagsSelected :>> ', tagsSelected);
+    // console.log('tagsSelected :>> ', tagsSelected);
 
     if (error) {
         console.error('error :>> ', { err: error });
@@ -90,9 +99,14 @@ export function TagSelect() {
 
     return (
         <>
-            <TagsSelected tags={tagsSelected} />
+            <TagsSelected 
+                tags={tagsSelected} 
+                onTagUnselected={onTagUnselected}
+            />
             <TagsTextFilter />
-            <UnselectedTags tags={tagsUnSelected} />
+            <UnselectedTags 
+                tags={tagsUnSelected}
+                onTagSelected={onTagSelected} />
         </>
     )
 }
