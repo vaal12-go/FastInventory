@@ -1,15 +1,14 @@
 from sqlmodel import Session
 import uuid
 import qrcode
-from PIL import Image, ImageFont, ImageDraw
-
 import io
+
+from PIL import Image, ImageFont, ImageDraw
 from fastapi.responses import StreamingResponse
 
 from .main_router import main_router
-# from app import app
-import db
-from models.item import Item
+from ..db import db
+from ..models.item import Item
 
 
 @main_router.get("/item-qr-code/{item_uuid}.png")
