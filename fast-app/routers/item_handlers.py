@@ -132,9 +132,9 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
         where_clause
     )
 
-    print("Statement:", select_stmt.compile())
+    # print("Statement:", select_stmt.compile())
 
-    print('item_handlers:134 select_stmt:>>', select_stmt)
+    # print('item_handlers:134 select_stmt:>>', select_stmt)
 
     all_items = session.exec(
         select_stmt.
@@ -174,6 +174,9 @@ def get_all_items(session, page: int | None = 0,
 @main_router.get("/item/{item_uuid}")
 def item_get_handler(item_uuid: str, page: int | None = 0,
                      tags: str | None = None, search_term: str | None = None):
+
+    print(f"search_term:{search_term}")
+                    
     with Session(db.db_engine) as session:
         requested_uuid = None
         try:
@@ -190,7 +193,7 @@ def item_get_handler(item_uuid: str, page: int | None = 0,
                 # print('item_handlers:85 tags:>>', tags)
                 # print('item_handlers:191 search_term:>>', search_term)
                 res = get_all_items(session, page, tags, search_term)
-                # print('item_handlers:153 res:>>', res)
+                print('item_handlers:153 res:>>', res)
                 return res
 
         return {

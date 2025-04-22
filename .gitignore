@@ -17,3 +17,6 @@ deployment/deployment_files/docker_fastapi_log.log
 *.sqlite3.bak*
 error_*.txt
 .vscode/settings.json
+.env
+.gitignore
+fast_inventory.sqlite3

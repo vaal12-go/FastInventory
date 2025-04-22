@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { TagSelect } from '../components/index/TagSelect';
 import { InventoryItems } from '../components/index/InventoryItems'
+import { ItemTextFilter } from '../components/index/ItemTextFilter';
 
 
 export function IndexPage() {
@@ -26,7 +27,6 @@ export function IndexPage() {
 
   return (
     <>
-
       {/* <!-- Main page container --> */}
       <div className="container-fluid text-center ps-3 pe-3">
         <div className="row text-start">
@@ -51,38 +51,7 @@ export function IndexPage() {
           {/* <!-- Items main section --> */}
           <div className="col-10  mt-3">
             <div className="container-fluid">
-              <div className="row">
-                <div className="col-2">
-                  <h3>List of items</h3>
-                </div>
-                <div className="col-6">
-                  <input type="text" className="form-control" id="item_search_input" placeholder="Search items" />
-                </div>
-              </div>
-
-              {/* <!-- Filters and selections --> */}
-              <div className="row pe-4 mb-3">
-                {/* <!-- TODO: add selection checkboxes to items, 'select all' checkbox and delete button for mass deletion of items --> */}
-                {/* <!-- <div className="col-1"><span className="align-middle">[x] all</span></div> --> */}
-                <div className="col-4">
-
-                </div>
-                {/* <!-- <div className="col border">filter/selection gadgets</div> --> */}
-              </div>
-              {/* <!-- END Filters and selections --> */}
-
-              {/* <!-- Items --> */}
-              <div className="row">
-                <div className="col">
-                  {/* <!-- ITEMS start --> */}
-                  <InventoryItems />
-
-                  {/* <!-- ITEMS END --> */}
-
-                </div>
-              </div>
-              {/* <!-- END Items --> */}
-
+              <InventoryItems />
               {/* <!-- Pagination --> */}
               <div className="row">
                 <div className="col-3 fs-6">
