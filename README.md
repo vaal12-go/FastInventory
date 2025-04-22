@@ -14,13 +14,17 @@ Web application writted with FastAPI and SQLModel to serve as a personal invento
 * Search terms hightlight on the client uses segments union algorythm (see array_reducer reduce_arrays function), which allows for flexible and effective hightlighing of search terms on the page. This feature is implemented with heavy reliance of functional js contstructs (array forEach, filter and reduce).
 
 ## Updates
-* 12Mar2025 - images are displayed on index page. server side uses context management of the sessions. Test database population (with random pictures).
+* 22Apr2025 - fastapi application moved to fast-app folder and it is better structured for further development. React rewrite of frontend started (not yet moved to actual frontend)
 * 16Mar2025 - search by tags and text search field is working (at the moment only for item names). Search terms are highlighted on the client.
+* 12Mar2025 - images are displayed on index page. server side uses context management of the sessions. Test database population (with random pictures).
+
 
 ## Further development
+* Front end rewrite with react
+    * URL replacement with search parameters, so search criteria (and tags) can be bookmarked on the index page
+    * Search - partially implemented in update of 16Mar2025
 * Deployment with docker and nginx
 * Integration with IP Webcam android application (so pictures taken from phone will be automatically saved to DB) - in works
-* URL replacement with search parameters, so search criteria (and tags) can be bookmarked on the index page
 * Authentification
 * Load testing (search/retrieval/db size) with tens of thousands items.
 * Separate databases for each user
@@ -31,7 +35,5 @@ Web application writted with FastAPI and SQLModel to serve as a personal invento
 * Allow management of item's pictures (deletion)
 * List of containers
     * Chain of containers (will require use of WITH RECURSIVE SQL)
-* List of tags - implemented in update of 16Mar2025
-* Search - partially implemented in update of 16Mar2025
-* 
+ 
 
