@@ -28,21 +28,31 @@ async function fetchInventoryItems(filters) {
 
 export function InventoryItems() {
     const [searchParams, setSearchParams] = useSearchParams()
+    // function getFilterParams() {
+    //     return {
+    //         search_term : searchParams.get("itemFilter")? searchParams.get("itemFilter") : "",
+    //         tags : searchParams.get("tags")? searchParams.get("tags") : "",
+    //     }
+    // }
+    
+
     function getFilterParams() {
+        console.log('getFilterParams searchParams.get("itemFilter") :>> ', searchParams.get("itemFilter"));
         return {
-            search_term : searchParams.get("itemFilter")? searchParams.get("itemFilter") : ""
+            search_term : searchParams.get("itemFilter")? searchParams.get("itemFilter") : "",
+            tags : searchParams.get("tags")? searchParams.get("tags") : "",
         }
     }
+
     const [filters, setFilters] = useState(getFilterParams())
 
     useEffect(()=>{
-        setSearchParams((params) => {
-            if(filters.search_term == "") {
-                params.delete("itemFilter")
-            } else 
-                params.set("itemFilter", filters.search_term)
-            return params
-          });
+        console.log('searchParamsChanged in useEffect :>> ');
+        console.log('searchParams.get("itemFilter") :>> ', searchParams.get("itemFilter"));
+        setFilters(getFilterParams())
+    }, [searchParams])
+
+    useEffect(()=>{
         mutate()
     }, [filters])
 
@@ -63,13 +73,22 @@ export function InventoryItems() {
 
     function onTextFilterChange(evt, filterText) {
         console.log('filterText :>> ', filterText);
-        setFilters(
-            { 
-                ...filters,
-                search_term : filterText,
+        // setFilters(
+        //     { 
+        //         ...filters,
+        //         search_term : filterText,
+        //     }
+        // )
+        setSearchParams((params) => {
+            if(filterText == "") {
+                params.delete("itemFilter")
+            } else {
+                console.log('Setting search param :>> ', filterText);
+                params.set("itemFilter", filterText)
             }
-        )
-        
+            return params
+        });
+        console.log('Search params are set: :>> ', filterText);
     }
 
     return (<>
