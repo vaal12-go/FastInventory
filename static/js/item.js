@@ -9,7 +9,7 @@ window.onload = async () => {
   await initImageControls();
 
   document.getElementById("cancel_btn").addEventListener("click", () => {
-    var returnURL = `${BASE_URL}html/index.html`;
+    var returnURL = `${BASE_URL}index.html`;
     window.location.replace(returnURL);
   }); //document.getElementById("cancel_btn").addEventListener(
 
@@ -37,7 +37,7 @@ window.onload = async () => {
       (jsonObj) => {
         // console.log("Have responce :>> ", jsonObj);
         if (jsonObj.status == "success") {
-          var returnURL = `${BASE_URL}html/index.html`;
+          var returnURL = `${BASE_URL}index.html`;
           window.location.replace(returnURL);
         }
       }

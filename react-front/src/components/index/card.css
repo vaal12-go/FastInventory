@@ -1,0 +1,39 @@
+
+
+.inventory-card {
+    width:300px;
+    float: left;
+}
+
+.inventory-card-title {
+    font-size: small;
+    text-align: justify;
+}
+
+.inventory-card-body {
+    clear: both;
+    text-align: end;
+    font-size: xx-small;
+}
+
+.inventory-card-img {
+    width:50px;
+    height: 50px;
+    margin-right: 10px;
+    margin-bottom: 3 px;
+    float: left;
+}
+
+.inventory-card-tag {
+    background-color: rgb(242, 242, 229);
+    padding: 3px;
+    margin-right: 3px;
+    margin-bottom: 10px;
+    float: left;
+    font-size: smaller;
+}
+
+.inventory-card-uuid {
+    font-weight: bolder;
+}
+

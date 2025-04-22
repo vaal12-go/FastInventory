@@ -8,7 +8,7 @@ function collect_item_data() {
 
   tgUUIDs = [];
   selectData = $("#tags_select2_selector").select2("data");
-  console.log("selectData :>> ", selectData);
+  // console.log("selectData :>> ", selectData);
   for (tagIdx in selectData) {
     tag = selectData[tagIdx];
     console.log("tag :>> ", tag);

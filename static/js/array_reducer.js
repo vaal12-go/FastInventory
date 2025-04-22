@@ -65,3 +65,17 @@ function reduce_arrays(arr_of_segments) {
   // console_debug("array_reducer:13 reduced_arr::", reduced_arr);
   return reduced_arr;
 } //function reduce_arrays(arr_of_segments) {
+
+function find_search_terms_in_string(search_str, search_term_arr) {
+  res_arr = [];
+  search_str = search_str.toLowerCase();
+  search_term_arr.forEach((search_term) => {
+    term_pos = search_str.search(search_term);
+    while (term_pos >= 0) {
+      end_pos = term_pos + search_term.length;
+      res_arr.push([term_pos, end_pos]);
+      term_pos = search_str.indexOf(search_term, end_pos);
+    }
+  });
+  return res_arr;
+} //function find_search_terms_in_string(search_str, search_term_arr) {

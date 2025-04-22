@@ -222,3 +222,35 @@ class ItemGetter {
     };
   }
 } //class ItemGetter {
+
+function fileIsImage(fName) {
+  let last_dot_idx = fName.lastIndexOf(".");
+  let fExt = fName.substring(last_dot_idx + 1);
+  let imgExtArray = ["png", "jpg", "jpeg"];
+  if (imgExtArray.includes(fExt.toLowerCase())) return true;
+  else return false;
+}
+
+function parse_search_term() {
+  let term = GLOBAL_STATE.items_selection_criteria.search_phrase;
+  quote_split_term = term.split('"');
+  quoted_strs = [];
+  quotes_array = quote_split_term.filter((currVal, idx, arr) => {
+    if (currVal == "") return false;
+    if (idx % 2 == 0) return true;
+    else {
+      quoted_strs.push(currVal);
+      return false;
+    }
+  });
+  ret_array = [];
+  quotes_array.forEach((currVal, idx, arr) => {
+    ret_array.push(...currVal.split(" "));
+  });
+  ret_array = ret_array.filter((currVal, idx, arr) => {
+    if (currVal.trim() == "") return false;
+    return true;
+  });
+  ret_array.push(...quoted_strs);
+  return ret_array;
+} //function parse_search_term() {
