@@ -20,3 +20,4 @@ error_*.txt
 .env
 .gitignore
 fast_inventory.sqlite3
+devHelperScripts/**

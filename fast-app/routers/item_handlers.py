@@ -144,7 +144,7 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
     return all_items
 # def get_items_with_tags(session, page, tags):
 
-
+# TODO: when 2 tags are selected - no items are returned - probably AND operator is used
 def get_all_items(session, page: int | None = 0,
                   tags: str | None = None, search_term: str | None = None):
     all_items = None
