@@ -1,10 +1,10 @@
 from sqlmodel import SQLModel, create_engine, Session, select
 
-from ..models.item import Item
+from models.item import Item
 from .configuration import SQLITE_FILE_NAME
-from ..models.item_tag_link import ItemTagLink
-from ..models.file import SQLiteFile
-from ..models.tag import Tag
+from models.item_tag_link import ItemTagLink
+from models.file import SQLiteFile
+from models.tag import Tag
 
 
 db_engine = None

@@ -7,11 +7,11 @@ from pydantic import BaseModel
 
 from .main_router import main_router
 # from app import app
-from ..models.tag import Tag, TagRec
-from ..models.item import Item, ItemCreate
-from ..models.file import SQLiteFile
+from models.tag import Tag, TagRec
+from models.item import Item, ItemCreate
+from models.file import SQLiteFile
 
-from ..db import db
+from db import db
 
 NO_TAG_UUID_NAME = "no_tag"
 
@@ -144,7 +144,7 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
     return all_items
 # def get_items_with_tags(session, page, tags):
 
-# TODO: when 2 tags are selected - no items are returned - probably AND operator is used
+# BUG: when 2 tags are selected - no items are returned - probably AND operator is used
 def get_all_items(session, page: int | None = 0,
                   tags: str | None = None, search_term: str | None = None):
     all_items = None
