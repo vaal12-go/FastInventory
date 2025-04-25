@@ -13,7 +13,7 @@ from models.tag import Tag
 from models.file import SQLiteFile, SQLiteFileContent
 import db
 from db.db import init_db
-from  db import configuration
+from db import configuration
 
 # DISK_BASE_PATH = r"c:\Users\may13\Desktop\Object photo disk"
 DISK_BASE_PATH = '/home/mar25/raspberry_mount/TransferDirCommon/Object photo disk'
@@ -49,7 +49,8 @@ def internal_init_db(echo=True):
     load_dotenv()
     configuration.SQLITE_FILE_NAME = os.getenv(
         "SQLITE_FILE_NAME", configuration.SQLITE_FILE_NAME)
-    db.db_engine = init_db(echo)
+    print(f"configuration.SQLITE_FILE_NAME:{configuration.SQLITE_FILE_NAME}")
+    db.db_engine = init_db(db_f_name= configuration.SQLITE_FILE_NAME, echo=echo)
 
 
 def addImage(img_file_name, item_uuid, session):
