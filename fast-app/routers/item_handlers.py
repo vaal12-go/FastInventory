@@ -85,9 +85,10 @@ def split_search_term(search_term):
     return [x for x in ret_list if x != ""]
 
 
-def get_items_with_tags(session, page, tags, search_term: str | None = None):
+def get_items_with_tags(session = None, page: int | None = 1, 
+            items_on_page: int | None = MAX_ITEMS_PER_PAGE,
+            tags: str | None = None, search_term: str | None = None):
     all_items = None
-
     select_stmt = select(Item)
     tags_clause = (1 == 1)
     search_clause_name = (1 == 1)
@@ -95,9 +96,7 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
     # PROCESS TAGs clauses
     if tags == NO_TAG_UUID_NAME:
         tags_clause = (Item.search_tags_field == "")
-
     clausesList = [False]
-    # print(f"tags:{tags}")
     if tags != None:
         tags_split = tags.split(";")
         for tag in tags_split:
@@ -138,7 +137,8 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
 
     all_items = session.exec(
         select_stmt.
-        order_by(Item.created_datetime.desc())
+        order_by(Item.created_datetime.desc()).
+        limit(items_on_page)
     ).all()
 
     return all_items
@@ -146,12 +146,14 @@ def get_items_with_tags(session, page, tags, search_term: str | None = None):
 
 # BUG: when 2 tags are selected - no items are returned - probably AND operator is used
 def get_all_items(session, page: int | None = 0,
+                  items_on_page: int | None = MAX_ITEMS_PER_PAGE, 
                   tags: str | None = None, search_term: str | None = None):
     all_items = None
     no_of_items = -1
     no_of_pages = -1
 
-    all_items = get_items_with_tags(session, page, tags, search_term)
+    all_items = get_items_with_tags(session, page, 
+            items_on_page,tags, search_term)
     no_of_items = len(all_items)
 
     no_of_pages = no_of_items // MAX_ITEMS_PER_PAGE
@@ -164,7 +166,7 @@ def get_all_items(session, page: int | None = 0,
     return {
         "status": "success",
         "items": outList.lst,
-        "page": page,
+        "page": page+1,
         "total_items": no_of_items,
         "total_pages": no_of_pages
     }
@@ -173,6 +175,7 @@ def get_all_items(session, page: int | None = 0,
 
 @main_router.get("/item/{item_uuid}")
 def item_get_handler(item_uuid: str, page: int | None = 0,
+                     items_on_page: int | None = MAX_ITEMS_PER_PAGE,
                      tags: str | None = None, search_term: str | None = None):
 
     print(f"search_term:{search_term}")
@@ -190,9 +193,11 @@ def item_get_handler(item_uuid: str, page: int | None = 0,
         else:
             if item_uuid == "all":
                 print("Will return all items")
+                print(f"items_on_page:{items_on_page}")
                 # print('item_handlers:85 tags:>>', tags)
                 # print('item_handlers:191 search_term:>>', search_term)
-                res = get_all_items(session, page, tags, search_term)
+                # Pages will start with 1 (in URL/request)
+                res = get_all_items(session, page-1, items_on_page, tags, search_term)
                 print('item_handlers:153 res:>>', res)
                 return res
 

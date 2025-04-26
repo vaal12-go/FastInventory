@@ -8,16 +8,18 @@ import './card.css'
 import { ItemTextFilter } from './ItemTextFilter';
 import React from 'react';
 
+const ITEMS_ON_PAGE = 6
+
 async function fetchInventoryItems(filters) {
-    console.log('filters in fetchInventoryItems :>> ', filters);
-    console.log('filters.keys :>> ', Object.keys(filters));
+    // console.log('filters in fetchInventoryItems :>> ', filters);
+    // console.log('filters.keys :>> ', Object.keys(filters));
     const filterURLParams = Object.keys(filters).reduce((accum, val)=>{
-        console.log('object props:>> ', val);
+        // console.log('object props:>> ', val);
         if(filters[val])
             accum += `&${val}=${filters[val]}`
         return accum
     }, "")
-    console.log('filterURLParams :>> ', filterURLParams);
+    // console.log('filterURLParams :>> ', filterURLParams);
     const url = `http://127.0.0.1:8080/item/all?${filterURLParams}`
     console.log('url :>> ', url);
     const itemsRes = await fetch(url)
@@ -37,18 +39,19 @@ export function InventoryItems() {
     
 
     function getFilterParams() {
-        console.log('getFilterParams searchParams.get("itemFilter") :>> ', searchParams.get("itemFilter"));
+        // console.log('getFilterParams searchParams.get("itemFilter") :>> ', searchParams.get("itemFilter"));
         return {
             search_term : searchParams.get("itemFilter")? searchParams.get("itemFilter") : "",
             tags : searchParams.get("tags")? searchParams.get("tags") : "",
+            page: searchParams.get("page") ? searchParams.get("page") : 1,
         }
     }
 
     const [filters, setFilters] = useState(getFilterParams())
 
     useEffect(()=>{
-        console.log('searchParamsChanged in useEffect :>> ');
-        console.log('searchParams.get("itemFilter") :>> ', searchParams.get("itemFilter"));
+        // console.log('searchParamsChanged in useEffect :>> ');
+        // console.log('searchParams.get("itemFilter") :>> ', searchParams.get("itemFilter"));
         setFilters(getFilterParams())
     }, [searchParams])
 
@@ -72,7 +75,7 @@ export function InventoryItems() {
     
 
     function onTextFilterChange(evt, filterText) {
-        console.log('filterText :>> ', filterText);
+        // console.log('filterText :>> ', filterText);
         // setFilters(
         //     { 
         //         ...filters,
@@ -83,12 +86,12 @@ export function InventoryItems() {
             if(filterText == "") {
                 params.delete("itemFilter")
             } else {
-                console.log('Setting search param :>> ', filterText);
+                // console.log('Setting search param :>> ', filterText);
                 params.set("itemFilter", filterText)
             }
             return params
         });
-        console.log('Search params are set: :>> ', filterText);
+        // console.log('Search params are set: :>> ', filterText);
     }
 
     return (<>
@@ -130,9 +133,6 @@ export function InventoryItems() {
             </div>
         </div>
         {/* <!-- END Items --> */}
-
-
-
     </>)
 }//export function InventoryItems() {
 

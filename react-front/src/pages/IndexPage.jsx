@@ -4,16 +4,14 @@ import { useSearchParams } from 'react-router-dom';
 import { TagSelect } from '../components/index/TagSelect';
 import { InventoryItems } from '../components/index/InventoryItems'
 import { ItemTextFilter } from '../components/index/ItemTextFilter';
+import { Pagination } from '../components/index/Pagination';
 
 
 export function IndexPage() {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
-  // console.log('searchParams :>> ', searchParams);
-
   const debugParam = searchParams.get("debug")
-  // console.log('debugParam  :>> ', debugParam);
 
   useEffect(() => {
     if (debugParam) {
@@ -24,6 +22,13 @@ export function IndexPage() {
     };
   }, []);
 
+  function onPaginationChange(selected_page) {
+    console.log('onPaginationChange. selected_page :>> ', selected_page);
+    setSearchParams((params) => {
+      params.set("page", selected_page)
+      return params
+    });
+  }
 
   return (
     <>
@@ -55,11 +60,12 @@ export function IndexPage() {
               {/* <!-- Pagination --> */}
               <div className="row">
                 <div className="col-3 fs-6">
-                  Pagination may not work properly in this update
+                  {/* Pagination may not work properly in this update */}
                 </div>
                 <div className="col-9 fs-4" id="pagination-holder">
-                  &#x226A; 1 2 ... | 3 | <span className="fs-2 fw-bold">4</span> | 5 |
-                  ... 6 7 &#x226B;
+                  {/* &#x226A; 1 2 ... | 3 | <span className="fs-2 fw-bold">4</span> | 5 |
+                  ... 6 7 &#x226B; */}
+                  <Pagination current_page={1} total_pages={5} onChange={onPaginationChange} />
                 </div>
               </div>
               {/* <!-- END Pagination --> */}
