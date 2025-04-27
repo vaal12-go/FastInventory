@@ -17,10 +17,6 @@ from models.file import SQLiteFile
 from db import db
 
 
-
-
-
-
 @main_router.get("/item/containers")
 async def containers_list_handler():
     with Session(db.db_engine) as session:
@@ -49,9 +45,6 @@ async def containers_list_handler():
             "items": outList.lst
         }
 # END async def containers_list_handler():
-
-
-
 
 def split_search_term(search_term):
     # print('item_handlers:72 search_term:>>', search_term)
