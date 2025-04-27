@@ -23,8 +23,18 @@ class ItemOut(BaseModel):
         arbitrary_types_allowed = True
 
 
-class ItemOutList(BaseModel):
-    lst: List[ItemOut] = []
+# This class is not needed as 
+# outList = list(map(
+#         lambda itm: ItemOut.parse_obj(itm), all_items
+#     ))
+#    does the trick of conversion in item_get.py
 
-    class Config:
-        from_attributes = True
+# class ItemOutList(List[ItemOut]):
+#     class Config:
+#         from_attributes = True
+
+# class ItemOutList(BaseModel):
+#     lst: List[ItemOut] = []
+
+#     class Config:
+#         from_attributes = True

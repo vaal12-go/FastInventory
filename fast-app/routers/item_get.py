@@ -6,7 +6,7 @@ from sqlmodel import Session, select, func, col, or_, and_
 from db import db
 
 from models.item import Item
-from models.item_out import ItemOutList
+from models.item_out import ItemOutList, ItemOut
 
 from .main_router import main_router
 
@@ -134,17 +134,20 @@ def get_all_items(session, page: int | None = 0,
     no_of_pages = no_of_items // DEFAULT_ITEMS_PER_PAGE
     if no_of_items % DEFAULT_ITEMS_PER_PAGE != 0:
         no_of_pages += 1
+        
 
-    outList = ItemOutList.parse_obj({"lst": all_items})
+    print(f"all_items:{all_items}")
+    print(f"type of all_items:{type(all_items)}")
 
-    print(f"type of outList.lst:{type(outList.lst)}")
+    outList = list(map(
+        lambda itm: ItemOut.parse_obj(itm), all_items
+    ))
 
-    # test_list = list(outList.lst)
-    # print(f"test_list:{type(test_list)}")
+    print(f"outList:{outList}")
 
     return {
         "status": "success",
-        "items": outList.lst,
+        "items": outList,
         "page": page+1,
         "total_items": no_of_items,
         "total_pages": no_of_pages
