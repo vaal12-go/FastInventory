@@ -1,18 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { TagSelect } from '../components/index/TagSelect';
-import { InventoryItems } from '../components/index/InventoryItems'
+import { getFilterParams, InventoryItems } from '../components/index/InventoryItems'
 import { ItemTextFilter } from '../components/index/ItemTextFilter';
 import { Pagination } from '../components/index/Pagination';
 
 
+
 export function IndexPage() {
-
   const [searchParams, setSearchParams] = useSearchParams()
-
   const debugParam = searchParams.get("debug")
-
   useEffect(() => {
     if (debugParam) {
       setSearchParams((params) => {
@@ -28,7 +26,13 @@ export function IndexPage() {
       params.set("page", selected_page)
       return params
     });
+    setFilters({
+      ...filters,
+      page: selected_page
+    })
   }
+
+  const [filters, setFilters] = useState(getFilterParams(searchParams))
 
   return (
     <>
@@ -44,11 +48,6 @@ export function IndexPage() {
                 </div>
               </div>
               <TagSelect></TagSelect>
-              {/* <div className="row">
-              <div className="col">
-                <div id="tags-holder" className="mt-1 ms-2 tags-holder"></div>
-              </div>
-            </div> */}
             </div>
           </div>
           {/* <!-- END TAGS left section --> */}
@@ -63,9 +62,7 @@ export function IndexPage() {
                   {/* Pagination may not work properly in this update */}
                 </div>
                 <div className="col-9 fs-4" id="pagination-holder">
-                  {/* &#x226A; 1 2 ... | 3 | <span className="fs-2 fw-bold">4</span> | 5 |
-                  ... 6 7 &#x226B; */}
-                  <Pagination current_page={1} total_pages={5} onChange={onPaginationChange} />
+                  <Pagination current_page={filters.page} total_pages={5} onChange={onPaginationChange} />
                 </div>
               </div>
               {/* <!-- END Pagination --> */}

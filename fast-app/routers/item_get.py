@@ -106,7 +106,7 @@ def get_all_items(session, item_filters):
 
     itm_offset = item_filters["items_on_page"] * item_filters["page"]
 
-
+    # https://github.com/fastapi/sqlmodel/issues/494
     count_select = select(func.count(Item.uuid)).where(where_clause)
     no_of_items = session.scalar(
         count_select

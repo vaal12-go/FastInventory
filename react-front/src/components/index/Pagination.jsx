@@ -30,7 +30,7 @@ export function Pagination({
     total_pages = 1,
     onChange = null,
 }) {
-
+    console.log("Current page:", current_page)
     const [nav_pages_to_show, setNavigationPages] = useState([]);
 
     useEffect(() => {
