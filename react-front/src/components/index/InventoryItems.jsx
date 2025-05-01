@@ -7,6 +7,7 @@ import './tags.css'
 import './card.css'
 import { ItemTextFilter } from './ItemTextFilter';
 import React from 'react';
+import { BASE_API_URL } from '../../lib/constants';
 
 const DEFAULT_ITEMS_ON_PAGE = 6
 
@@ -16,7 +17,7 @@ async function fetchInventoryItems(filters) {
             accum += `&${val}=${filters[val]}`
         return accum
     }, "")
-    const url = `http://127.0.0.1:8080/item/all?${filterURLParams}`
+    const url = `${BASE_API_URL}/item/all?${filterURLParams}`
     console.log('url :>> ', url);
     const itemsRes = await fetch(url)
     const itemsJSON = await itemsRes.json()

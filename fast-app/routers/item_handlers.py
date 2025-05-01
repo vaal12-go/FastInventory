@@ -12,6 +12,7 @@ from .main_router import main_router
 # from app import app
 from models.tag import Tag, TagRec
 from models.item import Item, ItemCreate
+from models.item_out import ItemOut
 from models.file import SQLiteFile
 
 from db import db
@@ -29,20 +30,18 @@ async def containers_list_handler():
                 "items": []
             }
         containerTagUUID = container_tag.uuid
-        # print(f"containerTagUUID:{containerTagUUID}")
-        # print('item_handlers.py: containerTagUUID=', containerTagUUID)
-        # print('item_handlers.py: type(containerTagUUID)=', type(containerTagUUID))
 
         stmt = select(Item). \
             join(Item.tags). \
             where(Tag.uuid == containerTagUUID)
-        res = session.exec(stmt).all()
+        all_items = session.exec(stmt).all()
 
-        outList = ItemOutList.parse_obj({"lst": res})
+        # outList = ItemOutList.parse_obj({"lst": res})
+        outList = list(map(lambda itm: ItemOut.parse_obj(itm), all_items))
 
         return {
             "status": "success",
-            "items": outList.lst
+            "items": outList
         }
 # END async def containers_list_handler():
 

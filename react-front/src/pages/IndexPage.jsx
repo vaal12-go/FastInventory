@@ -20,19 +20,10 @@ export function IndexPage() {
     };
   }, []);
 
-  function onPaginationChange(selected_page) {
-    console.log('onPaginationChange. selected_page :>> ', selected_page);
-    setSearchParams((params) => {
-      params.set("page", selected_page)
-      return params
-    });
-    setFilters({
-      ...filters,
-      page: selected_page
-    })
-  }
-
-  const [filters, setFilters] = useState(getFilterParams(searchParams))
+  // function onPaginationChange(selected_page) {
+  //   console.log('onPaginationChange. DOING NOTHING. selected_page :>> ', selected_page);
+  // }//function onPaginationChange(selected_page) {
+  
 
   return (
     <>
@@ -62,7 +53,9 @@ export function IndexPage() {
                   {/* Pagination may not work properly in this update */}
                 </div>
                 <div className="col-9 fs-4" id="pagination-holder">
-                  <Pagination current_page={filters.page} total_pages={5} onChange={onPaginationChange} />
+                  <Pagination total_pages={5} 
+                    // onChange={onPaginationChange} 
+                    />
                 </div>
               </div>
               {/* <!-- END Pagination --> */}

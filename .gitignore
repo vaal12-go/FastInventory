@@ -22,3 +22,5 @@ error_*.txt
 fast_inventory.sqlite3
 devHelperScripts/**
 fast-app/routers/item_handlers.py
+static_pre_mergewith public_1May2025.7z
+static/vite.svg
