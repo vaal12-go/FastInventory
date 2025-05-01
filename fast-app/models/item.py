@@ -1,11 +1,11 @@
 from datetime import datetime
 from sqlmodel import Field, SQLModel, Relationship, create_engine, TIMESTAMP
 import uuid as uuid_lib
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy import Column, DateTime
 from sqlalchemy.sql import func
 from pydantic import BaseModel, computed_field
-from typing import List
+
 
 
 from .item_tag_link import ItemTagLink
@@ -65,3 +65,6 @@ class Item(ItemBase, table=True):
             search_field = search_field + f"{tag.uuid};"
         print('item:65 search_field:>>', search_field)
         self.search_tags_field = search_field
+
+
+

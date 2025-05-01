@@ -7,16 +7,18 @@ from dotenv import load_dotenv
 
 from sqlmodel import Field, Session, select
 
-
+# from models import Item
 from models.item import Item
 from models.tag import Tag
 from models.file import SQLiteFile, SQLiteFileContent
 import db
-import configuration
+from db.db import init_db
+from db import configuration
 
-DISK_BASE_PATH = r"c:\Users\may13\Desktop\Object photo disk"
-INFO_FNAME = DISK_BASE_PATH + r"\TEXTFILE\OBJECT06.TXT"
-IMAGES_BASE_PATH = DISK_BASE_PATH+r"\PHOTOS\MED_RES"
+# DISK_BASE_PATH = r"c:\Users\may13\Desktop\Object photo disk"
+DISK_BASE_PATH = '/home/mar25/raspberry_mount/TransferDirCommon/Object photo disk'
+INFO_FNAME = DISK_BASE_PATH + r"/TEXTFILE/OBJECT06.TXT"
+IMAGES_BASE_PATH = DISK_BASE_PATH+r"/PHOTOS/MED_RES"
 
 TOTAL_NUM_OF_IMAGES = 120
 NUM_OF_ITEMS_TO_ADD = 5
@@ -43,11 +45,12 @@ def add_tags():
                 session.commit()
 
 
-def init_db(echo=True):
+def internal_init_db(echo=True):
     load_dotenv()
     configuration.SQLITE_FILE_NAME = os.getenv(
         "SQLITE_FILE_NAME", configuration.SQLITE_FILE_NAME)
-    db.db_engine = db.init_db(echo)
+    print(f"configuration.SQLITE_FILE_NAME:{configuration.SQLITE_FILE_NAME}")
+    db.db_engine = init_db(db_f_name= configuration.SQLITE_FILE_NAME, echo=echo)
 
 
 def addImage(img_file_name, item_uuid, session):
@@ -110,7 +113,8 @@ def add_item(itm_name, itm_img_fName):
 
 def iterate_images():
     items_added = 0
-    with open(INFO_FNAME, "r") as f:
+    print(f"INFO_FNAME:{INFO_FNAME}")
+    with open(INFO_FNAME, "r", encoding="cp1251") as f:
         for line in f:
             # print(f"Line:{line}")
             splitLines = line.split('\t')
@@ -135,7 +139,7 @@ def iterate_images():
 
 
 if __name__ == "__main__":
-    init_db(echo=False)
+    internal_init_db(echo=False)
 
     print("\n\n***********************************")
     print("***********************************")
@@ -143,5 +147,5 @@ if __name__ == "__main__":
     iterate_images()
 
 
-# To run:
-#    pipenv run python test_populate_db.py
+# To run (from fast-app directory):
+#    uv run -m tests.test_populate_db

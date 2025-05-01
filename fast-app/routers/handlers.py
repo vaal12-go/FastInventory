@@ -10,16 +10,16 @@ from pydantic import BaseModel, computed_field
 
 
 
-from ..db import db
-from ..models.item import Item, ItemCreate, TagRec
-from ..models.tag import Tag
-from ..models.file import SQLiteFile, SQLiteFileContent
+from db import db
+from models.item import Item, ItemCreate, TagRec
+from models.tag import Tag
+from models.file import SQLiteFile, SQLiteFileContent
 
 
 
 # from app import app
 from .main_router import main_router
-from ..internal import helpers
+from internal import helpers
 
 
 

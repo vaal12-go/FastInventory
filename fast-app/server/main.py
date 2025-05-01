@@ -1,19 +1,19 @@
 # Main module of the application
-# Dev run
-#    pipenv run fastapi dev --host 127.0.0.1 --port 8080 ./fast-app/main.py
+# Dev run (from fast-app dir):
+#    uv run fastapi dev --host 127.0.0.1 --port 8080 ./server/main.py
 
 # For prod environment (no IP as it will be managed by Docker):
-#    pipenv run fastapi run  --port 8080 main.py
+#    uv run fastapi run  --port 8080 ./server/main.py
 
 
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 from .app import app
-from .internal import helpers
+from internal import helpers
 
 # modules with handlers have to be imported so handles are registered
-from .routers import api_router
+from routers import api_router
 
 print(f"api_router:{api_router}")
 

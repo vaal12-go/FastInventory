@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 
-from .db import db
+from db import db
 # from populate_users import populate_users
 # import configuration
 
