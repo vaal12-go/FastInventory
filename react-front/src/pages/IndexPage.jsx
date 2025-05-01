@@ -5,7 +5,7 @@ import { TagSelect } from '../components/index/TagSelect';
 import { getFilterParams, InventoryItems } from '../components/index/InventoryItems'
 import { ItemTextFilter } from '../components/index/ItemTextFilter';
 import { Pagination } from '../components/index/Pagination';
-
+import { BASE_API_URL ,setBaseAPIURL } from '../lib/constants';
 
 
 export function IndexPage() {
@@ -13,17 +13,18 @@ export function IndexPage() {
   const debugParam = searchParams.get("debug")
   useEffect(() => {
     if (debugParam) {
-      setSearchParams((params) => {
-        params.set("debug", "false")
-        return params
-      });
-    };
+      // BASE_API_URL = "http://127.0.0.1:8080"
+      setBaseAPIURL("http://127.0.0.1:8080")
+      // setSearchParams((params) => {
+      //   params.set("debug", "false")
+      //   return params
+      // });
+    } else {//if (debugParam) {
+      // BASE_API_URL = window.location.origin;
+      setBaseAPIURL(window.location.origin)
+    }
+    console.log('BASE_API_URL :>> ', BASE_API_URL);
   }, []);
-
-  // function onPaginationChange(selected_page) {
-  //   console.log('onPaginationChange. DOING NOTHING. selected_page :>> ', selected_page);
-  // }//function onPaginationChange(selected_page) {
-  
 
   return (
     <>
@@ -53,9 +54,7 @@ export function IndexPage() {
                   {/* Pagination may not work properly in this update */}
                 </div>
                 <div className="col-9 fs-4" id="pagination-holder">
-                  <Pagination total_pages={5} 
-                    // onChange={onPaginationChange} 
-                    />
+                  <Pagination total_pages={5} />
                 </div>
               </div>
               {/* <!-- END Pagination --> */}

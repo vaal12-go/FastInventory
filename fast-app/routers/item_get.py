@@ -74,7 +74,6 @@ def get_all_items(session, item_filters):
 
     # PROCESS TAGs clauses
     clausesList = [False]
-    #         tags_clause = (Item.search_tags_field == "")
 
     # TODO: test with tags
     if item_filters["tags"] != "":
@@ -112,8 +111,6 @@ def get_all_items(session, item_filters):
         count_select
     )
 
-    # print(f"no_of_items:{no_of_items}")
-
     all_items = session.exec(
         select_stmt.order_by(Item.created_datetime.desc())
         .offset(itm_offset)
@@ -124,12 +121,10 @@ def get_all_items(session, item_filters):
     if no_of_items % DEFAULT_ITEMS_PER_PAGE != 0:
         no_of_pages += 1
 
-    # print(f"all_items:{all_items}")
-    print(f"type of all_items:{type(all_items)}")
+    # print(f"type of all_items:{type(all_items)}")
 
     outList = list(map(lambda itm: ItemOut.parse_obj(itm), all_items))
-    print(f"len of outList:{len(outList)}")
-
+    # print(f"len of outList:{len(outList)}")
     return {
         "items": outList,
         "total_items": no_of_items,

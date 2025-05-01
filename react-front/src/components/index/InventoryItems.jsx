@@ -50,7 +50,7 @@ export function InventoryItems() {
         return await fetchInventoryItems(filters)
     });
     if (error) {
-        console.error('error :>> ', { err: error });
+        console.error('error :>> ', error );
         return (<>
             <div>failed to load: </div>
             {error.message ? <div> {error.message} </div> : ""}
