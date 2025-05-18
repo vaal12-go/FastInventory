@@ -15,18 +15,18 @@ import db
 from db.db import init_db
 from db import configuration
 
-# DISK_BASE_PATH = r"c:\Users\may13\Desktop\Object photo disk"
-DISK_BASE_PATH = '/home/mar25/raspberry_mount/TransferDirCommon/Object photo disk'
+DISK_BASE_PATH = r"r:\TransferDirCommon\Object photo disk"
+# DISK_BASE_PATH = '/home/mar25/raspberry_mount/TransferDirCommon/Object photo disk'
 INFO_FNAME = DISK_BASE_PATH + r"/TEXTFILE/OBJECT06.TXT"
 IMAGES_BASE_PATH = DISK_BASE_PATH+r"/PHOTOS/MED_RES"
 
 TOTAL_NUM_OF_IMAGES = 120
-NUM_OF_ITEMS_TO_ADD = 5
+NUM_OF_ITEMS_TO_ADD = 15
 
 TAGS = [
     "container", "electronics", "materials", "usb cable", "HDMI cable",
     "cable", "Ethernet", "kitchen supplies", "medical supplies", "book",
-    "test_auto_added_item"
+    "test_auto_added_item", "test_auto_added_4May2025"
 ]
 
 
@@ -50,7 +50,7 @@ def internal_init_db(echo=True):
     configuration.SQLITE_FILE_NAME = os.getenv(
         "SQLITE_FILE_NAME", configuration.SQLITE_FILE_NAME)
     print(f"configuration.SQLITE_FILE_NAME:{configuration.SQLITE_FILE_NAME}")
-    db.db_engine = init_db(db_f_name= configuration.SQLITE_FILE_NAME, echo=echo)
+    db.db_engine = init_db(db_f_name=configuration.SQLITE_FILE_NAME, echo=echo)
 
 
 def addImage(img_file_name, item_uuid, session):
@@ -101,8 +101,9 @@ def add_item(itm_name, itm_img_fName):
         tag_obj = tag_in_db = session.exec(
             select(Tag).where(Tag.tag == tag)
         ).first()
-        itm.tags.append(tag_obj)
-        itm.update_search_tags_field()
+        if (tag_obj.tag != test_autoadd_item):
+            itm.tags.append(tag_obj)
+            itm.update_search_tags_field()
 
         session.add(itm)
         session.commit()

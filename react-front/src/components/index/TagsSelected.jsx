@@ -5,7 +5,7 @@ export function TagsSelected({ tags, onTagUnselected }) {
     // console.log('TagsSelected tags :>> tags ', tags);
 
     function onTagUnselectedHandler(evt, tag) {
-        console.log('TagsSelected evt :>> ', evt);
+        // console.log('TagsSelected evt :>> ', evt);
         if(onTagUnselected) onTagUnselected(evt, tag)
     }
     return (

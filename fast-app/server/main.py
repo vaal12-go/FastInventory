@@ -2,8 +2,16 @@
 # Dev run (from fast-app dir):
 #    uv run fastapi dev --host 127.0.0.1 --port 8080 ./server/main.py
 
+
+# To install packages (from fast-api dir):
+#    uv sync 
+
+
 # For prod environment (no IP as it will be managed by Docker):
 #    uv run fastapi run  --port 8080 ./server/main.py
+
+#TODO: BUG: REACT Pagination on empty DB shows 5 pages ?!?
+
 
 
 from fastapi.staticfiles import StaticFiles

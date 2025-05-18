@@ -1,0 +1,39 @@
+# Commands: https://winscp.net/eng/docs/scripting#commands
+
+#Options help:https://winscp.net/eng/docs/scriptcommand_option
+# option echo on
+
+option batch off
+
+# credential files are in credentials directory
+open sftp://%HOST% -username=%USER% -password=%PASS%
+
+echo
+echo 
+echo -------  Synchronizing files  --------
+
+call mkdir %BASE_DIR% -p
+cd %BASE_DIR%
+
+echo REMOTE DIR:
+pwd
+
+call mkdir static -p
+synchronize remote ../static ./static -delete
+
+call mkdir fast-app -p
+synchronize remote ../fast-app ./fast-app -delete
+call rm -r ./fast-app/.venv
+cd %BASE_DIR%/fast-app
+call uv sync
+
+echo To RUN server:
+echo uv run fastapi run  --port 8080 ./server/main.py
+
+
+
+# call mkdir deploy -p
+
+
+exit
+

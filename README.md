@@ -14,6 +14,10 @@ Web application writted with FastAPI and SQLModel to serve as a personal invento
 * Search terms hightlight on the client uses segments union algorythm (see array_reducer reduce_arrays function), which allows for flexible and effective hightlighing of search terms on the page. This feature is implemented with heavy reliance of functional js contstructs (array forEach, filter and reduce).
 
 ## Updates
+* 18May2025 - 
+    * Pagination is working on react index page.
+    * Fastapi application and development react application are designed to run via nginx (during development). API URL is passed via configuration cookie (by nginx). Sample nginx.conf in reverse_proxy_nginx_conf. 
+    * Fixed test_populate_db (error with duplicate tags added to item)
 * 1May2025 - fastapi application is transitioned to use uv package/venv manager. React index page is default index being served (other pages will be transitioned). It is a bit less functional than vanilla js page (e.g. search is not yet working), but pagination works.
 * 22Apr2025 - fastapi application moved to fast-app folder and it is better structured for further development. React rewrite of frontend started (not yet moved to actual frontend)
 * 16Mar2025 - search by tags and text search field is working (at the moment only for item names). Search terms are highlighted on the client.
@@ -21,6 +25,7 @@ Web application writted with FastAPI and SQLModel to serve as a personal invento
 
 
 ## Further development
+* Deployment nginx configuration to be created
 * Front end rewrite with react
     * URL replacement with search parameters, so search criteria (and tags) can be bookmarked on the index page
     * Search - partially implemented in update of 16Mar2025

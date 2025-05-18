@@ -27,12 +27,15 @@ async def item_qr_code_handler(item_uuid: uuid.UUID):
     biggerImg.paste(img.convert("RGBA"), box=(
         widthMargin, 40, qr_code_width+widthMargin, qr_code_height+40))
     draw = ImageDraw.Draw(biggerImg)
-    font = ImageFont.truetype(r'font/MonospaceTypewriter.ttf', 22)
+    # Path is relative to directory where uv is running usually 'fast-app' dir
+    # TODO: move fonts to fast-app directory and change paths here appropriately
+    # TODO: make constant with path to fonts
+    font = ImageFont.truetype(r'../font/MonospaceTypewriter.ttf', 22)
     textLen = draw.textlength(str(item_uuid), font=font)
     textMargin = (bigImgWidth-textLen)//2
     draw.text((textMargin, qr_code_height+15),
               str(item_uuid), fill="black", font=font)
-    font = ImageFont.truetype(r'font/whitrabt.ttf', 30)
+    font = ImageFont.truetype(r'../font/whitrabt.ttf', 30)
     draw.text((20, 10),
               item.name, fill="black", font=font)
 

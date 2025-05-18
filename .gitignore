@@ -24,3 +24,8 @@ devHelperScripts/**
 fast-app/routers/item_handlers.py
 static_pre_mergewith public_1May2025.7z
 static/vite.svg
+deployment/raspberry.credentials
+
+reverse_proxy_nginx_conf/nginx.conf.17May2025
+reverse_proxy_nginx_conf/nginx.conf.18May2025
+reverse_proxy_nginx_conf/runNginx.bat

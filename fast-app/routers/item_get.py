@@ -117,8 +117,9 @@ def get_all_items(session, item_filters):
         .limit(item_filters["items_on_page"])
     ).all()
 
-    no_of_pages = no_of_items // DEFAULT_ITEMS_PER_PAGE
-    if no_of_items % DEFAULT_ITEMS_PER_PAGE != 0:
+    no_of_pages = no_of_items // item_filters["items_on_page"]
+    print(f"no_of_pages:{no_of_pages}")
+    if (no_of_items % item_filters["items_on_page"]) != 0:
         no_of_pages += 1
 
     # print(f"type of all_items:{type(all_items)}")

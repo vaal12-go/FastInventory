@@ -1,44 +1,48 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fast Inventory React</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fast Inventory React</title>
+    <!-- Bootstrap related local imports -->
+    <link href="public/css/bootstrap.min_5.0.2.css" rel="stylesheet" />
+    <script src="public/js/bootstrap.bundle.min_5.0.2.js"></script>
+  </head>
 
-  <!-- Bootstrap related local imports -->
-  <link href="public/css/bootstrap.min_5.0.2.css" rel="stylesheet" />
-  <script src="public/js/bootstrap.bundle.min_5.0.2.js"></script>
-
-</head>
-
-<body>
-  <!-- NAVBAR START -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">
-        <img src="../img/Box.png" width="80px" />FastInventory</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="/html/item.html">Create new item</a>
-          </li>
-        </ul>
-        <span class="navbar-text"> react front version:0.2 1May2025</span>
+  <body>
+    <!-- NAVBAR START -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="../img/Box.png" width="80px" />FastInventory</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link active" href="/html/item.html"
+                >Create new item</a
+              >
+            </li>
+          </ul>
+          <span class="navbar-text"> react front version:0.3 18May2025</span>
+        </div>
       </div>
-    </div>
-  </nav>
-  <!-- NAVBAR END -->
+    </nav>
+    <!-- NAVBAR END -->
 
-
-  <div id="root"></div>
-  <script type="module" src="/src/main.jsx"></script>
-
-
-</body>
-
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

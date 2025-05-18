@@ -1,25 +1,31 @@
-
-
 .tag-unselected {
-    background-color: rgb(237, 245, 162);
-    padding: 3px;
-    margin-right: 3px;
-    margin-bottom: 3px;
-    float: left;
-    font-size: small;
+  background-color: rgb(237, 245, 162);
+  padding: 3px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  float: left;
+  font-size: small;
+  max-width: 100px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
 }
 
 .tag-selected {
-    background-color: rgb(96, 234, 244);
-    padding: 3px;
-    margin-right: 3px;
-    margin-bottom: 3px;
-    float: left;
-    font-size: small;
+  background-color: rgb(96, 234, 244);
+  padding: 3px;
+  margin-right: 3px;
+  margin-bottom: 3px;
+  float: left;
+  font-size: small;
+  max-width: 100px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
 }
 
 .tag-unselected-link {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 /* .tag-selected::after {
@@ -31,12 +37,10 @@
 } */
 
 .tag-selected-unselect-img {
-    width: 12px;
-    height: 12px;
+  width: 12px;
+  height: 12px;
 }
 
-
-
 .tags-holder {
-    font-size: 11px
+  font-size: 11px;
 }

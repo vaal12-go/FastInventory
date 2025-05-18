@@ -9,7 +9,8 @@ function swapClassesOnElement(elID, classToRemove, classToAdd) {
     console.log("swapClassesOnElement Have NULL ELEMENT");
     console.log("elID :>> ", elID);
     console.log("el :>> ", el);
-    //   TODO: throw exception here
+    //   [x]: throw exception here
+    throw new Error(`in swapClassesOnElement elID:${ilID} is NULL`);
   }
   if (classToRemove != "") el.classList.remove(classToRemove);
   if (classToAdd != "") el.classList.add(classToAdd);
@@ -21,44 +22,21 @@ async function fetchJSON(url, options, jsonFunction) {
   // TODO: add error messages
   try {
     const response = await fetch(url, options);
-    // if (!response.ok) {
-    //   updateServerStatus({ serverStatus: "offline" });
-    //   // throw new Error(`Response status: ${response.status}`);
-    // }
     const json = await response.json();
     jsonFunction(json);
   } catch (err) {
-    // updateServerStatus({ serverStatus: "offline" });
     console.log("Catched exception:", err);
   }
 } //async function fetchJSON(url, options, jsonFunction) {
 
 function console_debug(title_str, debug_var, debugOverride = false) {
-  // console.log("debug_var :>> ", debug_var);
   if (GLOBAL_STATE.DEBUG) {
     console.log(title_str + ":>>>", debug_var);
   }
 }
 
-// From https://stackoverflow.com/a/11231664
-// var type = (function (global) {
-//   var cache = {};
-//   return function (obj) {
-//     var key;
-//     return obj === null
-//       ? "null" // null
-//       : obj === global
-//       ? "global" // window in browser or global in nodejs
-//       : (key = typeof obj) !== "object"
-//       ? key // basic: string, boolean, number, undefined, function
-//       : obj.nodeType
-//       ? "object" // DOM element
-//       : cache[(key = {}.toString.call(obj))] || // cached. date, regexp, error, object, array, math
-//         (cache[key] = key.slice(8, -1).toLowerCase()); // get XXXX from [object XXXX], and cache it
-//   };
-// })(this);
-
 function get_obj_type(obj) {
+  // From https://stackoverflow.com/a/11231664
   var key;
   let internal_type =
     obj === null
@@ -111,13 +89,11 @@ function render_single_obj(obj, template = null) {
   `;
 
   let key_map = keys.map((k) => ({ key: k, field: obj[k] }));
-  console_debug("utils:110 key_map:>>", key_map);
+  // console_debug("utils:110 key_map:>>", key_map);
   let render_res = Mustache.render(defaultTemplate, {
     vals: key_map,
   });
-  console_debug("utils:111 render_res:>>", render_res);
-  // for (let keyIdx in keys) {
-  // }
+  // console_debug("utils:111 render_res:>>", render_res);
   return render_res;
 }
 
@@ -133,13 +109,13 @@ function render_obj_as_html(obj, template = null) {
   `;
   switch (get_obj_type(obj)) {
     case "array":
-      console_debug("we have array of objects. will iterate");
+      // console_debug("we have array of objects. will iterate");
       let renderedArr = obj.map((arrObj) => render_single_obj(arrObj));
-      console_debug("utils:130 renderedArr:>>", renderedArr);
+      // console_debug("utils:130 renderedArr:>>", renderedArr);
       let render_res = Mustache.render(defaultArrayTemplate, {
         elements: renderedArr,
       });
-      console_debug("utils:135 render_res:>>", render_res);
+      // console_debug("utils:135 render_res:>>", render_res);
       return render_res;
   }
   return "not implemented";
@@ -147,7 +123,6 @@ function render_obj_as_html(obj, template = null) {
 
 async function fetchHTML(url, debugOverride = false) {
   // TODO: will be fully awaitable and honoring Debug parameters
-  // console_debug("utils:43 url:>>", url);
   try {
     return await (await fetch(url)).text();
   } catch (err) {
@@ -157,15 +132,12 @@ async function fetchHTML(url, debugOverride = false) {
 
 async function fetchJSON2(url, options, debugOverride = false) {
   // TODO: will be fully awaitable and honoring Debug parameters
-  // console_debug("utils:43 url:>>", url);
 
   try {
     const response = await fetch(url, options);
     const json = await response.json();
-    // console_debug("utils:48 json:>>", json);
     return json;
   } catch (err) {
-    // console_debug("utils:51.fetchJSON2 err:>>", err);
     throw err;
   }
 } //async function fetchJSON(url, options, jsonFunction) {
@@ -254,3 +226,4 @@ function parse_search_term() {
   ret_array.push(...quoted_strs);
   return ret_array;
 } //function parse_search_term() {
+

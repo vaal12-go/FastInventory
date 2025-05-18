@@ -1,10 +1,13 @@
 import {BASE_API_URL} from "../../lib/constants.js"
 import { findImageFileOfItem } from "../../lib/utils.js"
+import useCookieConfig from "../../hooks/useCookieConfig";
 
 export function InventoryItem({ item }) {
     if(!item.image_file) {
         item.image_file = findImageFileOfItem(item)
     }
+
+    const [apiURL] = useCookieConfig("api_url")
 
 
     return (
@@ -12,7 +15,7 @@ export function InventoryItem({ item }) {
             {/* <!-- ITEM --> */}
             <div className="card inventory-card me-1 mb-1">
                 <h6 className="card-header">
-                    <a href={`${BASE_API_URL}/html/item.html?itemUUID=${item.uuid}`}>
+                    <a href={`${apiURL}html/item.html?itemUUID=${item.uuid}`}>
                         {item.name}
                     </a>
                 </h6>
@@ -20,7 +23,7 @@ export function InventoryItem({ item }) {
                     {/* TODO: make default 'not existing' image not a toolbox, but one in /static directory */}
                     <img src={
                             item.image_file ?  
-                                `${BASE_API_URL}/item_file/${item.image_file.uuid}` : "img/toolbox.jpg"
+                                `${apiURL}item_file/${item.image_file.uuid}` : "img/toolbox.jpg"
                             } 
                             alt="" 
                             className="inventory-card-img border" />

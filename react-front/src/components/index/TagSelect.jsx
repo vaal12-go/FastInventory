@@ -7,11 +7,13 @@ import { UnselectedTags } from "./UnselectedTags";
 
 import "./tags.css"
 import { useEffect, useState } from 'react';
+import { BASE_API_URL } from '../../lib/constants';
+import useCookieConfig from "../../hooks/useCookieConfig";
 
 
-async function fetchTags() {
-    // console.log('Fetching :>> ');
-    const url = "http://127.0.0.1:8080/tag"
+async function fetchTags(apiURL) {
+    const url = `${apiURL}tag`
+    console.log('fetchTags url :>> ', url);
     const tagsRes = await fetch(url)
     const tagsJSON = await tagsRes.json()
     console.log('tagsJSON :>> ', tagsJSON);
@@ -20,24 +22,16 @@ async function fetchTags() {
 
 
 export function TagSelect() {
-    const { data, error, isLoading } = useSWR('/tag', fetchTags)
-
+    const [apiURL] = useCookieConfig("api_url")
+    const { data, error, isLoading } = useSWR('/tag', async ()=>{
+        return await fetchTags(apiURL)}
+    )
     const [searchParams, setSearchParams] = useSearchParams()
-
-
     const [tagsSelected, setTagsSelected] = useState([])
     const [tagsUnSelected, setTagsUnSelected] = useState([])
     const [tagFilterText, setTagFilterText] = useState("")
+    
 
-    // Testing URL: http://localhost:5173/?tags=efc745cf-2952-4ffb-9ee9-f588d770fbe5,b6230611-71c3-4aae-b87b-4602786d3c1a
-    // container and electronics
-    // {
-    // "tag": "container",
-    // "description": "Automatically created description for 'container' tag.",
-    // "uuid": "efc745cf-2952-4ffb-9ee9-f588d770fbe5"
-    // }
-
-    // console.log('data :>> ', data);
 
     function setSelectedTagsURLParam(newTagsSelected) {
         const newURLTags = newTagsSelected.reduce((url_str, new_tag) => {
@@ -47,7 +41,7 @@ export function TagSelect() {
                 url_str += `,${new_tag.uuid}`
             return url_str
         }, "")
-        console.log('newURLTags :>> ', newURLTags);
+        // console.log('newURLTags :>> ', newURLTags);
         setSearchParams((params) => {
             if(newURLTags.length==0)
                 params.delete("tags")
@@ -61,17 +55,13 @@ export function TagSelect() {
     }//function setSelectedTagsURLParam(newTagsSelected) {
 
     function onTagSelected(evt, tag) {
-        // console.log('tag Selected in TagSelect:>> ', tag);
         const newTagsSelected = [...tagsSelected];
         newTagsSelected.push(tag);
         setSelectedTagsURLParam(newTagsSelected);
     }
 
     function onTagUnselected(evt, tag) {
-        // console.log('TagUnselected in  TagSelect evt :>> ', evt);
-        // console.log('tagsSelected :>> ', tagsSelected);
         const newTagsSelected = tagsSelected.filter((old_tag) => old_tag.uuid != tag.uuid)
-        // console.log('newTagsSelected :>> ', newTagsSelected);
         setSelectedTagsURLParam(newTagsSelected);
     }
 
@@ -80,7 +70,6 @@ export function TagSelect() {
         let unselectedTagArr = []
         if (data) {
             unselectedTagArr = [...data.tags]
-            // console.log('data  in retrieveTags:>> ', data);
             const tagsSelectedStr = searchParams.get("tags")
             if (tagsSelectedStr != "" && !(tagsSelectedStr === null)) {
                 const tagsStrArr = tagsSelectedStr.split(",")
@@ -106,7 +95,6 @@ export function TagSelect() {
     }, [data])
 
     function onTagFilterChange(evt, filterText) {
-        // console.log('filterText :>> ', filterText);
         setTagFilterText(filterText)
     }
 

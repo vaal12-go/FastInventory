@@ -1,3 +1,4 @@
+// import React from 'react';
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom';
 
@@ -6,51 +7,58 @@ import { InventoryItem } from './InventoryItem';
 import './tags.css'
 import './card.css'
 import { ItemTextFilter } from './ItemTextFilter';
-import React from 'react';
-import { BASE_API_URL } from '../../lib/constants';
 
-const DEFAULT_ITEMS_ON_PAGE = 6
+// import { BASE_API_URL } from '../../lib/constants';
+import { Pagination } from './Pagination';
+import { getFilterParams } from '../../lib/utils';
 
-async function fetchInventoryItems(filters) {
+import useCookieConfig from "../../hooks/useCookieConfig";
+
+
+
+async function fetchInventoryItems(filters, apiURL) {
     const filterURLParams = Object.keys(filters).reduce((accum, val) => {
         if (filters[val])
             accum += `&${val}=${filters[val]}`
         return accum
     }, "")
-    const url = `${BASE_API_URL}/item/all?${filterURLParams}`
-    console.log('url :>> ', url);
+    const url = `${apiURL}item/all?${filterURLParams}`
+    // console.log('fetchInventoryItems url :>> ', url);
     const itemsRes = await fetch(url)
     const itemsJSON = await itemsRes.json()
     console.log('itemsJSON :>> ', itemsJSON);
     return itemsJSON
 }
 
-export function getFilterParams(searchParams) {
-    return {
-        search_term: searchParams.get("itemFilter") ? searchParams.get("itemFilter") : "",
-        tags: searchParams.get("tags") ? searchParams.get("tags") : "",
-        page: searchParams.get("page") ? searchParams.get("page") : 1,
-        items_on_page: searchParams.get("items_on_page") ? searchParams.get("items_on_page") : DEFAULT_ITEMS_ON_PAGE,
-    }
-}
-
 export function InventoryItems() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [filters, setFilters] = useState(getFilterParams(searchParams))
+    const [totalPages, setTotalPages] = useState(0)
+    const [apiURL] = useCookieConfig("api_url")
+
+    // console.log('apiURL :>> ', apiURL);
 
     useEffect(() => {
         setFilters(getFilterParams(searchParams))
     }, [searchParams])
 
     useEffect(() => {
+        // console.log('apiURL before mutate :>> ', apiURL);
         mutate()
-    }, [filters])
+    }, [filters, apiURL])
 
     const { data, error, isLoading, mutate } = useSWR('/api/user', async () => {
-        return await fetchInventoryItems(filters)
+        if(apiURL == "") {
+            // console.log('Empty apiURL in useSWR :>> ');
+            return {}
+        } else {
+            // console.log('apiURL in useSWR:>> ', apiURL);
+            return await fetchInventoryItems(filters, apiURL)
+        }
+        
     });
     if (error) {
-        console.error('error :>> ', error );
+        console.error('error :>> ', error);
         return (<>
             <div>failed to load: </div>
             {error.message ? <div> {error.message} </div> : ""}
@@ -94,7 +102,6 @@ export function InventoryItems() {
         {/* <!-- Items --> */}
         <div className="row">
             <div className="col d-flex flex-wrap">
-                {/* <!-- ITEMS start --> */}
                 {
                     data.items.map((itm) => {
                         return (<InventoryItem
@@ -102,10 +109,19 @@ export function InventoryItems() {
                             key={`item_${itm.uuid}`} />)
                     })
                 }
-                {/* <!-- ITEMS END --> */}
             </div>
         </div>
         {/* <!-- END Items --> */}
+
+        {/* <!-- Pagination --> */}
+        <div className="row">
+            <div className="col-9 fs-4" id="pagination-holder">
+                {data ?
+                    <Pagination total_pages={data.total_pages} />
+                    : ""}
+            </div>
+        </div>
+        {/* <!-- END Pagination --> */}
     </>)
 }//export function InventoryItems() {
 

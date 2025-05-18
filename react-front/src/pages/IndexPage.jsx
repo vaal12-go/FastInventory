@@ -1,30 +1,20 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import { TagSelect } from '../components/index/TagSelect';
-import { getFilterParams, InventoryItems } from '../components/index/InventoryItems'
-import { ItemTextFilter } from '../components/index/ItemTextFilter';
-import { Pagination } from '../components/index/Pagination';
-import { BASE_API_URL ,setBaseAPIURL } from '../lib/constants';
-
+import { TagSelect } from "../components/index/TagSelect";
+import { InventoryItems } from "../components/index/InventoryItems";
+import { BASE_API_URL, setBaseAPIURL } from "../lib/constants";
+import useCookieConfig from "../hooks/useCookieConfig";
 
 export function IndexPage() {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const debugParam = searchParams.get("debug")
-  useEffect(() => {
-    if (debugParam) {
-      // BASE_API_URL = "http://127.0.0.1:8080"
-      setBaseAPIURL("http://127.0.0.1:8080")
-      // setSearchParams((params) => {
-      //   params.set("debug", "false")
-      //   return params
-      // });
-    } else {//if (debugParam) {
-      // BASE_API_URL = window.location.origin;
-      setBaseAPIURL(window.location.origin)
-    }
-    console.log('BASE_API_URL :>> ', BASE_API_URL);
-  }, []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  // const [configValue] = useCookieConfig("api_url")
+  // const [baseAPIURLInternal, setBaseAPIURLInternal] = useState('');
+
+  // const debugParam = searchParams.get("debug");
+
+  // console.log('configValue :>> ', configValue);
+  // console.log('BASE_API_URL :>> ', BASE_API_URL);
 
   return (
     <>
@@ -45,26 +35,15 @@ export function IndexPage() {
           {/* <!-- END TAGS left section --> */}
 
           {/* <!-- Items main section --> */}
-          <div className="col-10  mt-3">
-            <div className="container-fluid">
+          <div className="col-10 mt-3">
+            <div className="container-fluid text-center" id="items-container">
               <InventoryItems />
-              {/* <!-- Pagination --> */}
-              <div className="row">
-                <div className="col-3 fs-6">
-                  {/* Pagination may not work properly in this update */}
-                </div>
-                <div className="col-9 fs-4" id="pagination-holder">
-                  <Pagination total_pages={5} />
-                </div>
-              </div>
-              {/* <!-- END Pagination --> */}
             </div>
           </div>
           {/* <!-- END Items main section --> */}
         </div>
       </div>
       {/* <!-- END Main page container --> */}
-
     </>
-  )
+  );
 }

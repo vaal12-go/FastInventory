@@ -2,7 +2,7 @@ export function Tag({tag, selected, onSelectClick, onUnselectClick}) {
     // console.log('selected:', selected, '   tag :>> ', tag);
     function onSelectClickHandler() {
         return (evt)=>{
-            console.log('evt :>> ', evt);
+            // console.log('evt :>> ', evt);
             evt.preventDefault();
             if(onSelectClick) onSelectClick(evt, tag);
         }
@@ -10,7 +10,7 @@ export function Tag({tag, selected, onSelectClick, onUnselectClick}) {
 
     function onUnselectClickHandler() {
         return (evt)=> {
-            console.log('onUnselectClickHandler evt :>> ', evt);
+            // console.log('onUnselectClickHandler evt :>> ', evt);
             evt.preventDefault();
             if(onUnselectClick) onUnselectClick(evt, tag);
         }

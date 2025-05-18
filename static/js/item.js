@@ -8,8 +8,11 @@ window.onload = async () => {
 
   await initImageControls();
 
+  console.log('returnURL :>> ', `${BASE_URL}`);
   document.getElementById("cancel_btn").addEventListener("click", () => {
-    var returnURL = `${BASE_URL}index.html`;
+    const linkBaseURL = BASE_URL.substring(0, BASE_URL.length-4); 
+    var returnURL = `${linkBaseURL}`;
+    console.log('returnURL :>> ', returnURL);
     window.location.replace(returnURL);
   }); //document.getElementById("cancel_btn").addEventListener(
 
@@ -37,7 +40,8 @@ window.onload = async () => {
       (jsonObj) => {
         // console.log("Have responce :>> ", jsonObj);
         if (jsonObj.status == "success") {
-          var returnURL = `${BASE_URL}index.html`;
+          const linkBaseURL = BASE_URL.substring(0, BASE_URL.length-4);
+          var returnURL = `${linkBaseURL}index.html`;
           window.location.replace(returnURL);
         }
       }
